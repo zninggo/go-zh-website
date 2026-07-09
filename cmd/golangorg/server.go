@@ -285,6 +285,13 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
+	// Proxy playground compile requests to official Go playground
+	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Scheme = "https"
+		r.URL.Host = "play.golang.org"
+		http.Redirect(w, r, r.URL.String(), http.StatusTemporaryRedirect)
+	})
+
 	mux.Handle("/explore/", http.StripPrefix("/explore/", redirectPrefix("https://pkg.go.dev/")))
 	if err := blog.RegisterFeeds(mux, "", godevSite); err != nil {
 		log.Fatalf("blog: %v", err)
