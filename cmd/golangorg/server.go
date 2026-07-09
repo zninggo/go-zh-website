@@ -309,6 +309,7 @@ func NewHandler(contentDir, goroot string) http.Handler {
 	h = addCSP(mux)
 	h = hostEnforcerHandler(h)
 	h = hostPathHandler(h)
+	h = pathPrefixHandler(h)
 	return h
 }
 
@@ -655,6 +656,66 @@ func (r *linkRewriter) Flush() {
 	for host := range validHosts {
 		repl = append(repl, `href="https://`+host, `href="/`+host)
 		repl = append(repl, `src="https://`+host, `src="/`+host)
+	}
+	strings.NewReplacer(repl...).WriteString(r.ResponseWriter, string(r.buf))
+	r.buf = nil
+}
+
+// pathPrefixHandler rewrites links in HTML output for docs.zmto.io
+// to include the /go prefix, so CSS/JS/images load correctly.
+func pathPrefixHandler(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Host != "docs.zmto.io" {
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		lw := &pathPrefixRewriter{ResponseWriter: w, prefix: "/go"}
+		h.ServeHTTP(lw, r)
+		lw.Flush()
+	})
+}
+
+// pathPrefixRewriter rewrites absolute paths to include a prefix.
+type pathPrefixRewriter struct {
+	http.ResponseWriter
+	prefix string
+	buf    []byte
+	ct     string
+}
+
+func (r *pathPrefixRewriter) Write(data []byte) (int, error) {
+	if r.ct == "" {
+		ct := r.Header().Get("Content-Type")
+		if ct == "" {
+			ct = http.DetectContentType(data)
+		}
+		r.ct = ct
+	}
+	if !strings.HasPrefix(r.ct, "text/html") {
+		return r.ResponseWriter.Write(data)
+	}
+	r.buf = append(r.buf, data...)
+	return len(data), nil
+}
+
+func (r *pathPrefixRewriter) Flush() {
+	repl := []string{
+		`href="/css/`, `href="` + r.prefix + `/css/`,
+		`href="/js/`, `href="` + r.prefix + `/js/`,
+		`href="/images/`, `href="` + r.prefix + `/images/`,
+		`href="/fonts/`, `href="` + r.prefix + `/fonts/`,
+		`src="/js/`, `src="` + r.prefix + `/js/`,
+		`src="/images/`, `src="` + r.prefix + `/images/`,
+		`href="/doc/`, `href="` + r.prefix + `/doc/`,
+		`href="/blog/`, `href="` + r.prefix + `/blog/`,
+		`href="/learn/`, `href="` + r.prefix + `/learn/`,
+		`href="/tour/`, `href="` + r.prefix + `/tour/`,
+		`href="/play/`, `href="` + r.prefix + `/play/`,
+		`href="/pkg/`, `href="` + r.prefix + `/pkg/`,
+		`href="/cmd/`, `href="` + r.prefix + `/cmd/`,
+		`href="/ref/`, `href="` + r.prefix + `/ref/`,
+		`href="/`, `href="` + r.prefix + `/`,
 	}
 	strings.NewReplacer(repl...).WriteString(r.ResponseWriter, string(r.buf))
 	r.buf = nil
