@@ -521,6 +521,8 @@ var validHosts = map[string]bool{
 	"tip.golang.org":   true,
 	"tour.golang.org":  true,
 
+	"docs.zmto.io": true,
+
 	"go.dev":       true,
 	"blog.go.dev":  true,
 	"learn.go.dev": true,
