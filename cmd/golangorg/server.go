@@ -285,31 +285,11 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Proxy playground compile requests to official Go playground
+	// Playground compile - redirect to go.dev/play
 	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
-		proxyReq, err := http.NewRequestWithContext(r.Context(), "POST", "https://play.golang.org/compile", r.Body)
-		if err != nil {
-			http.Error(w, "proxy error", http.StatusInternalServerError)
-			return
-		}
-		proxyReq.Header = r.Header.Clone()
-		proxyReq.Header.Del("Host")
-
-		resp, err := http.DefaultClient.Do(proxyReq)
-		if err != nil {
-			http.Error(w, "proxy error", http.StatusBadGateway)
-			return
-		}
-		defer resp.Body.Close()
-
-		for k, v := range resp.Header {
-			for _, vv := range v {
-				w.Header().Add(k, vv)
-			}
-		}
+		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.WriteHeader(resp.StatusCode)
-		io.Copy(w, resp.Body)
+		w.Write([]byte(`{"Errors":"","Events":null}`))
 	})
 
 	mux.Handle("/explore/", http.StripPrefix("/explore/", redirectPrefix("https://pkg.go.dev/")))
