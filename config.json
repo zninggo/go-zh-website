@@ -1,0 +1,9 @@
+{
+  "translation": {
+    "api_url": "${TRANSLATION_API_URL}",
+    "api_key": "${TRANSLATION_API_KEY}",
+    "model": "${TRANSLATION_MODEL}",
+    "timeout": 300000,
+    "max_retries": 3
+  }
+}

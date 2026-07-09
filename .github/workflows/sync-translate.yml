@@ -1,0 +1,79 @@
+name: Sync and Translate
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      force_translate:
+        description: 'Force retranslate all files'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  NODE_VERSION: '22'
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync upstream changes
+        run: |
+          git remote add upstream https://github.com/golang/website.git || true
+          git fetch upstream master
+          git merge upstream/master --no-edit --allow-unrelated-histories -X theirs || {
+            echo "Merge conflict, resolving..."
+            git checkout --theirs _content/ || true
+            git add .
+            git commit --no-edit -m "merge: resolve upstream conflicts"
+          }
+
+      - name: Detect changed files
+        id: changes
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- '_content/doc/' '_content/learn/' | grep -E '\.(md|html)$' || true)
+          if [ -n "$CHANGED" ] || [ "${{ inputs.force_translate }}" = "true" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changed files:"
+            echo "$CHANGED"
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No documentation changes detected."
+          fi
+
+      - name: Translate documentation
+        if: steps.changes.outputs.has_changes == 'true'
+        run: node scripts/translate.js
+        env:
+          TRANSLATION_API_URL: ${{ secrets.TRANSLATION_API_URL }}
+          TRANSLATION_API_KEY: ${{ secrets.TRANSLATION_API_KEY }}
+          TRANSLATION_MODEL: ${{ secrets.TRANSLATION_MODEL }}
+          FORCE_TRANSLATE: ${{ inputs.force_translate }}
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _translations/ translation-queue.json
+          git diff --staged --quiet || git commit -m "chore: update translations [skip ci]"
+          git push

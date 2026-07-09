@@ -57,6 +57,7 @@ var (
 	verbose    = flag.Bool("v", false, "verbose mode")
 	goroot     = flag.String("goroot", runtime.GOROOT(), "Go root directory")
 	contentDir = flag.String("content", "", "path to _content directory")
+	lang       = flag.String("lang", "", "language for translated content (e.g. zh)")
 
 	runningOnAppEngine = os.Getenv("PORT") != ""
 	forceGorootZip, _  = strconv.ParseBool(os.Getenv("GOLANGORG_FORCE_GOROOT_ZIP"))
@@ -126,6 +127,9 @@ func main() {
 		log.Printf("\taddress = %s", *httpAddr)
 		log.Printf("\tgoroot = %s", *goroot)
 		log.Printf("\tcontent = %s", contentSource())
+		if *lang != "" {
+			log.Printf("\tlang = %s", *lang)
+		}
 		handler = loggingHandler(handler)
 	}
 
@@ -166,6 +170,16 @@ func NewHandler(contentDir, goroot string) http.Handler {
 		contentFS = os.DirFS(contentDir)
 	} else {
 		contentFS = website.Content()
+	}
+
+	// If a language is specified, overlay translated content on top of the original.
+	if lang != "" {
+		if transFS := website.Translations(lang); transFS != nil {
+			log.Printf("loading translations for language: %s", lang)
+			contentFS = unionFS{transFS, contentFS}
+		} else {
+			log.Printf("no translations found for language: %s", lang)
+		}
 	}
 
 	var gorootFS fs.FS
