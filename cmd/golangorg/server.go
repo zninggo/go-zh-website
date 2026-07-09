@@ -173,12 +173,12 @@ func NewHandler(contentDir, goroot string) http.Handler {
 	}
 
 	// If a language is specified, overlay translated content on top of the original.
-	if lang != "" {
-		if transFS := website.Translations(lang); transFS != nil {
-			log.Printf("loading translations for language: %s", lang)
+	if *lang != "" {
+		if transFS := website.Translations(*lang); transFS != nil {
+			log.Printf("loading translations for language: %s", *lang)
 			contentFS = unionFS{transFS, contentFS}
 		} else {
-			log.Printf("no translations found for language: %s", lang)
+			log.Printf("no translations found for language: %s", *lang)
 		}
 	}
 
