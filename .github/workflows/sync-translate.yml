@@ -70,6 +70,14 @@ jobs:
           TRANSLATION_MODEL: ${{ secrets.TRANSLATION_MODEL }}
           FORCE_TRANSLATE: ${{ inputs.force_translate }}
 
+      - name: Verify translations
+        if: steps.changes.outputs.has_changes == 'true'
+        run: node scripts/verify.js || true
+        env:
+          TRANSLATION_API_URL: ${{ secrets.TRANSLATION_API_URL }}
+          TRANSLATION_API_KEY: ${{ secrets.TRANSLATION_API_KEY }}
+          TRANSLATION_MODEL: ${{ secrets.TRANSLATION_MODEL }}
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
