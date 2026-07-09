@@ -741,12 +741,12 @@ func (r *pathPrefixRewriter) Flush() {
 	r.buf = nil
 }
 
-// translationRedirectHandler redirects non-translated pages to go.dev.
-// Pages under /doc/, /ref/, /pkg/, /cmd/, /learn/ stay on the mirror.
-// All other pages redirect to go.dev.
+// translationRedirectHandler redirects pages that can't work on mirror to go.dev.
+// Only /dl/ (downloads) and /play/ (playground needs backend) are redirected.
+// All other pages stay on the mirror for translation.
 func translationRedirectHandler(h http.Handler) http.Handler {
-	// Paths that should stay on the mirror (need translation)
-	stayPaths := []string{"/doc/", "/ref/", "/pkg/", "/cmd/", "/learn/"}
+	// Paths that must redirect to go.dev (can't work on mirror)
+	redirectPaths := []string{"/dl/", "/play/"}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Only redirect for docs.zmto.io
@@ -757,34 +757,20 @@ func translationRedirectHandler(h http.Handler) http.Handler {
 
 		path := r.URL.Path
 
-		// Check if path should stay on mirror
-		for _, prefix := range stayPaths {
-			if strings.HasPrefix(path, prefix) || path == "/doc" || path == "/ref" || path == "/pkg" || path == "/cmd" || path == "/learn" {
-				h.ServeHTTP(w, r)
+		// Check if path must redirect
+		for _, prefix := range redirectPaths {
+			if strings.HasPrefix(path, prefix) {
+				target := "https://go.dev" + path
+				if r.URL.RawQuery != "" {
+					target += "?" + r.URL.RawQuery
+				}
+				http.Redirect(w, r, target, http.StatusFound)
 				return
 			}
 		}
 
-		// Static assets stay on mirror
-		if strings.HasPrefix(path, "/css/") || strings.HasPrefix(path, "/js/") ||
-			strings.HasPrefix(path, "/images/") || strings.HasPrefix(path, "/fonts/") ||
-			strings.HasPrefix(path, "/favicon") {
-			h.ServeHTTP(w, r)
-			return
-		}
-
-		// Root page stays on mirror
-		if path == "/" || path == "" {
-			h.ServeHTTP(w, r)
-			return
-		}
-
-		// Everything else redirects to go.dev
-		target := "https://go.dev" + path
-		if r.URL.RawQuery != "" {
-			target += "?" + r.URL.RawQuery
-		}
-		http.Redirect(w, r, target, http.StatusFound)
+		// Everything else stays on mirror
+		h.ServeHTTP(w, r)
 	})
 }
 
