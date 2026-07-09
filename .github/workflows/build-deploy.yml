@@ -50,3 +50,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Trigger Dokploy redeploy
+        run: |
+          curl -s -X POST "${{ secrets.DOKPLOY_URL }}/api/application.deploy" \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
+            -d '{"applicationId": "${{ secrets.DOKPLOY_APP_ID }}"}'
