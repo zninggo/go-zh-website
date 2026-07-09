@@ -142,7 +142,23 @@ function splitContent(content, ext) {
   return blocks;
 }
 
-function splitTextBlocks(text, maxChunkSize = 8000) {
+function extractTitle(content) {
+  // 从 frontmatter 提取标题
+  const fmMatch = content.match(/^<!--\s*(\{[\s\S]*?\})\s*-->/);
+  if (fmMatch) {
+    try {
+      const fm = JSON.parse(fmMatch[1]);
+      return fm.Title || fm.title || '';
+    } catch {}
+  }
+  const mdTitle = content.match(/^#\s+(.+)$/m);
+  if (mdTitle) return mdTitle[1];
+  const htmlTitle = content.match(/<title>([^<]+)<\/title>/i) || content.match(/<h1[^>]*>([^<]+)<\/h1>/i);
+  if (htmlTitle) return htmlTitle[1];
+  return '';
+}
+
+function splitTextBlocks(text, maxChunkSize = 6000) {
   const chunks = [];
   const paragraphs = text.split(/\n\n+/);
   let currentChunk = '';
@@ -163,22 +179,45 @@ function splitTextBlocks(text, maxChunkSize = 8000) {
   return chunks;
 }
 
-async function translateText(text, glossary, config) {
+function translateCodeComments(code) {
+  // 翻译代码块中的注释，保留代码本身
+  // 支持 Go/C/JS 风格的 // 和 /* */ 注释，以及 # 注释（shell/python）
+  return code.replace(/(\/\/\s*)(.+)$/gm, (match, prefix, comment) => {
+    // 跳过 URL 注释和编译器指令
+    if (comment.match(/^http|^nolint|^go:|^noinspection|^TODO|^FIXME|^HACK/)) {
+      return match;
+    }
+    return prefix + `[待翻译: ${comment}]`;
+  }).replace(/(\/\*\s*)([\s\S]*?)(\s*\*\/)/g, (match, open, comment, close) => {
+    return open + `[待翻译: ${comment}]` + close;
+  });
+}
+
+async function translateText(text, glossary, config, context = {}) {
   const { api_url, api_key, model, timeout, max_retries } = config.translation;
 
   const glossaryPrompt = Object.entries(glossary)
     .map(([en, zh]) => `${en} -> ${zh}`)
     .join('\n');
 
+  const contextInfo = [];
+  if (context.title) contextInfo.push(`文档标题: ${context.title}`);
+  if (context.before) contextInfo.push(`前文摘要: ${context.before.slice(-300)}`);
+  if (context.after) contextInfo.push(`后文摘要: ${context.after.slice(0, 300)}`);
+
   const systemPrompt = `你是一个专业的技术文档翻译专家。你的任务是将英文技术文档翻译成中文。
+
+当前翻译上下文：
+${contextInfo.length > 0 ? contextInfo.join('\n') : '(无额外上下文)'}
 
 翻译规则：
 1. 保持专业术语的准确性，参考术语表
-2. 保持代码块不翻译，只翻译注释
-3. 保持Markdown/HTML格式不变
-4. 保持链接和引用不变
-5. 翻译要自然流畅，符合中文表达习惯
-6. 保留frontmatter格式，只翻译Title/title字段
+2. 保持Markdown/HTML格式不变
+3. 保持链接和引用不变
+4. 翻译要自然流畅，符合中文表达习惯
+5. 保留frontmatter格式，只翻译Title/title字段
+6. 根据上下文保持翻译的一致性和连贯性
+7. 标记为 [待翻译: ...] 的代码注释需要翻译为中文，去掉 [待翻译: ] 标记
 
 术语表：
 ${glossaryPrompt}`;
@@ -229,22 +268,49 @@ async function translateFile(file, glossary, config) {
   console.log(`  翻译: ${file}`);
 
   const content = await fs.readFile(sourcePath, 'utf-8');
+  const title = extractTitle(content);
   const blocks = splitContent(content, ext);
+
+  // 收集所有文本块用于上下文
+  const allTextParts = blocks.filter(b => b.type === 'text').map(b => b.content);
 
   let translatedContent = '';
   let blockIndex = 0;
+  let textPartIndex = 0;
 
   for (const block of blocks) {
     if (block.type === 'code') {
-      translatedContent += block.content;
+      // 代码块：翻译注释，保留代码
+      const hasComments = block.content.match(/\/\/\s*\S/) || block.content.match(/\/\*[\s\S]*?\*\//);
+      if (hasComments) {
+        const markedCode = translateCodeComments(block.content);
+        blockIndex++;
+        console.log(`    代码块 ${blockIndex}: 翻译注释`);
+        const context = {
+          title,
+          before: translatedContent.slice(-500),
+          after: ''
+        };
+        const translated = await translateText(markedCode, glossary, config, context);
+        translatedContent += translated;
+      } else {
+        translatedContent += block.content;
+      }
     } else {
+      // 文本块：带上下文翻译
       const chunks = splitTextBlocks(block.content);
       for (const chunk of chunks) {
         blockIndex++;
         console.log(`    文本块 ${blockIndex}: ${chunk.length} 字符`);
-        const translated = await translateText(chunk, glossary, config);
+        const context = {
+          title,
+          before: translatedContent.slice(-500),
+          after: allTextParts[textPartIndex + 1] ? allTextParts[textPartIndex + 1].slice(0, 300) : ''
+        };
+        const translated = await translateText(chunk, glossary, config, context);
         translatedContent += translated;
       }
+      textPartIndex++;
     }
   }
 
