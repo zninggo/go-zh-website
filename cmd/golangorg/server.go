@@ -285,11 +285,18 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Playground compile - redirect to go.dev/play
+	// Playground endpoints - return empty responses to avoid JS alerts
 	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Write([]byte(`{"Errors":"","Events":null}`))
+	})
+	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte("playground-disabled"))
+	})
+	mux.HandleFunc("/doc/play/", func(w http.ResponseWriter, r *http.Request) {
+		http.NotFound(w, r)
 	})
 
 	mux.Handle("/explore/", http.StripPrefix("/explore/", redirectPrefix("https://pkg.go.dev/")))
@@ -317,6 +324,12 @@ func NewHandler(contentDir, goroot string) http.Handler {
 	h = hostEnforcerHandler(h)
 	h = hostPathHandler(h)
 	h = pathPrefixHandler(h)
+
+	// If translations are enabled, redirect non-translated pages to go.dev
+	if *lang != "" {
+		h = translationRedirectHandler(h)
+	}
+
 	return h
 }
 
@@ -726,6 +739,53 @@ func (r *pathPrefixRewriter) Flush() {
 	}
 	strings.NewReplacer(repl...).WriteString(r.ResponseWriter, string(r.buf))
 	r.buf = nil
+}
+
+// translationRedirectHandler redirects non-translated pages to go.dev.
+// Pages under /doc/, /ref/, /pkg/, /cmd/, /learn/ stay on the mirror.
+// All other pages redirect to go.dev.
+func translationRedirectHandler(h http.Handler) http.Handler {
+	// Paths that should stay on the mirror (need translation)
+	stayPaths := []string{"/doc/", "/ref/", "/pkg/", "/cmd/", "/learn/"}
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Only redirect for docs.zmto.io
+		if r.Host != "docs.zmto.io" {
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		path := r.URL.Path
+
+		// Check if path should stay on mirror
+		for _, prefix := range stayPaths {
+			if strings.HasPrefix(path, prefix) || path == "/doc" || path == "/ref" || path == "/pkg" || path == "/cmd" || path == "/learn" {
+				h.ServeHTTP(w, r)
+				return
+			}
+		}
+
+		// Static assets stay on mirror
+		if strings.HasPrefix(path, "/css/") || strings.HasPrefix(path, "/js/") ||
+			strings.HasPrefix(path, "/images/") || strings.HasPrefix(path, "/fonts/") ||
+			strings.HasPrefix(path, "/favicon") {
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		// Root page stays on mirror
+		if path == "/" || path == "" {
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		// Everything else redirects to go.dev
+		target := "https://go.dev" + path
+		if r.URL.RawQuery != "" {
+			target += "?" + r.URL.RawQuery
+		}
+		http.Redirect(w, r, target, http.StatusFound)
+	})
 }
 
 func loggingHandler(h http.Handler) http.Handler {
