@@ -474,7 +474,8 @@
       "source": "doc/go_faq.md",
       "target": "doc/go_faq.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:42:53.056Z"
     },
     {
       "source": "doc/gopath_code.html",
