@@ -201,7 +201,8 @@
       "source": "doc/docs.md",
       "target": "doc/docs.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T13:27:09.292Z"
     },
     {
       "source": "doc/editors.html",
