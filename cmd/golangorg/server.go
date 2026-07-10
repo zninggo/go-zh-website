@@ -9,6 +9,7 @@ import (
 	"archive/zip"
 	"bytes"
 	"context"
+	"crypto/tls"
 	"embed"
 	"encoding/json"
 	"errors"
@@ -294,6 +295,10 @@ func NewHandler(contentDir, goroot string) http.Handler {
 				req.URL.Scheme = target.Scheme
 				req.URL.Host = target.Host
 				req.Host = target.Host
+			},
+			Transport: &http.Transport{
+				ForceAttemptHTTP2: false,
+				TLSNextProto:     make(map[string]func(string, *tls.Conn) http.RoundTripper),
 			},
 		}
 		w.Header().Set("Access-Control-Allow-Origin", "*")
