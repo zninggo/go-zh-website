@@ -124,7 +124,8 @@
       "source": "doc/database/index.md",
       "target": "doc/database/index.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T12:43:20.811Z"
     },
     {
       "source": "doc/database/manage-connections.md",
