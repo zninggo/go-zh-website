@@ -831,7 +831,8 @@
       "source": "doc/tutorial/govulncheck-ide.md",
       "target": "doc/tutorial/govulncheck-ide.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:46:43.438Z"
     },
     {
       "source": "doc/tutorial/govulncheck.md",
