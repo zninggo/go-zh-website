@@ -290,6 +290,7 @@ func NewHandler(contentDir, goroot string) http.Handler {
 		return func(w http.ResponseWriter, r *http.Request) {
 			body, _ := io.ReadAll(r.Body)
 			r.Body.Close()
+			log.Printf("playground %s body=%d ct=%s", path, len(body), r.Header.Get("Content-Type"))
 
 			target := "https://go.dev" + path
 			if r.URL.RawQuery != "" {
