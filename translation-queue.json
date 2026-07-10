@@ -1,341 +1,294 @@
 {
-  "timestamp": "2026-07-10T07:43:50.014Z",
+  "timestamp": "2026-07-10T12:24:48.154Z",
   "files": [
     {
       "source": "doc/articles/go_command.html",
       "target": "doc/articles/go_command.md",
       "type": "html",
       "status": "completed",
-      "translatedAt": "2026-07-10T07:44:44.663Z"
+      "translatedAt": "2026-07-10T12:25:47.396Z"
     },
     {
       "source": "doc/articles/index.html",
       "target": "doc/articles/index.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:44:52.113Z"
+      "status": "pending"
     },
     {
       "source": "doc/articles/race_detector.html",
       "target": "doc/articles/race_detector.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:45:57.001Z"
+      "status": "pending"
     },
     {
       "source": "doc/articles/wiki/edit.html",
       "target": "doc/articles/wiki/edit.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:46:05.797Z"
+      "status": "pending"
     },
     {
       "source": "doc/articles/wiki/index.html",
       "target": "doc/articles/wiki/index.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:47:59.611Z"
+      "status": "pending"
     },
     {
       "source": "doc/articles/wiki/view.html",
       "target": "doc/articles/wiki/view.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:48:07.638Z"
+      "status": "pending"
     },
     {
       "source": "doc/build-cover.md",
       "target": "doc/build-cover.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:50:48.351Z"
+      "status": "pending"
     },
     {
       "source": "doc/cmd.html",
       "target": "doc/cmd.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:51:09.927Z"
+      "status": "pending"
     },
     {
       "source": "doc/code.html",
       "target": "doc/code.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:52:22.906Z"
+      "status": "pending"
     },
     {
       "source": "doc/comment.md",
       "target": "doc/comment.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:55:27.913Z"
+      "status": "pending"
     },
     {
       "source": "doc/conduct.md",
       "target": "doc/conduct.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:55:35.801Z"
+      "status": "pending"
     },
     {
       "source": "doc/contrib.md",
       "target": "doc/contrib.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:55:44.875Z"
+      "status": "pending"
     },
     {
       "source": "doc/contribute.html",
       "target": "doc/contribute.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:59:18.915Z"
+      "status": "pending"
     },
     {
       "source": "doc/copyright.md",
       "target": "doc/copyright.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T07:59:25.824Z"
+      "status": "pending"
     },
     {
       "source": "doc/database/cancel-operations.md",
       "target": "doc/database/cancel-operations.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:00:05.262Z"
+      "status": "pending"
     },
     {
       "source": "doc/database/change-data.md",
       "target": "doc/database/change-data.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:00:48.433Z"
+      "status": "pending"
     },
     {
       "source": "doc/database/execute-transactions.md",
       "target": "doc/database/execute-transactions.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:01:34.333Z"
+      "status": "pending"
     },
     {
       "source": "doc/database/index.md",
       "target": "doc/database/index.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:01:58.163Z"
+      "status": "pending"
     },
     {
       "source": "doc/database/manage-connections.md",
       "target": "doc/database/manage-connections.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:02:25.403Z"
+      "status": "pending"
     },
     {
       "source": "doc/database/open-handle.md",
       "target": "doc/database/open-handle.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:04:14.128Z"
+      "status": "pending"
     },
     {
       "source": "doc/database/prepared-statements.md",
       "target": "doc/database/prepared-statements.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:04:58.589Z"
+      "status": "pending"
     },
     {
       "source": "doc/database/querying.md",
       "target": "doc/database/querying.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:06:50.205Z"
+      "status": "pending"
     },
     {
       "source": "doc/database/sql-injection.md",
       "target": "doc/database/sql-injection.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:07:36.887Z"
+      "status": "pending"
     },
     {
       "source": "doc/debugging_with_gdb.md",
       "target": "doc/debugging_with_gdb.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:07:44.338Z"
+      "status": "pending"
     },
     {
       "source": "doc/devel/pre_go1.html",
       "target": "doc/devel/pre_go1.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:09:18.672Z"
+      "status": "pending"
     },
     {
       "source": "doc/devel/release.html",
       "target": "doc/devel/release.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:12:02.422Z"
+      "status": "pending"
     },
     {
       "source": "doc/devel/weekly.html",
       "target": "doc/devel/weekly.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:40:41.827Z"
+      "status": "pending"
     },
     {
       "source": "doc/diagnostics.html",
       "target": "doc/diagnostics.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:42:28.381Z"
+      "status": "pending"
     },
     {
       "source": "doc/docs.md",
       "target": "doc/docs.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:42:37.112Z"
+      "status": "pending"
     },
     {
       "source": "doc/editors.html",
       "target": "doc/editors.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:42:54.077Z"
+      "status": "pending"
     },
     {
       "source": "doc/effective_go.html",
       "target": "doc/effective_go.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T08:53:08.449Z"
+      "status": "pending"
     },
     {
       "source": "doc/faq.md",
       "target": "doc/faq.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:04:41.081Z"
+      "status": "pending"
     },
     {
       "source": "doc/fuzz.md",
       "target": "doc/fuzz.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:04:50.554Z"
+      "status": "pending"
     },
     {
       "source": "doc/gc-guide.html",
       "target": "doc/gc-guide.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:11:06.843Z"
+      "status": "pending"
     },
     {
       "source": "doc/gccgo_contribute.html",
       "target": "doc/gccgo_contribute.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:11:32.200Z"
+      "status": "pending"
     },
     {
       "source": "doc/gccgo_install.md",
       "target": "doc/gccgo_install.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:11:40.556Z"
+      "status": "pending"
     },
     {
       "source": "doc/gdb.html",
       "target": "doc/gdb.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:13:22.421Z"
+      "status": "pending"
     },
     {
       "source": "doc/go-get-install-deprecation.md",
       "target": "doc/go-get-install-deprecation.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:13:52.009Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.1.md",
       "target": "doc/go1.1.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:16:25.547Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.10.md",
       "target": "doc/go1.10.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:20:37.865Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.11.md",
       "target": "doc/go1.11.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:23:03.437Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.12.md",
       "target": "doc/go1.12.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:25:51.865Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.13.md",
       "target": "doc/go1.13.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:28:49.057Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.14.md",
       "target": "doc/go1.14.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:31:25.155Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.15.md",
       "target": "doc/go1.15.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:34:16.189Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.16.md",
       "target": "doc/go1.16.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:37:29.255Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.17.md",
       "target": "doc/go1.17.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:40:54.502Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.18.md",
       "target": "doc/go1.18.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T09:44:52.020Z"
+      "status": "pending"
     },
     {
       "source": "doc/go1.19.md",

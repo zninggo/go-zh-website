@@ -1,94 +1,54 @@
 <!--{
-	"title": "关于 go 命令"
+	"title": "关于go命令"
 }-->
 
-<p>Go 发行包中包含一个名为
-"<code><a href="/cmd/go/">go</a></code>" 的命令，
-该命令能够自动完成 Go 包（packages）和命令（commands）的下载、构建、安装和测试。
-本文将介绍我们编写这个新命令的原因、它的功能边界以及使用方法。</p>
+<p>Go 语言发行版中包含一个名为 "<code><a href="/cmd/go/">go</a></code>" 的命令，它可以自动完成 Go 包和命令的下载、构建、安装与测试。本文将探讨我们为何编写这个新命令，它的功能定位、非设计目标，以及如何使用它。</p>
 
 <h2>设计初衷</h2>
 
-<p>您可能看过早期 Go 技术讲座中 Rob Pike 的玩笑话：Go 语言的灵感诞生于等待一个大型 Google 服务器编译完成的漫长过程。
-这确实是 Go 诞生的真实动机：创建一门能够良好支撑 Google 编写和运行的大型软件开发的语言。
-从一开始我们就明确，这样的语言必须提供清晰表达代码库间依赖关系的方式，因此引入了包（package）分组和显式的导入（import）代码块。
-同样从一开始就清楚，您可能需要任意语法来描述导入的代码；这就是为什么导入路径是字符串字面量（string literal）。</p>
+<p>你可能在早期的 Go 技术演讲中看到过 Rob Pike 的玩笑，说 Go 的灵感源于等待大型谷歌服务器编译时的漫长等待。这确实是 Go 诞生的核心动机：构建一门能高效构建谷歌所编写和运行的大型软件的语言。从一开始就很明确，这样的语言必须能清晰表达代码库之间的依赖关系，因此有了包的分组和显式的导入代码块。同样明确的是，你可能需要任意语法来描述被导入的代码，这就是为什么导入路径是字符串字面量。</p>
 
-<p>Go 从诞生之初就有一个明确目标：仅依靠源代码本身包含的信息来构建 Go 程序，无需开发者编写 makefile 或任何 makefile 的现代替代品。
-如果 Go 需要配置文件来说明如何构建程序，那么它就已经失败了。</p>
+<p>Go 语言从诞生之初就有一个明确目标：仅凭源代码本身的信息就能构建 Go 代码，无需编写 Makefile 或任何其他现代构建系统的配置文件。如果 Go 需要配置文件来说明如何构建程序，那么 Go 就算失败了。</p>
 
-<p>最初，并没有 Go 编译器，早期开发的重点是先构建编译器，再为其构建库。
-为了快速推进，我们暂时使用 make 和编写 makefile 的方式来自动化构建 Go 代码的过程。
-当编译单个包需要多次调用 Go 编译器时，我们甚至用程序来自动生成 makefile。
-如果您查阅代码库的历史记录，应该还能找到这个程序。</p>
+<p>最初，Go 编译器尚未出现，早期开发集中在构建编译器和相应的库。为了便捷起见，我们曾使用 make 并编写 Makefile 来推迟构建过程的自动化。当编译单个包需要多次调用 Go 编译器时，我们甚至用程序自动生成 Makefile——你可以在仓库历史记录中找到它。</p>
 
-<p>新 go 命令的目的正是回归这一理想：Go 程序的编译过程不应依赖任何配置，除了编写必要的导入（import）语句外，开发者无需额外交付。</p>
+<p>新 go 命令的诞生，正是我们回归这一理想的体现：Go 程序的编译不应依赖额外的配置，开发者只需编写必要的导入语句即可。</p>
 
 <h2>配置与约定</h2>
 
-<p>实现无需配置系统的简洁性，在于建立并遵循约定。
-系统的有效性完全依赖于这些约定的遵守。
-Go 首次发布时，许多人发布的包必须安装在特定位置、使用特定名称、通过特定构建工具才能使用。
-这可以理解：这是大多数其他语言的工作方式。
-过去几年，我们不断提醒用户关于 <code>goinstall</code> 命令
-（现已由 <a href="/cmd/go/#hdr-Download_and_install_packages_and_dependencies"><code>go get</code></a> 取代）
-及其约定：第一，导入路径（import path）以已知方式从源代码的 URL 派生；
-第二，在本地文件系统中存储源代码的位置以已知方式从导入路径派生；
-第三，源代码树中的每个目录对应一个包（package）；
-第四，包的构建仅依赖源代码中的信息。
-如今，绝大多数包都遵循了这些约定。
-这使得 Go 生态系统更简单、更强大。</p>
+<p>实现免配置系统的关键在于建立约定。系统的有效性完全取决于这些约定是否被遵守。Go 语言刚发布时，许多发布的包要求必须安装在特定路径下、使用特定名称、依赖特定构建工具才能使用。这可以理解：大多数其他语言就是这样运作的。过去几年里，我们一直提醒用户使用 <code>goinstall</code> 命令（现已被 <a href="/cmd/go/#hdr-Download_and_install_packages_and_dependencies"><code>go get</code></a> 取代）并遵循其约定：首先，导入路径需通过已知规则从源代码 URL 推导；其次，本地文件系统中的存储路径需通过已知规则从导入路径推导；再次，源码树中的每个目录对应一个包；最后，包的构建仅依赖源代码中的信息。如今，绝大多数包都遵循这些约定，Go 生态因此变得更简洁强大。</p>
 
-<p>我们收到过许多请求，希望允许在包目录中放置 makefile 来提供超出源代码的少量额外配置。
-但这会引入新的规则。
-由于我们没有应允此类请求，才得以编写 go 命令，并彻底摆脱了对 make 或其他构建系统的依赖。</p>
+<p>我们曾收到许多请求，希望允许包目录中的 Makefile 提供少量额外配置。但这会引入新的规则。正因为我们没有接受这类请求，才得以编写出 go 命令，彻底摆脱了对 make 或其他构建系统的依赖。</p>
 
-<p>需要理解的是，go 命令不是一个通用的构建工具。
-它无法被配置，也只尝试构建 Go 包（packages）。
-这些是重要的简化假设：它们不仅简化了实现，更重要的是简化了工具本身的使用。</p>
+<p>需要理解的是，go 命令并非通用构建工具。它不可配置，也仅用于构建 Go 包。这是重要的简化假设：不仅简化了实现，更重要的是简化了工具本身的使用。</p>
 
-<h2>Go 的约定</h2>
+<h2>Go 的约定规范</h2>
 
 <p><code>go</code> 命令要求代码遵循一些关键且成熟的约定。</p>
 
-<p>首先，导入路径（import path）以已知方式从源代码的 URL 派生。
-对于 Bitbucket、GitHub、Google Code 和 Launchpad，代码仓库的根目录由仓库的主 URL 标识（不含 <code>https://</code> 前缀）。
-子目录则通过在该路径后添加名称来命名。
-例如，Google 日志包 <code>glog</code> 的源代码通过运行以下命令获取：</p>
+<p>第一，导入路径需通过已知规则从源代码 URL 推导。对于 Bitbucket、GitHub、Google Code 和 Launchpad 平台，仓库根目录通过主 URL 标识（不包含 <code>https://</code> 前缀），子目录则通过追加路径命名。例如，Google 日志包 <code>glog</code> 的源代码可通过以下命令获取：</p>
 
 <pre>
 git clone https://github.com/golang/glog
 </pre>
 
-因此，
-<a href="https://pkg.go.dev/github.com/golang/glog">glog</a>
-包的导入路径为 "<code>github.com/golang/glog</code>"。</p>
+<p>因此，<a href="https://pkg.go.dev/github.com/golang/glog">glog</a> 包的导入路径为 "<code>github.com/golang/glog</code>"。</p>
 
-<p>这些路径虽然较长，但换来了一个自动管理的导入路径命名空间，以及像 go 命令这样的工具能够通过未知导入路径推断出源代码获取位置的能力。</p>
+<p>这些路径虽然较长，但换来了自动管理的导入路径命名空间，以及像 go 命令这样的工具能够通过陌生导入路径推断源代码获取位置的能力。</p>
 
-<p>其次，源代码在本地文件系统中的存储位置以已知方式从导入路径派生，具体为
-<code>$GOPATH/src/&lt;import-path&gt;</code>。
-如果未设置 <code>$GOPATH</code>，则默认为用户主目录下的 <code>go</code> 子目录。
-如果 <code>$GOPATH</code> 设置为路径列表，go 命令会尝试列表中每个目录的
-<code>&lt;dir&gt;/src/&lt;import-path&gt;</code>。
-</p>
+<p>第二，本地文件系统中的源代码存储路径需通过已知规则从导入路径推导，具体为 <code>$GOPATH/src/&lt;import-path&gt;</code>。若未设置，<code>$GOPATH</code> 默认为用户主目录下的 <code>go</code> 子目录。若 <code>$GOPATH</code> 设置为路径列表，go 命令会依次尝试 <code>&lt;dir&gt;/src/&lt;import-path&gt;</code> 路径。</p>
 
-<p>根据约定，每个这样的目录树都包含一个名为 "<code>bin</code>" 的顶级目录（用于存放编译后的可执行文件）、一个名为 "<code>pkg</code>" 的顶级目录（用于存放可导入的已编译包），以及 "<code>src</code>" 目录（用于存放包源文件）。
-这种结构使得每个目录树都是自包含的：编译产物和源代码总是在相邻位置。</p>
+<p>按照约定，每个目录树包含顶层目录 "<code>bin</code>"（存放编译后的可执行文件）、顶层目录 "<code>pkg</code>"（存放可导入的编译包）以及 "<code>src</code>" 目录（存放包源代码）。这种结构使每个目录树自成体系：编译产物与源代码始终保持相邻。</p>
 
-<p>这些命名约定也支持反向操作：从目录名推导出其导入路径。
-这种映射对于 go 命令的许多子命令至关重要，下文将会看到。</p><p>第三，源代码树中的每个目录都对应一个单独的包（package）。通过将目录限制为单一包，我们无需创建混合导入路径——这种路径需要先指定目录再指定该目录内的包。此外，大多数文件管理工具和用户界面都以目录作为基本操作单元。将 Go 的核心单元——包——与文件系统结构绑定，意味着文件系统工具也能成为 Go 包管理工具。复制、移动或删除一个包，等同于复制、移动或删除一个目录。</p>
+<p>这些命名约定还支持反向推导：从目录名称推导出导入路径。这种映射关系对 go 命令的许多子命令至关重要，下文将具体说明。</p><p>第三，源代码树中的每个目录对应一个单独的包。通过将目录限制为单个包，我们无需创建混合导入路径——先指定目录再指定目录内的包。此外，大多数文件管理工具和用户界面都以目录作为基本工作单位。将 Go 语言的基本单元——包——与文件系统结构绑定，意味着文件系统工具可以直接作为 Go 包管理工具使用。复制、移动或删除一个包，就等同于复制、移动或删除一个目录。</p>
 
-<p>第四，每个包仅使用源文件中包含的信息进行构建。这使得工具更有可能适应不断变化的构建环境和条件。例如，如果我们允许额外的配置（如编译器标志或命令行指令），那么每当构建工具更新时，这些配置也需要同步更新；并且这种配置本质上与特定工具链的使用绑定。</p>
+<p>第四，每个包仅使用源代码文件中包含的信息进行构建。这使得工具更有可能适应不断变化的构建环境和条件。例如，如果我们允许使用额外的配置（如编译器标志或命令行指令），那么每次构建工具更新时都需要同步更新这些配置；同时，这也会使得配置与特定工具链的使用产生固有绑定。</p>
 
-<h2>go 命令入门</h2>
+<h2>go 命令入门指南</h2>
 
-<p>最后，简要介绍如何使用 go 命令。
-如前所述，Unix 系统上默认的 <code>$GOPATH</code> 路径是 <code>$HOME/go</code>。
-我们将在此存放程序。
-如需使用其他位置，可设置 <code>$GOPATH</code> 环境变量；详情请参阅<a href="/doc/code.html">《如何编写 Go 代码》</a>。
+<p>最后，简要介绍如何使用 go 命令。如前所述，Unix 系统上默认的 <code>$GOPATH</code> 是 <code>$HOME/go</code>，我们将把程序存储在此处。若要使用其他路径，可以设置 <code>$GOPATH</code>；详情请参阅<a href="/doc/code.html">《如何编写 Go 代码》</a>。
 
-<p>首先添加一些源代码。假设我们需要使用 codesearch 项目中的索引库以及一个左倾红黑树。可以通过 "<code>go get</code>" 子命令同时安装两者：</p>
+<p>我们首先添加一些源代码。假设我们要使用 codesearch 项目中的索引库以及一个左倾红黑树。可以通过 "<code>go get</code>" 子命令同时安装这两个库：</p>
 
 <pre>
 $ go get github.com/google/codesearch/index
@@ -96,12 +56,9 @@ $ go get github.com/petar/GoLLRB/llrb
 $
 </pre>
 
-<p>这两个项目现已下载并安装到 <code>$HOME/go</code> 目录下，其中包含
-<code>src/github.com/google/codesearch/index/</code> 和
-<code>src/github.com/petar/GoLLRB/llrb/</code> 两个目录，
-以及这些库及其依赖项的编译包（位于 <code>pkg/</code> 目录）。</p>
+<p>这两个项目现在已下载并安装到 <code>$HOME/go</code> 目录中，该目录包含 <code>src/github.com/google/codesearch/index/</code> 和 <code>src/github.com/petar/GoLLRB/llrb/</code> 两个子目录，以及这些库及其依赖项对应的已编译包（位于 <code>pkg/</code> 目录）。</p>
 
-<p>由于我们使用版本控制系统（Mercurial 和 Git）检出源码，源代码树还包含对应仓库中的其他文件（如相关包）。"<code>go list</code>" 子命令可列出其参数对应的导入路径，其中模式 "<code>./...</code>" 表示从当前目录（"<code>./</code>"）开始查找其下的所有包（"<code>...</code>"）：</p>
+<p>由于我们使用了版本控制系统（Mercurial 和 Git）来检出源代码，源代码树中还包含相应仓库中的其他文件，例如相关包。"<code>go list</code>" 子命令会列出其参数对应的导入路径，而模式 "<code>./...</code>" 表示从当前目录（"<code>./</code>"）开始查找该目录下的所有包（"<code>...</code>"）：</p>
 
 <pre>
 $ cd $HOME/go/src
@@ -117,22 +74,22 @@ github.com/petar/GoLLRB/llrb
 $
 </pre>
 
-<p>我们还可以测试这些包：</p>
+<p>我们也可以测试这些包：</p>
 
 <pre>
 $ go test ./...
 ?   	github.com/google/codesearch/cmd/cgrep	[无测试文件]
 ?   	github.com/google/codesearch/cmd/cindex	[无测试文件]
 ?   	github.com/google/codesearch/cmd/csearch	[无测试文件]
-ok  	github.com/google/codesearch/index	0.203s
-ok  	github.com/google/codesearch/regexp	0.017s
+ok  	github.com/google/codesearch/index	0.203秒
+ok  	github.com/google/codesearch/regexp	0.017秒
 ?   	github.com/google/codesearch/sparse	[无测试文件]
 ?       github.com/petar/GoLLRB/example          [无测试文件]
-ok      github.com/petar/GoLLRB/llrb             0.231s
+ok      github.com/petar/GoLLRB/llrb             0.231秒
 $
 </pre>
 
-<p>如果 go 子命令在未指定路径的情况下调用，它将在当前目录下执行操作：</p>
+<p>如果执行 go 子命令时未列出任何路径，它将作用于当前目录：</p>
 
 <pre>
 $ cd github.com/google/codesearch/regexp
@@ -140,29 +97,25 @@ $ go list
 github.com/google/codesearch/regexp
 $ go test -v
 === RUN   TestNstateEnc
---- PASS: TestNstateEnc (0.00s)
+--- PASS: TestNstateEnc (0.00秒)
 === RUN   TestMatch
---- PASS: TestMatch (0.00s)
+--- PASS: TestMatch (0.00秒)
 === RUN   TestGrep
---- PASS: TestGrep (0.00s)
+--- PASS: TestGrep (0.00秒)
 PASS
-ok  	github.com/google/codesearch/regexp	0.018s
+ok  	github.com/google/codesearch/regexp	0.018秒
 $ go install
 $
 </pre>
 
-<p>"<code>go install</code>" 子命令会将包的最新版本安装到 pkg 目录中。由于 go 命令能分析依赖图，"<code>go install</code>" 还会递归安装此包导入但已过期的所有依赖包。</p>
+<p>"<code>go install</code>" 子命令会将包的最新副本安装到 pkg 目录中。由于 go 命令能够分析依赖关系图，"<code>go install</code>" 还会递归地安装该包所导入的、但已过时的任何依赖包。</p>
 
-<p>请注意，"<code>go install</code>" 能够根据目录命名约定自动确定当前目录中包的导入路径名称。虽然如果能自定义存放源代码的目录名称会更方便（我们可能不会选择这么长的名称），但这需要工具额外的配置和复杂性。多输入一两个目录名，换来的是更简洁强大的特性，这点代价是值得的。</p>
+<p>请注意，"<code>go install</code>" 能够通过目录命名约定确定当前目录中包的导入路径。如果我们能自由选择存放源代码的目录名称可能会更方便（我们可能也不会选择这么长的名字），但这种能力需要在工具中引入额外的配置和复杂性。多输入一两个目录名，换来的是工具更简洁强大，这个代价是值得的。</p>
 
 <h2>局限性</h2>
 
-<p>如前所述，go 命令并非通用构建工具。
-特别是它不具备在构建过程中生成 Go 源文件的功能，尽管它提供了
-<a href="/cmd/go/#hdr-Generate_Go_files_by_processing_source"><code>go
-<code>generate</code></a> 工具，可以在构建前自动创建 Go 文件。
-对于更高级的构建需求，你可能需要编写 makefile（或自选构建工具的配置文件）来运行生成 Go 文件的工具，然后将这些生成的源文件提交到代码仓库。这对包作者而言虽然增加了工作量，但对用户而言却大大简化了流程——他们只需使用 "<code>go get</code>" 即可，无需获取和构建额外工具。</p>
+<p>如前所述，go 命令并非通用构建工具。特别是，它不具备在构建过程中生成 Go 源代码文件的功能，尽管它提供了<a href="/cmd/go/#hdr-Generate_Go_files_by_processing_source"><code>go generate</code></a>命令，可以在构建<em>之前</em>自动化创建 Go 文件。对于更高级的构建设置，您可能需要编写 makefile（或您选择的构建工具的配置文件）来运行生成 Go 文件的工具，然后将生成的源文件提交到您的版本库。这会给包作者带来额外工作，但对您的用户而言则大大减轻了负担——他们只需使用 "<code>go get</code>" 即可，无需获取和构建任何额外工具。</p>
 
 <h2>更多信息</h2>
 
-<p>欲了解更多详情，请阅读<a href="/doc/code.html">《如何编写 Go 代码》</a>并参阅<a href="/cmd/go/">go 命令文档</a>。</p>
+<p>欲了解更多详情，请阅读<a href="/doc/code.html">《如何编写 Go 代码》</a>并查看<a href="/cmd/go/">go 命令文档</a>。</p>
