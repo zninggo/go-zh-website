@@ -516,7 +516,8 @@
       "source": "doc/install/source.html",
       "target": "doc/install/source.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:49:04.972Z"
     },
     {
       "source": "doc/install-source.md",
