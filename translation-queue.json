@@ -1,0 +1,774 @@
+{
+  "timestamp": "2026-07-10T07:43:50.014Z",
+  "files": [
+    {
+      "source": "doc/articles/go_command.html",
+      "target": "doc/articles/go_command.md",
+      "type": "html",
+      "status": "completed",
+      "translatedAt": "2026-07-10T07:44:44.663Z"
+    },
+    {
+      "source": "doc/articles/index.html",
+      "target": "doc/articles/index.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/articles/race_detector.html",
+      "target": "doc/articles/race_detector.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/articles/wiki/edit.html",
+      "target": "doc/articles/wiki/edit.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/articles/wiki/index.html",
+      "target": "doc/articles/wiki/index.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/articles/wiki/view.html",
+      "target": "doc/articles/wiki/view.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/build-cover.md",
+      "target": "doc/build-cover.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/cmd.html",
+      "target": "doc/cmd.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/code.html",
+      "target": "doc/code.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/comment.md",
+      "target": "doc/comment.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/conduct.md",
+      "target": "doc/conduct.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/contrib.md",
+      "target": "doc/contrib.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/contribute.html",
+      "target": "doc/contribute.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/copyright.md",
+      "target": "doc/copyright.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/database/cancel-operations.md",
+      "target": "doc/database/cancel-operations.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/database/change-data.md",
+      "target": "doc/database/change-data.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/database/execute-transactions.md",
+      "target": "doc/database/execute-transactions.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/database/index.md",
+      "target": "doc/database/index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/database/manage-connections.md",
+      "target": "doc/database/manage-connections.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/database/open-handle.md",
+      "target": "doc/database/open-handle.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/database/prepared-statements.md",
+      "target": "doc/database/prepared-statements.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/database/querying.md",
+      "target": "doc/database/querying.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/database/sql-injection.md",
+      "target": "doc/database/sql-injection.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/debugging_with_gdb.md",
+      "target": "doc/debugging_with_gdb.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/devel/pre_go1.html",
+      "target": "doc/devel/pre_go1.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/devel/release.html",
+      "target": "doc/devel/release.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/devel/weekly.html",
+      "target": "doc/devel/weekly.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/diagnostics.html",
+      "target": "doc/diagnostics.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/docs.md",
+      "target": "doc/docs.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/editors.html",
+      "target": "doc/editors.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/effective_go.html",
+      "target": "doc/effective_go.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/faq.md",
+      "target": "doc/faq.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/fuzz.md",
+      "target": "doc/fuzz.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/gc-guide.html",
+      "target": "doc/gc-guide.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/gccgo_contribute.html",
+      "target": "doc/gccgo_contribute.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/gccgo_install.md",
+      "target": "doc/gccgo_install.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/gdb.html",
+      "target": "doc/gdb.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go-get-install-deprecation.md",
+      "target": "doc/go-get-install-deprecation.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.1.md",
+      "target": "doc/go1.1.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.10.md",
+      "target": "doc/go1.10.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.11.md",
+      "target": "doc/go1.11.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.12.md",
+      "target": "doc/go1.12.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.13.md",
+      "target": "doc/go1.13.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.14.md",
+      "target": "doc/go1.14.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.15.md",
+      "target": "doc/go1.15.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.16.md",
+      "target": "doc/go1.16.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.17.md",
+      "target": "doc/go1.17.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.18.md",
+      "target": "doc/go1.18.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.19.md",
+      "target": "doc/go1.19.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.2.md",
+      "target": "doc/go1.2.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.20.md",
+      "target": "doc/go1.20.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.21.md",
+      "target": "doc/go1.21.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.22.md",
+      "target": "doc/go1.22.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.23.md",
+      "target": "doc/go1.23.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.24.md",
+      "target": "doc/go1.24.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.25.md",
+      "target": "doc/go1.25.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.26.md",
+      "target": "doc/go1.26.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.27.md",
+      "target": "doc/go1.27.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.3.md",
+      "target": "doc/go1.3.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.4.md",
+      "target": "doc/go1.4.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.5.md",
+      "target": "doc/go1.5.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.6.md",
+      "target": "doc/go1.6.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.7.md",
+      "target": "doc/go1.7.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.8.md",
+      "target": "doc/go1.8.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.9.md",
+      "target": "doc/go1.9.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1.md",
+      "target": "doc/go1.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go1compat.html",
+      "target": "doc/go1compat.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/go_faq.md",
+      "target": "doc/go_faq.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/gopath_code.html",
+      "target": "doc/gopath_code.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/gopher/index.md",
+      "target": "doc/gopher/index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/help.md",
+      "target": "doc/help.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/index.html",
+      "target": "doc/index.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/install/gccgo.html",
+      "target": "doc/install/gccgo.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/install/source.html",
+      "target": "doc/install/source.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/install-source.md",
+      "target": "doc/install-source.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/install.html",
+      "target": "doc/install.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/manage-install.html",
+      "target": "doc/manage-install.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/developing.md",
+      "target": "doc/modules/developing.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/gomod-ref.md",
+      "target": "doc/modules/gomod-ref.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/layout.md",
+      "target": "doc/modules/layout.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/major-version.md",
+      "target": "doc/modules/major-version.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/managing-dependencies.md",
+      "target": "doc/modules/managing-dependencies.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/managing-source.md",
+      "target": "doc/modules/managing-source.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/pruning.md",
+      "target": "doc/modules/pruning.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/publishing.md",
+      "target": "doc/modules/publishing.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/release-workflow.md",
+      "target": "doc/modules/release-workflow.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/modules/version-numbers.md",
+      "target": "doc/modules/version-numbers.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/next.md",
+      "target": "doc/next.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/pgo.md",
+      "target": "doc/pgo.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/root.md",
+      "target": "doc/root.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/best-practices.md",
+      "target": "doc/security/best-practices.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/decisions.md",
+      "target": "doc/security/decisions.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/fips140.md",
+      "target": "doc/security/fips140.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/fuzz/index.md",
+      "target": "doc/security/fuzz/index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/fuzz/technical.md",
+      "target": "doc/security/fuzz/technical.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/index.md",
+      "target": "doc/security/index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/policy.md",
+      "target": "doc/security/policy.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/threat-model.md",
+      "target": "doc/security/threat-model.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/vuln/cna.md",
+      "target": "doc/security/vuln/cna.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/vuln/database.md",
+      "target": "doc/security/vuln/database.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/vuln/editor.md",
+      "target": "doc/security/vuln/editor.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/vuln/index.md",
+      "target": "doc/security/vuln/index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/vuln/vulncheck.md",
+      "target": "doc/security/vuln/vulncheck.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/vulncheck.md",
+      "target": "doc/security/vulncheck.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/vulndb/api.md",
+      "target": "doc/security/vulndb/api.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/vulndb/index.md",
+      "target": "doc/security/vulndb/index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/security/vulndb/policy.md",
+      "target": "doc/security/vulndb/policy.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/telemetry.md",
+      "target": "doc/telemetry.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/toolchain.md",
+      "target": "doc/toolchain.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tos.html",
+      "target": "doc/tos.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/add-a-test.html",
+      "target": "doc/tutorial/add-a-test.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/call-module-code.html",
+      "target": "doc/tutorial/call-module-code.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/compile-install.html",
+      "target": "doc/tutorial/compile-install.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/create-module.html",
+      "target": "doc/tutorial/create-module.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/database-access.md",
+      "target": "doc/tutorial/database-access.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/fuzz.md",
+      "target": "doc/tutorial/fuzz.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/generics.md",
+      "target": "doc/tutorial/generics.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/getting-started.html",
+      "target": "doc/tutorial/getting-started.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/govulncheck-ide.md",
+      "target": "doc/tutorial/govulncheck-ide.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/govulncheck.md",
+      "target": "doc/tutorial/govulncheck.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/greetings-multiple-people.html",
+      "target": "doc/tutorial/greetings-multiple-people.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/handle-errors.html",
+      "target": "doc/tutorial/handle-errors.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/index.html",
+      "target": "doc/tutorial/index.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/module-conclusion.html",
+      "target": "doc/tutorial/module-conclusion.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/random-greeting.html",
+      "target": "doc/tutorial/random-greeting.md",
+      "type": "html",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/web-service-gin.md",
+      "target": "doc/tutorial/web-service-gin.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "doc/tutorial/workspaces.md",
+      "target": "doc/tutorial/workspaces.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "learn/index.md",
+      "target": "learn/index.md",
+      "type": "markdown",
+      "status": "pending"
+    }
+  ]
+}
