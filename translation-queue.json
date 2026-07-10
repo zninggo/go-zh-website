@@ -691,7 +691,8 @@
       "source": "doc/security/vuln/cna.md",
       "target": "doc/security/vuln/cna.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:18:55.738Z"
     },
     {
       "source": "doc/security/vuln/database.md",
