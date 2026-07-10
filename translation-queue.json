@@ -166,7 +166,8 @@
       "source": "doc/debugging_with_gdb.md",
       "target": "doc/debugging_with_gdb.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T08:07:44.338Z"
     },
     {
       "source": "doc/devel/pre_go1.html",
