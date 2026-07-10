@@ -572,7 +572,8 @@
       "source": "doc/modules/managing-dependencies.md",
       "target": "doc/modules/managing-dependencies.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:06:15.863Z"
     },
     {
       "source": "doc/modules/managing-source.md",
