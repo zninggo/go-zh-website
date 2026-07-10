@@ -607,7 +607,8 @@
       "source": "doc/modules/version-numbers.md",
       "target": "doc/modules/version-numbers.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:10:49.720Z"
     },
     {
       "source": "doc/next.md",
