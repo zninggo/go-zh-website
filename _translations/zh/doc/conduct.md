@@ -1,5 +1,3 @@
-```json
-{
+<!--{
 	"Redirect": "/conduct"
-}
-```
+}-->
