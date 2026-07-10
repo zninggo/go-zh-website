@@ -481,7 +481,8 @@
       "source": "doc/gopath_code.html",
       "target": "doc/gopath_code.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:43:01.572Z"
     },
     {
       "source": "doc/gopher/index.md",
