@@ -796,7 +796,8 @@
       "source": "doc/tutorial/create-module.html",
       "target": "doc/tutorial/create-module.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:29:45.329Z"
     },
     {
       "source": "doc/tutorial/database-access.md",
