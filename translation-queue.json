@@ -250,7 +250,8 @@
       "source": "doc/gccgo_install.md",
       "target": "doc/gccgo_install.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T14:00:01.064Z"
     },
     {
       "source": "doc/gdb.html",

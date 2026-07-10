@@ -1,3 +1,5 @@
-<!--{
-	"重定向": "/doc/install/gccgo"
-}-->
+```json
+{
+    "重定向": "/doc/install/gccgo"
+}
+```
