@@ -1,0 +1,161 @@
+<!--{
+    "Title": "为多人返回问候语",
+    "Breadcrumb": true
+}-->
+
+<p>
+  在您对模块代码进行的最后修改中，您将添加支持在一次请求中为多人获取问候语的功能。换句话说，您需要处理多值输入，然后将输入中的值与多值输出进行配对。为此，您需要将一组名字传递给一个能够为每个名字返回问候语的函数。
+</p>
+
+<aside class="Note">
+  <strong>注意：</strong>本主题是多部分教程的一部分，该教程从<a href="/doc/tutorial/create-module.html">创建Go模块</a>开始。
+</aside>
+
+<p>
+  但这里有个问题。将<code>Hello</code>函数的参数从单个名字改为一组名字会改变函数的签名。如果您已经发布了<code>example.com/greetings</code>模块，并且用户已经编写了调用<code>Hello</code>的代码，那么这个更改会破坏他们的程序。</p>
+
+<p>
+  在这种情况下，更好的选择是编写一个具有不同名称的新函数。新函数将接受多个参数。这样可以保留旧函数以实现向后兼容。
+</p>
+
+<ol>
+  <li>
+    在 greetings/greetings.go 中，将代码修改为如下所示。
+
+    <pre>
+package greetings
+
+import (
+    "errors"
+    "fmt"
+    "math/rand"
+)
+
+// Hello 为指定的人返回问候语。
+func Hello(name string) (string, error) {
+    // 如果未提供名字，则返回带有消息的错误。
+    if name == "" {
+        return name, errors.New("empty name")
+    }
+    // 使用随机格式创建消息。
+    message := fmt.Sprintf(randomFormat(), name)
+    return message, nil
+}
+
+<ins>// Hellos 返回一个映射，该映射将每个指定的人与问候消息关联起来。
+func Hellos(names []string) (map[string]string, error) {
+    // 一个用于将名字与消息关联的映射。
+    messages := make(map[string]string)
+    // 遍历接收到的名字切片，为每个名字调用 Hello 函数以获取消息。
+    for _, name := range names {
+        message, err := Hello(name)
+        if err != nil {
+            return nil, err
+        }
+        // 在映射中，将检索到的消息与名字关联。
+        messages[name] = message
+    }
+    return messages, nil
+}</ins>
+
+// randomFormat 从一组问候消息中返回一个。返回的消息是随机选择的。
+func randomFormat() string {
+    // 消息格式的切片。
+    formats := []string{
+        "Hi, %v. Welcome!",
+        "Great to see you, %v!",
+        "Hail, %v! Well met!",
+    }
+
+    // 随机选择并返回一个消息格式。
+    return formats[rand.Intn(len(formats))]
+}
+</pre>
+
+    <p>
+      在此代码中，您：
+    </p>
+
+    <ul>
+      <li>
+        添加了一个<code>Hellos</code>函数，其参数是名字的切片而非单个名字。同时，您将其返回类型之一从<code>string</code>更改为<code>map</code>，以便可以返回名字到问候消息的映射。
+      </li>
+      <li>
+        让新的<code>Hellos</code>函数调用现有的<code>Hello</code>函数。这有助于减少重复，同时保留两个函数。
+      </li>
+      <li>
+        创建一个<code>messages</code>映射，用于将接收到的每个名字（作为键）与生成的消息（作为值）关联起来。在Go中，您使用以下语法初始化映射：<code>make(map[<em>键类型</em>]<em>值类型</em>)</code>。您让<code>Hellos</code>函数将此映射返回给调用者。有关映射的更多信息，请参阅Go博客上的<a href="/blog/maps">Go maps in action</a>。
+      </li>
+      <li>
+        遍历函数接收到的名字，检查每个名字是否具有非空值，然后为每个名字关联一条消息。在此<code>for</code>循环中，<code>range</code>返回两个值：循环中当前项的索引和该项值的副本。您不需要索引，因此使用Go的空标识符（下划线）忽略它。更多信息请参阅Effective Go中的<a href="/doc/effective_go.html#blank">The blank identifier</a>。
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    在您的 hello/hello.go 调用代码中，传递一个名字切片，然后打印返回的名字/消息映射的内容。
+
+    <p>
+      在 hello.go 中，将代码修改为如下所示。
+    </p>
+
+    <pre>
+package main
+
+import (
+    "fmt"
+    "log"
+
+    "example.com/greetings"
+)
+
+func main() {
+    // 设置预定义Logger的属性，包括日志条目前缀和禁用打印时间、源文件及行号的标志。
+    log.SetPrefix("greetings: ")
+    log.SetFlags(0)
+
+    <ins>// 名字的切片。
+    names := []string{"Gladys", "Samantha", "Darrin"}
+
+    // 请求这些名字的问候消息。
+    messages, err := greetings.Hellos(names)</ins>
+    if err != nil {
+        log.Fatal(err)
+    }
+    <ins>// 如果未返回错误，则将返回的消息映射打印到控制台。
+    fmt.Println(messages)</ins>
+}
+</pre>
+
+    <p>
+      通过这些更改，您：
+    </p>
+
+    <ul>
+      <li>
+        创建了一个<code>names</code>变量，作为包含三个名字的切片类型。
+      </li>
+      <li>
+        将<code>names</code>变量作为参数传递给<code>Hellos</code>函数。
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    在命令行中，切换到包含 hello/hello.go 的目录，然后使用<code>go run</code>确认代码是否正常工作。
+
+    <p>
+      输出应该是一个将名字与消息关联起来的映射的字符串表示，类似于以下内容：
+    </p><pre>
+$ go run .
+map[Darrin:Hail, Darrin! Well met! Gladys:Hi, Gladys. Welcome! Samantha:Hail, Samantha! Well met!]
+</pre>
+
+本主题介绍了使用映射来表示名称/值对的概念。同时也阐述了通过在新功能或功能变更时，为模块实现新函数以保持向后兼容性的思路。关于向后兼容性的更多信息，请参阅<a href="/blog/module-compatibility">保持模块兼容性</a>。
+
+接下来，您将使用Go语言内置功能为代码创建单元测试。
+
+<p class="Navigation">
+  <a class="Navigation-prev" href="/doc/tutorial/random-greeting.html">&lt; 返回随机问候语</a>
+  <a class="Navigation-next" href="/doc/tutorial/add-a-test.html">添加测试 &gt;</a>
+</p>

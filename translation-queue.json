@@ -845,7 +845,8 @@
       "source": "doc/tutorial/greetings-multiple-people.html",
       "target": "doc/tutorial/greetings-multiple-people.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:50:01.311Z"
     },
     {
       "source": "doc/tutorial/handle-errors.html",
