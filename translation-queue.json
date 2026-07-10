@@ -656,7 +656,8 @@
       "source": "doc/security/fuzz/index.md",
       "target": "doc/security/fuzz/index.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:16:19.492Z"
     },
     {
       "source": "doc/security/fuzz/technical.md",
