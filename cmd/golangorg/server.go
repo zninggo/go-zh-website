@@ -19,6 +19,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"path"
@@ -285,30 +286,18 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Playground endpoints - proxy to go.dev
+	// Playground endpoints - reverse proxy to go.dev
 	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
-		body, _ := io.ReadAll(r.Body)
-		proxyReq, err := http.NewRequestWithContext(r.Context(), "POST", "https://go.dev/_/compile?"+r.URL.RawQuery, bytes.NewReader(body))
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.Write([]byte(`{"Errors":"","Events":null}`))
-			return
+		target, _ := url.Parse("https://go.dev")
+		proxy := &httputil.ReverseProxy{
+			Director: func(req *http.Request) {
+				req.URL.Scheme = target.Scheme
+				req.URL.Host = target.Host
+				req.Host = target.Host
+			},
 		}
-		proxyReq.Header.Set("Content-Type", r.Header.Get("Content-Type"))
-
-		client := &http.Client{Timeout: 30 * time.Second}
-		resp, err := client.Do(proxyReq)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.Write([]byte(`{"Errors":"","Events":null}`))
-			return
-		}
-		defer resp.Body.Close()
-
-		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.WriteHeader(resp.StatusCode)
-		io.Copy(w, resp.Body)
+		proxy.ServeHTTP(w, r)
 	})
 	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
