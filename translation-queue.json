@@ -880,7 +880,8 @@
       "source": "doc/tutorial/web-service-gin.md",
       "target": "doc/tutorial/web-service-gin.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:56:44.430Z"
     },
     {
       "source": "doc/tutorial/workspaces.md",
