@@ -355,7 +355,8 @@
       "source": "doc/go1.20.md",
       "target": "doc/go1.20.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T14:49:30.291Z"
     },
     {
       "source": "doc/go1.21.md",
