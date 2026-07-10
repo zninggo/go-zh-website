@@ -642,7 +642,8 @@
       "source": "doc/security/decisions.md",
       "target": "doc/security/decisions.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:13:42.489Z"
     },
     {
       "source": "doc/security/fips140.md",
