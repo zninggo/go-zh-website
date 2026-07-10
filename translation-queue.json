@@ -761,7 +761,8 @@
       "source": "doc/toolchain.md",
       "target": "doc/toolchain.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:26:56.346Z"
     },
     {
       "source": "doc/tos.html",
