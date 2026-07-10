@@ -754,7 +754,8 @@
       "source": "doc/telemetry.md",
       "target": "doc/telemetry.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:24:31.932Z"
     },
     {
       "source": "doc/toolchain.md",
