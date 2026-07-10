@@ -1,0 +1,608 @@
+---
+title: Go 1.15 发布说明
+---
+
+<!--
+注意：在本文档及本目录的其他文档中，约定是使用非等宽空格设置等宽短语，例如
+`hello` `world`。
+请勿发送 CL 删除此类短语的内部标签。
+-->
+
+<style>
+  main ul li { margin: 0.5em 0; }
+</style>
+
+## Go 1.15 简介 {#introduction}
+
+最新的 Go 版本 1.15 在 [Go 1.14](go1.14) 发布六个月后发布。
+其大部分更改集中在工具链、运行时和库的实现中。
+一如既往，此版本遵循 Go 1 [兼容性承诺](/doc/go1compat.html)。
+我们预期几乎所有 Go 程序将继续像以前一样编译和运行。
+
+Go 1.15 包含了对[链接器的实质性改进](#linker)，
+改进了[在高核心数下为小对象的内存分配](#runtime)，并
+弃用了 [X.509 CommonName](#commonname)。
+`GOPROXY` 现在支持跳过返回错误的代理，并且
+新增了一个[嵌入式 tzdata 包](#time/tzdata)。
+
+## 语言变更 {#language}
+
+语言没有变化。
+
+## 平台移植 {#ports}
+
+### Darwin {#darwin}
+
+正如 Go 1.14 发布说明中[宣布](go1.14#darwin)的那样，
+Go 1.15 要求 macOS 10.12 Sierra 或更高版本；对先前版本的支持已停止。
+
+<!-- golang.org/issue/37610, golang.org/issue/37611, CL 227582, and CL 227198  -->
+正如 Go 1.14 发布说明中[宣布](/doc/go1.14#darwin)的那样，
+Go 1.15 停止支持 macOS、iOS、iPadOS、watchOS 和 tvOS 上的 32 位二进制文件
+（即 `darwin/386` 和 `darwin/arm` 平台）。Go 继续支持
+64 位的 `darwin/amd64` 和 `darwin/arm64` 平台。
+
+### Windows {#windows}
+
+<!-- CL 214397 and CL 230217 -->
+当提供 `-buildmode=pie` cmd/link 标志时，Go 现在生成 Windows ASLR 可执行文件。
+在 Windows 上，Go 命令默认使用 `-buildmode=pie`。
+
+<!-- CL 227003 -->
+`-race` 和 `-msan` 标志现在总是启用 `-d=checkptr`，该检查 `unsafe.Pointer` 的使用情况。这在之前对除 Windows 以外的所有操作系统都已如此。
+
+<!-- CL 211139 -->
+Go 构建的 DLL 不再在进程收到信号（例如终端中的 Ctrl-C）时导致进程退出。
+
+### Android {#android}
+
+<!-- CL 235017, golang.org/issue/38838 -->
+在为 Android 链接二进制文件时，Go 1.15 显式选择
+最新 NDK 版本中可用的 `lld` 链接器。
+`lld` 链接器避免了在某些设备上的崩溃，并且计划
+在未来某个 NDK 版本中成为默认的 NDK 链接器。
+
+### OpenBSD {#openbsd}
+
+<!-- CL 234381 -->
+Go 1.15 添加了对 `GOARCH=arm` 和 `GOARCH=arm64` 上 OpenBSD 6.7 的支持。
+先前的 Go 版本已经支持了 `GOARCH=386` 和 `GOARCH=amd64` 上的 OpenBSD 6.7。
+
+### RISC-V {#riscv}
+
+<!-- CL 226400, CL 226206, and others -->
+在 Linux 上 64 位 RISC-V 平台（`GOOS=linux`, `GOARCH=riscv64`）
+的稳定性和性能改进方面取得了进展。它现在也支持异步抢占。
+
+### 386 {#386}
+
+<!-- golang.org/issue/40255 -->
+Go 1.15 是支持仅含 x87 浮点硬件（`GO386=387`）的最后一个版本。
+未来的版本将要求 386 架构至少支持 SSE2，这将 Go 的
+最低 `GOARCH=386` 要求提高到 Intel Pentium 4（2000 年发布）
+或 AMD Opteron/Athlon 64（2003 年发布）。
+
+## 工具 {#tools}
+
+### Go 命令 {#go-command}
+
+<!-- golang.org/issue/37367 -->
+`GOPROXY` 环境变量现在支持跳过返回错误的代理。
+代理 URL 现在可以用逗号（`,`）或竖线字符（`|`）分隔。
+如果一个代理 URL 后面跟着逗号，则 `go` 命令仅在收到 404 或 410 HTTP 响应后
+才会尝试列表中的下一个代理。如果一个代理 URL 后面跟着竖线字符，
+则 `go` 命令在遇到任何错误后都会尝试列表中的下一个代理。
+请注意，`GOPROXY` 的默认值仍然是 `https://proxy.golang.org,direct`，
+它在出现错误时不会回退到 `direct`。
+
+#### `go` `test` {#go-test}
+
+<!-- https://golang.org/issue/36134 -->
+更改 `-timeout` 标志现在会使缓存的测试结果失效。
+当使用较短的超时重新调用 `go` `test` 时，使用长超时运行的测试缓存结果将不再被视为通过。
+
+#### 标志解析 {#go-flag-parsing}
+
+<!-- https://golang.org/cl/211358 -->
+修复了 `go` `test` 和 `go` `vet` 中的多个标志解析问题。
+值得注意的是，在 `GOFLAGS` 中指定的标志处理得更加一致，并且
+`-outputdir` 标志现在将相对路径解释为相对于 `go` 命令的工作目录
+（而不是每个独立测试的工作目录）。
+
+#### 模块缓存 {#module-cache}
+
+<!-- https://golang.org/cl/219538 -->
+模块缓存的位置现在可以通过 `GOMODCACHE` 环境变量设置。
+`GOMODCACHE` 的默认值是 `GOPATH[0]/pkg/mod`，即此更改前模块缓存的位置。
+
+<!-- https://golang.org/cl/221157 -->
+现在提供了一个解决 Windows “访问被拒绝” 错误的方案，该错误
+发生在访问模块缓存的 `go` 命令中，由外部程序并发扫描文件系统引起
+（参见 [issue #36568](/issue/36568)）。该方案默认未启用，
+因为当低于 1.14.2 和 1.13.10 版本的 Go 与同一模块缓存并发运行时使用它不安全。
+可以通过显式设置环境变量 `GODEBUG=modcacheunzipinplace=1` 来启用它。
+
+### Vet {#vet}
+
+#### 关于 string(x) 的新警告 {#vet-string-int}
+
+<!-- CL 212919, 232660 -->
+vet 工具现在会对 `string(x)` 形式的转换发出警告，
+其中 `x` 是除 `rune` 或 `byte` 之外的整数类型。
+Go 的使用经验表明，许多此类转换错误地假设 `string(x)`
+的求值结果是整数 `x` 的字符串表示。
+实际上，它求值结果为包含 `x` 值的 UTF-8 编码的字符串。
+例如，`string(9786)` 的求值结果不是字符串 `"9786"`；
+它求值结果为字符串 `"\xe2\x98\xba"`，即 `"☺"`。正确使用 `string(x)` 的代码可以重写为 `string(rune(x))`。
+或者，在某些情况下，调用 `utf8.EncodeRune(buf, x)` 并使用合适的字节切片 `buf` 可能是正确的解决方案。
+其他代码很可能应该使用 `strconv.Itoa` 或 `fmt.Sprint`。
+
+这个新的 vet 检查在使用 `go` `test` 时默认启用。
+
+我们正在考虑在未来的 Go 版本中禁止这种转换。
+也就是说，语言可能会改为仅在 `x` 的类型为 `rune` 或 `byte` 时才允许 `string(x)` 这样的整数 `x`。
+这样的语言变更将不向后兼容。
+我们正在将此 vet 检查作为修改语言的第一步试验。
+
+#### 针对不可能的接口转换的新警告 {#vet-impossible-interface}
+
+<!-- CL 218779, 232660 -->
+vet 工具现在会对从一个接口类型到另一个接口类型的类型断言发出警告，如果该类型断言总是会失败。
+当两个接口类型都实现了具有相同名称但不同方法签名的方法时，就会发生这种情况。
+
+编写总是失败的类型断言没有意义，因此任何触发此 vet 检查的代码都应该被重写。
+
+这个新的 vet 检查在使用 `go` `test` 时默认启用。
+
+我们正在考虑在未来的 Go 版本中禁止不可能的接口类型断言。
+这样的语言变更将不向后兼容。
+我们正在将此 vet 检查作为修改语言的第一步试验。
+
+## 运行时 {#runtime}
+
+<!-- CL 221779 -->
+如果 `panic` 的参数值类型派生自以下任意一种类型：`bool`、`complex64`、`complex128`、`float32`、`float64`、`int`、`int8`、`int16`、`int32`、`int64`、`string`、`uint`、`uint8`、`uint16`、`uint32`、`uint64`、`uintptr`，那么现在会打印该值本身，而不仅仅是它的地址。
+以前，只有当值正好是这些类型时才会这样。
+
+<!-- CL 228900 -->
+在 Unix 系统上，如果使用 `kill` 命令或 `kill` 系统调用向 Go 程序发送 `SIGSEGV`、`SIGBUS` 或 `SIGFPE` 信号，并且该信号未通过 [`os/signal.Notify`](/pkg/os/signal/#Notify) 进行处理，那么 Go 程序现在将可靠地崩溃并打印堆栈跟踪。
+在早期版本中，其行为是不可预测的。
+
+<!-- CL 221182, CL 229998 -->
+小对象的分配现在在高核心数下的性能表现好得多，并且最坏情况的延迟也更低。
+
+<!-- CL 216401 -->
+将小整数值转换为接口值不再导致内存分配。
+
+<!-- CL 216818 -->
+在已关闭的 channel 上进行非阻塞接收现在与在打开的 channel 上进行非阻塞接收的性能相当。
+
+## 编译器 {#compiler}
+
+<!-- CL 229578 -->
+`unsafe` 包的[安全规则](/pkg/unsafe/#Pointer)允许在调用某些函数时将 `unsafe.Pointer` 转换为 `uintptr`。
+以前，在某些情况下，编译器允许多重链式转换（例如，`syscall.Syscall(…,`
+`uintptr(uintptr(ptr)),` `…)`）。
+编译器现在要求恰好一次转换。使用了多重转换的代码应进行更新以满足安全规则。
+
+<!-- CL 230544, CL 231397 -->
+Go 1.15 通过消除某些类型的 GC 元数据并更积极地消除未使用的类型元数据，使典型的二进制文件大小比 Go 1.14 减少了约 5%。
+
+<!-- CL 219357, CL 231600 -->
+在 `GOARCH=amd64` 上，工具链现在通过将函数对齐到 32 字节边界并填充跳转指令来缓解 [Intel CPU 错误 SKX102](https://www.intel.com/content/www/us/en/support/articles/000055650/processors.html)。
+虽然这种填充会增加二进制文件大小，但上述二进制大小的改进完全弥补了这一点。
+
+<!-- CL 222661 -->
+Go 1.15 为编译器和汇编器添加了一个 `-spectre` 标志，以允许启用 Spectre 缓解措施。
+这些措施几乎永远不需要，主要是作为一种“深度防御”机制提供。
+详见 [Spectre 维基页面](/wiki/Spectre)。
+
+<!-- CL 228578 -->
+编译器现在会对适用于声明时没有意义的 `//go:` 编译器指令报错 "misplaced compiler directive"。
+这类误用的指令以前是无效的，但会被编译器静默忽略。
+
+<!-- CL 206658, CL 205066 -->
+编译器的 `-json` 优化日志现在报告大的（>= 128 字节）拷贝操作，并包含逃逸分析决策的解释。
+
+## 链接器 {#linker}
+
+本次发布包含了对 Go 链接器的实质性改进，这降低了链接器的资源使用（时间和内存），并提高了代码的健壮性/可维护性。
+
+对于一组具有代表性的大型 Go 程序，在 `amd64` 架构上运行的基于 `ELF` 的操作系统（Linux、FreeBSD、NetBSD、OpenBSD、Dragonfly 和 Solaris）中，链接平均快了 20%，内存使用减少了 30%。对于其他架构/操作系统的组合，改进幅度较小。
+
+链接器性能提升的关键因素是重新设计的对象文件格式，以及内部阶段的改进以增加并发性（例如，并行地对符号应用重定位）。
+Go 1.15 中的对象文件比其 1.14 版本略大。
+
+这些变更是一个多版本项目的组成部分，旨在[实现 Go 链接器的现代化](/s/better-linker)，这意味着预期在未来的发布版本中还会有额外的链接器改进。
+
+<!-- CL 207877 -->
+链接器现在默认为 `linux/amd64` 和 `linux/arm64` 上的 `-buildmode=pie` 使用内部链接模式，因此这些配置不再需要 C 链接器。
+外部链接模式（这在 Go 1.14 中是 `-buildmode=pie` 的默认模式）仍然可以通过 `-ldflags=-linkmode=external` 标志来请求。
+
+## Objdump {#objdump}
+
+<!-- CL 225459 -->
+[objdump](/cmd/objdump/) 工具现在支持使用 `-gnu` 标志以 GNU 汇编器语法进行反汇编。
+
+## 标准库 {#library}
+
+### 新的嵌入式 tzdata 包 {#time_tzdata}<!-- CL 224588 -->
+Go 1.15 新增了一个包 [`time/tzdata`](/pkg/time/tzdata/)，该包允许将时区数据库嵌入程序中。导入此包（通过 `import _ "time/tzdata"`）可使程序在本地系统缺少时区数据库的情况下也能查找时区信息。此外，您也可以在构建时使用 `-tags timetzdata` 标签来嵌入时区数据库。以上两种方式都会使程序大小增加约 800 KB。
+
+### Cgo {#cgo}
+
+<!-- CL 235817 -->
+Go 1.15 将 C 类型 `EGLConfig` 翻译为 Go 类型 `uintptr`。此变更类似于 Go 1.12 及更高版本对 `EGLDisplay`、Darwin 的 CoreFoundation 和 Java 的 JNI 类型的处理方式。详情请参阅 [cgo 文档](/cmd/cgo/#hdr-Special_cases)。
+
+<!-- CL 250940 -->
+自 Go 1.15.3 起，cgo 不再允许 Go 代码在栈或堆上分配未定义的结构体类型（即仅声明为 `struct S;` 或类似形式的 C 结构体）。Go 代码仅能使用指向这些类型的指针。此前，在栈或堆上分配此类结构体实例并传递指针或完整结构体值给 C 代码始终是不安全且难以正确工作的，现在此行为已被禁止。修复方法是：要么重写 Go 代码仅使用指针，要么通过包含相应的 C 头文件确保 Go 代码能看到该结构体的完整定义。
+
+### X.509 CommonName 废弃 {#commonname}
+
+<!-- CL 231379 -->
+当证书不存在 Subject Alternative Names 时，将 X.509 证书的 `CommonName` 字段视为主机名的过时、遗留行为现已被默认禁用。您可以通过在 `GODEBUG` 环境变量中添加 `x509ignoreCN=0` 来临时重新启用此行为。
+
+请注意，如果 `CommonName` 本身是无效的主机名，则无论 `GODEBUG` 如何设置，该字段都会被忽略。无效主机名包括：包含字母、数字、连字符和下划线之外字符的名称，以及包含空标签或尾部点号的名称。
+
+### 标准库的次要变更 {#minor_library_changes}
+
+一如既往，标准库有多处次要变更和更新，这些都遵循了 Go 1 的[兼容性承诺](/doc/go1compat)。
+
+#### [bufio](/pkg/bufio/)
+
+<!-- CL 225357, CL 225557 -->
+当 [`Scanner`](/pkg/bufio/#Scanner) 配合使用了行为不正确的 [`io.Reader`](/pkg/io/#Reader)（其 `Read` 方法错误地返回负数）时，`Scanner` 将不再引发 panic，而是返回新的错误 [`ErrBadReadCount`](/pkg/bufio/#ErrBadReadCount)。
+
+<!-- bufio -->
+
+#### [context](/pkg/context/)
+
+<!-- CL 223777 -->
+现在明确禁止使用 nil 父上下文创建派生的 `Context`。任何通过 [`WithValue`](/pkg/context/#WithValue)、[`WithDeadline`](/pkg/context/#WithDeadline) 或 [`WithCancel`](/pkg/context/#WithCancel) 函数尝试这样做都将导致 panic。
+
+<!-- context -->
+
+#### [crypto](/pkg/crypto/)
+
+<!-- CL 231417, CL 225460 -->
+[`crypto/rsa`](/pkg/crypto/rsa/)、[`crypto/ecdsa`](/pkg/crypto/ecdsa/) 和 [`crypto/ed25519`](/pkg/crypto/ed25519/) 包中的 `PrivateKey` 和 `PublicKey` 类型现新增了 `Equal` 方法，用于比较密钥是否等效或为公钥创建类型安全的接口。该方法签名与 [`go-cmp` 的相等性定义](https://pkg.go.dev/github.com/google/go-cmp/cmp#Equal) 兼容。
+
+<!-- CL 224937 -->
+[`Hash`](/pkg/crypto/#Hash) 现已实现 [`fmt.Stringer`](/pkg/fmt/#Stringer) 接口。
+
+<!-- crypto -->
+
+#### [crypto/ecdsa](/pkg/crypto/ecdsa/)
+
+<!-- CL 217940 -->
+新增的 [`SignASN1`](/pkg/crypto/ecdsa/#SignASN1) 和 [`VerifyASN1`](/pkg/crypto/ecdsa/#VerifyASN1) 函数支持以标准的 ASN.1 DER 编码格式生成和验证 ECDSA 签名。
+
+<!-- crypto/ecdsa -->
+
+#### [crypto/elliptic](/pkg/crypto/elliptic/)
+
+<!-- CL 202819 -->
+新增的 [`MarshalCompressed`](/pkg/crypto/elliptic/#MarshalCompressed) 和 [`UnmarshalCompressed`](/pkg/crypto/elliptic/#UnmarshalCompressed) 函数支持对 NIST 椭圆曲线点进行压缩格式的编码和解码。
+
+<!-- crypto/elliptic -->
+
+#### [crypto/rsa](/pkg/crypto/rsa/)
+
+<!-- CL 226203 -->
+根据 RFC 8017，[`VerifyPKCS1v15`](/pkg/crypto/rsa/#VerifyPKCS1v15) 现会拒绝缺少前导零的无效短签名。
+
+<!-- crypto/rsa -->
+
+#### [crypto/tls](/pkg/crypto/tls/)
+
+<!-- CL 214977 -->
+新增的 [`Dialer`](/pkg/crypto/tls/#Dialer) 类型及其 [`DialContext`](/pkg/crypto/tls/#Dialer.DialContext) 方法允许使用上下文与 TLS 服务器建立连接并进行握手。
+
+<!-- CL 229122 -->
+在 [`Config`](/pkg/crypto/tls/#Config) 类型上新增了 [`VerifyConnection`](/pkg/crypto/tls/#Config.VerifyConnection) 回调，允许对每个连接执行自定义验证逻辑。该回调可以访问包含对端证书、SCT 和 Stapled OCSP 响应的 [`ConnectionState`](/pkg/crypto/tls/#ConnectionState)。
+
+<!-- CL 230679 -->
+自动生成的会话票据密钥现在每 24 小时自动轮换一次，有效期为 7 天，以限制其对前向保密性的影响。
+
+<!-- CL 231317 -->
+在 TLS 1.2 及更早版本中，用于恢复连接的会话密钥的会话票据有效期现在也限制为 7 天，同样是为了限制其对前向保密性的影响。
+
+<!-- CL 231038 -->
+RFC 8446 中规定的客户端降级保护检查现已被强制执行。这可能会导致客户端在遇到行为类似于未授权降级攻击的中间件时出现连接错误。
+
+<!-- CL 208226 -->
+[`SignatureScheme`](/pkg/crypto/tls/#SignatureScheme)、[`CurveID`](/pkg/crypto/tls/#CurveID) 和 [`ClientAuthType`](/pkg/crypto/tls/#ClientAuthType) 现已实现 [`fmt.Stringer`](/pkg/fmt/#Stringer) 接口。
+
+<!-- CL 236737 -->
+客户端恢复连接时，[`ConnectionState`](/pkg/crypto/tls/#ConnectionState) 的 `OCSPResponse` 和 `SignedCertificateTimestamps` 字段现在会被重新填充。<!-- CL 227840 -->
+[`tls.Conn`](/pkg/crypto/tls/#Conn) 现在对永久断开的连接返回一个不透明的错误，该错误封装了临时的 [`net.Error`](/pkg/net/http/#Error)。要访问原始的 `net.Error`，请使用 [`errors.As`](/pkg/errors/#As)（或 [`errors.Unwrap`](/pkg/errors/#Unwrap)）而不是类型断言。
+
+<!-- crypto/tls -->
+
+#### [crypto/x509](/pkg/crypto/x509/)
+
+<!-- CL 231378, CL 231380, CL 231381 -->
+如果证书上的名称或被验证的名称（使用 [`VerifyOptions.DNSName`](/pkg/crypto/x509/#VerifyOptions.DNSName) 或 [`VerifyHostname`](/pkg/crypto/x509/#Certificate.VerifyHostname)）无效，现在它们将不进行进一步处理（不考虑通配符或去除尾部点），直接进行大小写不敏感的比较。无效名称包括包含字母、数字、连字符和下划线以外字符的名称、包含空标签的名称，以及证书上带有尾部点的名称。
+
+<!-- CL 217298 -->
+新的 [`CreateRevocationList`](/pkg/crypto/x509/#CreateRevocationList) 函数和 [`RevocationList`](/pkg/crypto/x509/#RevocationList) 类型允许创建符合 RFC 5280 的 X.509 v2 证书吊销列表。
+
+<!-- CL 227098 -->
+[`CreateCertificate`](/pkg/crypto/x509/#CreateCertificate) 现在会自动生成 `SubjectKeyId`，如果模板是 CA 且未明确指定一个。
+
+<!-- CL 228777 -->
+如果模板指定了 `MaxPathLen` 但本身不是 CA，[`CreateCertificate`](/pkg/crypto/x509/#CreateCertificate) 现在会返回错误。
+
+<!-- CL 205237 -->
+在除 macOS 以外的 Unix 系统上，`SSL_CERT_DIR` 环境变量现在可以是冒号分隔的列表。
+
+<!-- CL 227037 -->
+在 macOS 上，二进制文件现在总是链接到 `Security.framework` 以提取系统信任根，无论 cgo 是否可用。由此产生的行为应该与操作系统验证器更加一致。
+
+<!-- crypto/x509 -->
+
+#### [crypto/x509/pkix](/pkg/crypto/x509/pkix/)
+
+<!-- CL 229864, CL 240543 -->
+如果 [`ExtraNames`](/pkg/crypto/x509/pkix/#Name.ExtraNames) 为 nil，[`Name.String`](/pkg/crypto/x509/pkix/#Name.String) 现在会打印 [`Names`](/pkg/crypto/x509/pkix/#Name.Names) 中的非标准属性。
+
+<!-- crypto/x509/pkix -->
+
+#### [database/sql](/pkg/database/sql/)
+
+<!-- CL 145758 -->
+新的 [`DB.SetConnMaxIdleTime`](/pkg/database/sql/#DB.SetConnMaxIdleTime) 方法允许在连接空闲一段时间后将其从连接池中移除，而不考虑连接的总生命周期。[`DBStats.MaxIdleTimeClosed`](/pkg/database/sql/#DBStats.MaxIdleTimeClosed) 字段显示因 `DB.SetConnMaxIdleTime` 而关闭的连接总数。
+
+<!-- CL 214317 -->
+新的 [`Row.Err`](/pkg/database/sql/#Row.Err) getter 允许在不调用 `Row.Scan` 的情况下检查查询错误。
+
+<!-- database/sql -->
+
+#### [database/sql/driver](/pkg/database/sql/driver/)
+
+<!-- CL 174122 -->
+新的 [`Validator`](/pkg/database/sql/driver/#Validator) 接口可以由 `Conn` 实现，以允许驱动程序指示连接是否有效或是否应被丢弃。
+
+<!-- database/sql/driver -->
+
+#### [debug/pe](/pkg/debug/pe/)
+
+<!-- CL 222637 -->
+该包现在定义了 PE 文件格式使用的 `IMAGE_FILE`、`IMAGE_SUBSYSTEM` 和 `IMAGE_DLLCHARACTERISTICS` 常量。
+
+<!-- debug/pe -->
+
+#### [encoding/asn1](/pkg/encoding/asn1/)
+
+<!-- CL 226984 -->
+[`Marshal`](/pkg/encoding/asn1/#Marshal) 现在根据 X.690 DER 对 SET OF 的组件进行排序。
+
+<!-- CL 227320 -->
+[`Unmarshal`](/pkg/encoding/asn1/#Unmarshal) 现在拒绝不符合 X.690 DER 最小编码要求的标签和对象标识符。
+
+<!-- encoding/asn1 -->
+
+#### [encoding/json](/pkg/encoding/json/)
+
+<!-- CL 199837 -->
+该包现在对解码时的最大嵌套深度有一个内部限制。这减少了深度嵌套的输入可能使用大量栈内存，甚至导致 "goroutine stack exceeds limit"（协程栈超限）恐慌的可能性。
+
+<!-- encoding/json -->
+
+#### [flag](/pkg/flag/)
+
+<!-- CL 221427 -->
+当 `flag` 包遇到 `-h` 或 `-help`，且这些标志未定义时，现在会打印使用说明。如果 [`FlagSet`](/pkg/flag/#FlagSet) 是使用 [`ExitOnError`](/pkg/flag/#ExitOnError) 创建的，[`FlagSet.Parse`](/pkg/flag/#FlagSet.Parse) 以前会以状态码 2 退出。在此版本中，`-h` 或 `-help` 的退出状态已更改为 0。特别地，这适用于命令行标志的默认处理。
+
+#### [fmt](/pkg/fmt/)
+
+<!-- CL 215001 -->
+打印动词 `%#g` 和 `%#G` 现在会保留浮点值的尾随零。
+
+<!-- fmt -->
+
+#### [go/format](/pkg/go/format/)
+
+<!-- golang.org/issue/37476, CL 231461, CL 240683 -->
+[`Source`](/pkg/go/format/#Source) 和 [`Node`](/pkg/go/format/#Node) 函数现在在格式化 Go 源代码时，会规范化数字字面量的前缀和指数。这与 [`gofmt`](/pkg/cmd/gofmt/) 命令自 [Go 1.13](/doc/go1.13#gofmt) 实现以来的行为一致。
+
+<!-- go/format -->
+
+#### [html/template](/pkg/html/template/)
+
+<!-- CL 226097 -->
+该包现在在所有 JavaScript 和 JSON 上下文中使用 Unicode 转义（`\uNNNN`）。这修复了 `application/ld+json` 和 `application/json` 上下文中的转义错误。
+
+<!-- html/template -->
+
+#### [io/ioutil](/pkg/io/ioutil/)
+
+<!-- CL 212597 -->
+[`TempDir`](/pkg/io/ioutil/#TempDir) 和 [`TempFile`](/pkg/io/ioutil/#TempFile) 现在拒绝包含路径分隔符的模式。也就是说，像 `ioutil.TempFile("/tmp",` `"../base*")` 这样的调用将不再成功。这防止了意外的目录遍历。
+
+<!-- io/ioutil -->
+
+#### [math/big](/pkg/math/big/)
+
+<!-- CL 230397 -->
+新的 [`Int.FillBytes`](/pkg/math/big/#Int.FillBytes) 方法允许序列化到固定大小的预分配字节切片。
+
+<!-- math/big -->
+
+#### [math/cmplx](/pkg/math/cmplx/)#### [math/cmplx](/pkg/math/cmplx/)
+
+<!-- CL 220689 -->
+此包中的函数已更新，以符合 C99 标准（附录 G IEC 60559 兼容的复数算术），特别是在处理特殊参数如无穷大（infinity）、非数字（NaN）和带符号零（signed zero）方面。
+
+<!-- math/cmplx-->
+
+#### [net](/pkg/net/)
+
+<!-- CL 228645 -->
+如果一个 I/O 操作超过了由 [`Conn.SetDeadline`](/pkg/net/#Conn)、`Conn.SetReadDeadline` 或 `Conn.SetWriteDeadline` 方法设置的截止时间，它现在将返回一个错误，该错误是或包装了 [`os.ErrDeadlineExceeded`](/pkg/os/#ErrDeadlineExceeded)。这可以用来可靠地检测一个错误是否由超时引起。早期版本建议调用错误的 `Timeout` 方法，但 I/O 操作可能会返回 `Timeout` 方法返回 `true` 的错误，即使截止时间实际上并未超过。
+
+<!-- CL 228641 -->
+新的 [`Resolver.LookupIP`](/pkg/net/#Resolver.LookupIP) 方法支持既特定于网络类型又接受上下文的 IP 查找。
+
+#### [net/http](/pkg/net/http/)
+
+<!-- CL 231418, CL 231419 -->
+作为针对请求走私攻击的加固措施，解析现在变得更加严格：非 ASCII 空白字符不再像空格（SP）和水平制表符（HTAB）那样被修剪，并且不再支持 "`identity`" `Transfer-Encoding`。
+
+<!-- net/http -->
+
+#### [net/http/httputil](/pkg/net/http/httputil/)
+
+<!-- CL 230937 -->
+当传入 `Request.Header` 映射中对应 `X-Forwarded-For` 字段的条目为 `nil` 时，[`ReverseProxy`](/pkg/net/http/httputil/#ReverseProxy) 现在支持不修改 `X-Forwarded-For` 头。
+
+<!-- CL 224897 -->
+当由 [`ReverseProxy`](/pkg/net/http/httputil/#ReverseProxy) 处理的协议切换（如 WebSocket）请求被取消时，现在会正确关闭后端连接。
+
+#### [net/http/pprof](/pkg/net/http/pprof/)
+
+<!-- CL 147598, CL 229537 -->
+所有分析端点现在都支持一个 "`seconds`" 参数。当该参数存在时，端点会分析指定秒数的时间并报告差异。"`seconds`" 参数在 `cpu` 分析和追踪端点中的含义保持不变。
+
+#### [net/url](/pkg/net/url/)
+
+<!-- CL 227645 -->
+新的 [`URL`](/pkg/net/url/#URL) 字段 `RawFragment` 和方法 [`EscapedFragment`](/pkg/net/url/#URL.EscapedFragment) 提供了关于特定片段（fragment）确切编码的详细信息和控制。它们类似于 `RawPath` 和 [`EscapedPath`](/pkg/net/url/#URL.EscapedPath)。
+
+<!-- CL 207082 -->
+新的 [`URL`](/pkg/net/url/#URL) 方法 [`Redacted`](/pkg/net/url/#URL.Redacted) 返回 URL 的字符串形式，其中任何密码都被替换为 `xxxxx`。
+
+#### [os](/pkg/os/)
+
+<!-- CL -->
+如果一个 I/O 操作超过了由 [`File.SetDeadline`](/pkg/os/#File.SetDeadline)、[`File.SetReadDeadline`](/pkg/os/#File.SetReadDeadline) 或 [`File.SetWriteDeadline`](/pkg/os/#File.SetWriteDeadline) 方法设置的截止时间，它现在将返回一个错误，该错误是或包装了 [`os.ErrDeadlineExceeded`](/pkg/os/#ErrDeadlineExceeded)。这可以用来可靠地检测一个错误是否由超时引起。早期版本建议调用错误的 `Timeout` 方法，但 I/O 操作可能会返回 `Timeout` 方法返回 `true` 的错误，即使截止时间实际上并未超过。
+
+<!-- CL 232862 -->
+`os` 和 `net` 包现在会自动重试因 `EINTR` 而失败的系统调用。此前这会导致偶发失败，这种情况在 Go 1.14 中因增加了异步抢占而变得更加常见。现在这个问题已得到透明处理。
+
+<!-- CL 229101 -->
+[`os.File`](/pkg/os/#File) 类型现在支持 [`ReadFrom`](/pkg/os/#File.ReadFrom) 方法。这允许在某些系统上使用 [`io.Copy`](/pkg/io/#Copy) 将数据从一个 `os.File` 复制到另一个 `os.File` 时，调用 `copy_file_range` 系统调用。其结果是，[`io.CopyBuffer`](/pkg/io/#CopyBuffer) 在复制到 `os.File` 时可能不会总是使用提供的缓冲区。如果程序希望强制使用提供的缓冲区，可以通过编写 `io.CopyBuffer(struct{ io.Writer }{dst}, src, buf)` 来实现。
+
+#### [plugin](/pkg/plugin/)
+
+<!-- CL 182959 -->
+在 macOS 上，`-buildmode=plugin` 现在支持（并默认启用）DWARF 信息生成。
+
+<!-- CL 191617 -->
+`freebsd/amd64` 现在支持使用 `-buildmode=plugin` 构建。
+
+#### [reflect](/pkg/reflect/)
+
+<!-- CL 228902 -->
+`reflect` 包现在禁止访问所有未导出字段的方法，而此前它允许访问未导出的嵌入字段的方法。依赖先前行为的代码应更新为访问封闭变量的相应提升方法。
+
+#### [regexp](/pkg/regexp/)
+
+<!-- CL 187919 -->
+新的 [`Regexp.SubexpIndex`](/pkg/regexp/#Regexp.SubexpIndex) 方法返回正则表达式中具有给定名称的第一个子表达式的索引。
+
+<!-- regexp -->
+
+#### [runtime](/pkg/runtime/)
+
+<!-- CL 216557 -->
+包括 [`ReadMemStats`](/pkg/runtime/#ReadMemStats) 和 [`GoroutineProfile`](/pkg/runtime/#GoroutineProfile) 在内的几个函数，如果垃圾回收正在进行，现在将不再阻塞。
+
+#### [runtime/pprof](/pkg/runtime/pprof/)
+
+<!-- CL 189318 -->
+协程（goroutine）分析现在包含了每个协程在分析时关联的配置文件标签。此功能尚未在使用 `debug=2` 报告的分析中实现。
+
+#### [strconv](/pkg/strconv/)
+
+<!-- CL 216617 -->
+新增了 [`FormatComplex`](/pkg/strconv/#FormatComplex) 和 [`ParseComplex`](/pkg/strconv/#ParseComplex) 用于处理复数。
+
+[`FormatComplex`](/pkg/strconv/#FormatComplex) 将复数转换为 `(a+bi)` 形式的字符串，其中 `a` 和 `b` 分别是实部和虚部。
+
+[`ParseComplex`](/pkg/strconv/#ParseComplex) 将字符串转换为指定精度的复数。`ParseComplex` 接受 `N+Ni` 格式的复数。
+
+<!-- strconv -->
+
+#### [sync](/pkg/sync/)<!-- CL 205899, golang.org/issue/33762 -->
+新的方法
+[`Map.LoadAndDelete`](/pkg/sync/#Map.LoadAndDelete)
+会原子性地删除键值，并在键存在时返回其之前的值。
+
+<!-- CL 205899 -->
+方法
+[`Map.Delete`](/pkg/sync/#Map.Delete)
+效率更高。
+
+<!-- sync -->
+
+#### [syscall](/pkg/syscall/)
+
+<!-- CL 231638 -->
+在 Unix 系统上，使用
+[`SysProcAttr`](/pkg/syscall/#SysProcAttr)
+的函数现在将拒绝同时设置 `Setctty`
+和 `Foreground` 字段，因为两者都使用
+`Ctty` 字段，但使用方式不兼容。
+我们预期极少有现有程序会同时设置这两个字段。
+
+设置 `Setctty` 字段现在要求
+`Ctty` 字段被设置为一个在子进程中的文件描述符编号，
+该编号由 `ProcAttr.Files` 字段确定。
+使用子进程描述符总是有效的，但过去在某些情况下，
+使用父进程文件描述符也可能碰巧有效。
+一些设置了 `Setctty` 的程序需要将
+`Ctty` 的值改为使用子进程描述符编号。
+
+<!-- CL 220578 -->
+现在可以在 `windows/amd64` 上[调用](/pkg/syscall/#Proc.Call)
+返回浮点值的系统调用。
+
+#### [testing](/pkg/testing/)
+
+<!-- golang.org/issue/28135 -->
+`testing.T` 类型现在拥有一个
+[`Deadline`](/pkg/testing/#T.Deadline) 方法，
+该方法会报告测试二进制文件将超过其
+超时限制的时间。
+
+<!-- golang.org/issue/34129 -->
+`TestMain` 函数不再需要显式调用
+`os.Exit`。如果一个 `TestMain` 函数返回，
+测试二进制文件将使用 `m.Run` 返回的值
+来调用 `os.Exit`。
+
+<!-- CL 226877, golang.org/issue/35998 -->
+新的方法
+[`T.TempDir`](/pkg/testing/#T.TempDir) 和
+[`B.TempDir`](/pkg/testing/#B.TempDir)
+返回在测试结束时会自动清理的
+临时目录。
+
+<!-- CL 229085 -->
+`go` `test` `-v` 现在按
+测试名称分组输出，而不再在每行都打印测试名称。
+
+<!-- testing -->
+
+#### [text/template](/pkg/text/template/)
+
+<!-- CL 226097 -->
+[`JSEscape`](/pkg/text/template/#JSEscape) 现在
+一致地使用 Unicode 转义符（`\u00XX`），这些转义符
+与 JSON 兼容。
+
+<!-- text/template -->
+
+#### [time](/pkg/time/)
+
+<!-- CL 220424, CL 217362, golang.org/issue/33184 -->
+新的方法
+[`Ticker.Reset`](/pkg/time/#Ticker.Reset)
+支持更改 Ticker 的间隔时长。
+
+<!-- CL 227878 -->
+当返回错误时，[`ParseDuration`](/pkg/time/#ParseDuration) 现在会
+将原始值放在引号中返回。
+
+<!-- time -->
