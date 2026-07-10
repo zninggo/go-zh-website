@@ -614,7 +614,8 @@
       "source": "doc/next.md",
       "target": "doc/next.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:11:00.068Z"
     },
     {
       "source": "doc/pgo.md",
