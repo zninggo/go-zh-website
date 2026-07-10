@@ -488,7 +488,8 @@
       "source": "doc/gopher/index.md",
       "target": "doc/gopher/index.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:43:11.997Z"
     },
     {
       "source": "doc/help.md",
