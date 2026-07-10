@@ -33,7 +33,8 @@
       "source": "doc/articles/wiki/index.html",
       "target": "doc/articles/wiki/index.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T12:29:16.459Z"
     },
     {
       "source": "doc/articles/wiki/view.html",
