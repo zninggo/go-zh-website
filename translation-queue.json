@@ -726,7 +726,8 @@
       "source": "doc/security/vulncheck.md",
       "target": "doc/security/vulncheck.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:22:31.975Z"
     },
     {
       "source": "doc/security/vulndb/api.md",
