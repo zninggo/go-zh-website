@@ -670,7 +670,8 @@
       "source": "doc/security/index.md",
       "target": "doc/security/index.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:17:29.190Z"
     },
     {
       "source": "doc/security/policy.md",
