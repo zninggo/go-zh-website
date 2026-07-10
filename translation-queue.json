@@ -159,7 +159,8 @@
       "source": "doc/database/sql-injection.md",
       "target": "doc/database/sql-injection.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T08:07:36.887Z"
     },
     {
       "source": "doc/debugging_with_gdb.md",
