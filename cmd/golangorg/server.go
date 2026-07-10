@@ -285,7 +285,7 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Playground proxy - forward to go.dev (CDN must bypass /_/* paths)
+	// Playground proxy - forward to go.dev
 	playProxy := func(path string) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			body, _ := io.ReadAll(r.Body)
