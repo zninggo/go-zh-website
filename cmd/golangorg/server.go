@@ -285,39 +285,13 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Playground endpoints - proxy compile to go.dev
+	// Playground compile - redirect POST body to go.dev via 307
 	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
-		body, _ := io.ReadAll(r.Body)
-		r.Body.Close()
-
-		proxyURL := "https://go.dev/_/compile"
+		target := "https://go.dev/_/compile"
 		if r.URL.RawQuery != "" {
-			proxyURL += "?" + r.URL.RawQuery
+			target += "?" + r.URL.RawQuery
 		}
-
-		req, err := http.NewRequest("POST", proxyURL, bytes.NewReader(body))
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.Write([]byte(`{"Errors":"playground proxy error","Events":null}`))
-			return
-		}
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		req.Header.Set("User-Agent", "GoZhWebsite/1.0")
-
-		client := &http.Client{Timeout: 30 * time.Second}
-		resp, err := client.Do(req)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.Write([]byte(`{"Errors":"playground unavailable","Events":null}`))
-			return
-		}
-		defer resp.Body.Close()
-
-		respBody, _ := io.ReadAll(resp.Body)
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.WriteHeader(resp.StatusCode)
-		w.Write(respBody)
+		http.Redirect(w, r, target, http.StatusTemporaryRedirect)
 	})
 	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
