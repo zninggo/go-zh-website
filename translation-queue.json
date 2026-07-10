@@ -649,7 +649,8 @@
       "source": "doc/security/fips140.md",
       "target": "doc/security/fips140.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:14:30.089Z"
     },
     {
       "source": "doc/security/fuzz/index.md",
