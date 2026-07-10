@@ -1,67 +1,69 @@
 <!--{
-	"Title": "为 GCC 的 gccgo 前端做贡献",
+	"Title": "为gccgo前端做贡献",
 	"Breadcrumb": true
 }-->
 
-<h2>简介</h2>
+<h2>引言</h2>
 
 <p>
-以下是关于为 GCC 的 gccgo 前端做贡献的一些说明。
-有关为 Go 项目中除 gccgo 以外的其他部分做贡献的信息，请参见
-<a href="/doc/contribute.html">为 Go 项目做贡献</a>。
-有关自行构建 gccgo 的信息，请参见
-<a href="/doc/install/gccgo">安装和使用 gccgo</a>。
-关于使用 gccgo 前端进行开发的更多详细过程信息，请参见
-gofrontend 代码仓库中的
-<a href="https://go.googlesource.com/gofrontend/+/master/HACKING">HACKING 文件</a>。
+本文档是关于为GCC的gccgo前端做贡献的一些说明。
+有关除gccgo之外Go项目其他部分的贡献信息，请参阅<a href="/doc/contribute.html">为Go项目做贡献</a>。
+有关自行构建gccgo的信息，请参阅<a href="/doc/install/gccgo">安装和使用gccgo</a>。
+关于使用gccgo前端进行开发的具体流程细节，请参阅gofrontend仓库中的<a href="https://go.googlesource.com/gofrontend/+/master/HACKING">HACKING文件</a>。
 </p>
 
 <h2>法律前提</h2>
 
 <p>
-您必须遵守 <a href="/doc/contribute.html#copyright">Go 版权规则</a>，这些规则适用于对 gccgo 前端及关联的 libgo 库所做的所有更改。属于 GCC 而非 gccgo 部分的代码，必须遵循通用的
-<a href="https://gcc.gnu.org/contribute.html">GCC 贡献规则</a>。
+所有对gccgo前端及其关联libgo库的修改都必须遵守<a href="/doc/contribute.html#copyright">Go版权规则</a>。
+属于GCC而非gccgo部分的代码必须遵循通用的<a href="https://gcc.gnu.org/contribute.html">GCC贡献规则</a>。
 </p>
 
 <h2>代码</h2>
 
 <p>
-gccgo 前端的主源代码仓库位于
-<a href="https://go.googlesource.com/gofrontend">https://go.googlesource.com/gofrontend</a>。
-该仓库在
-<a href="https://github.com/golang/gofrontend">https://github.com/golang/gofrontend</a>
-进行了镜像。
-主源代码本身无法独立构建，只能与 GCC 一起构建（将来可能会支持其他编译器）。对 gccgo 前端所做的更改也会被应用到托管在 <code>gcc.gnu.org</code> 的 GCC 源代码仓库中。在 <code>gofrontend</code> 仓库中，<code>go</code> 目录会被镜像到 GCC 仓库中的 <code>gcc/go/gofrontend</code> 目录，而 <code>gofrontend</code> 仓库中的 <code>libgo</code> 目录则会被镜像到 GCC 的 <code>libgo</code> 目录。此外，来自 <a href="https://go.googlesource.com/go">Go 主仓库</a> 的 <code>test</code> 目录也会被镜像到 GCC 仓库中的 <code>gcc/testsuite/go.test/test</code> 目录。
+gccgo前端的源代码主要托管在<a href="https://go.googlesource.com/gofrontend">https://go.googlesource.com/gofrontend</a>，
+同时在<a href="https://github.com/golang/gofrontend">https://github.com/golang/gofrontend</a>有镜像副本。
+这些主源代码本身无法独立构建，必须与GCC协同编译（未来可能支持其他编译器）。
+对gccgo前端所做的更改也会同步到托管在<code>gcc.gnu.org</code>的GCC代码仓库中。
+在<code>gofrontend</code>仓库中，<code>go</code>目录对应GCC仓库中的<code>gcc/go/gofrontend</code>目录；
+<code>gofrontend</code>的<code>libgo</code>目录则对应GCC仓库的<code>libgo</code>目录。
+此外，<a href="https://go.googlesource.com/go">Go主仓库</a>中的<code>test</code>目录会被镜像到GCC仓库的<code>gcc/testsuite/go.test/test</code>目录。
 </p>
 
 <p>
-这些目录的更改始终从主源代码仓库流向 GCC 仓库。除了通过在主源代码中进行更改然后进行镜像之外，绝不应该在 GCC 仓库中直接修改这些文件。
+这些目录的更改始终从主源代码流向GCC仓库。文件应仅在主源代码中修改后通过镜像同步更新，不应直接在GCC仓库中修改。
 </p>
 
 <p>
-gccgo 前端是用 C++ 编写的。它遵循 GNU 和 GCC 的 C++ 编码标准。在为前端编写代码时，请遵循周围代码的格式。几乎所有特定于 GCC 的代码都不在前端本身，而是在 GCC 源代码的 <code>gcc/go</code> 目录中。
+gccgo前端采用C++编写，遵循GNU和GCC的C++编码规范。
+编写前端代码时，请保持与周围代码一致的格式。
+几乎所有GCC特定的代码都不在前端本身，而是位于GCC源码的<code>gcc/go</code>目录中。
 </p>
 
 <p>
-gccgo 的运行时库与 <a href="https://go.googlesource.com/go">Go 主仓库</a> 中的库大部分相同。Go 仓库中的库代码会定期使用 shell 脚本 <code>libgo/merge.sh</code> 合并到 <code>gofrontend</code> 仓库的 <code>libgo/go</code> 目录中，然后再合并到 GCC 仓库中。因此，大多数库的更改应在 Go 主仓库中进行。<code>libgo/go</code> 目录之外的文件是 gccgo 特有的；不过，<code>libgo/runtime</code> 中的一些文件是基于 Go 主仓库中 <code>src/runtime</code> 目录下的文件。
+gccgo的运行时库与<a href="https://go.googlesource.com/go">Go主仓库</a>中的库基本相同。
+Go仓库中的库代码会定期通过shell脚本<code>libgo/merge.sh</code>合并到<code>gofrontend</code>的<code>libgo/go</code>目录，进而同步到GCC仓库。
+因此，大多数库代码的修改应在Go主仓库中进行。
+<code>libgo/go</code>目录外的文件是gccgo特有的；但<code>libgo/runtime</code>中的部分文件基于Go主仓库的<code>src/runtime</code>目录。
 </p>
 
 <h2>测试</h2>
 
 <p>
-所有补丁都必须经过测试。引入新测试失败的补丁是不可接受的。
+所有补丁都必须经过测试，引入新测试失败的补丁是不可接受的。
 </p>
 
 <p>
-要运行 gccgo 测试套件，请在您的构建目录中运行 <code>make check-go</code>。这将运行 <code>gcc/testsuite/go.*</code> 下的各种测试，并且还会运行 <code>libgo</code> 测试套件。这份来自 Go 主仓库的测试副本是通过 <code>gcc/testsuite/go.test/go-test.exp</code> 中的 DejaGNU 脚本来运行的。
+要运行gccgo测试套件，请在构建目录中执行<code>make check-go</code>命令。这将运行<code>gcc/testsuite/go.*</code>下的各类测试以及<code>libgo</code>测试套件。从Go主仓库获取的测试副本通过<code>gcc/testsuite/go.test/go-test.exp</code>中的DejaGNU脚本运行。
 </p>
 
 <p>
-大多数新的测试应该提交到 Go 主仓库，以便稍后镜像到 GCC 仓库中。如果有针对 gccgo 的特定测试需求，它们应放在 GCC 仓库的 <code>gcc/testsuite/go.go-torture</code> 或 <code>gcc/testsuite/go.dg</code> 目录中。
+大多数新增测试应提交至Go主仓库，之后镜像同步到GCC仓库。如需针对gccgo的特定测试，应放入GCC仓库的<code>gcc/testsuite/go.go-torture</code>或<code>gcc/testsuite/go.dg</code>目录。
 </p>
 
 <h2>提交更改</h2>
 
 <p>
-对 Go 前端的更改应遵循与 Go 主仓库相同的流程，只是针对的是 <code>gofrontend</code> 项目和 <code>gofrontend-dev@googlegroups.com</code> 邮件列表，而不是 <code>go</code> 项目和 <code>golang-dev@googlegroups.com</code> 邮件列表。然后，这些更改将被合并到 GCC 源代码中。
+对Go前端的更改应遵循与Go主仓库相同的流程，但需使用<code>gofrontend</code>项目和<code>gofrontend-dev@googlegroups.com</code>邮件列表，而非<code>go</code>项目和<code>golang-dev@googlegroups.com</code>邮件列表。这些更改随后将被合并到GCC源码中。
 </p>
