@@ -1,0 +1,4513 @@
+<!--{
+	"Title": "每周快照历史"
+}-->
+
+<p>本页面汇总了 Go 语言标记的每周快照之间的变更。此类快照现已不再创建，本页面仅作为历史参考保留。</p>
+
+<p>如需了解最新信息，请参阅<a href="/change">变更日志</a>和<a href="https://groups.google.com/group/golang-dev/">开发者邮件列表</a>。</p>
+
+<h2 id="2012-03-27">2012-03-27 (<a href="release.html#go1">Go 1</a>)</h2>
+
+<pre>
+* cmd/dist: 修复 go1 版本的检测问题。
+* cmd/go: 添加缺失的错误检查（感谢 Evan Shaw），
+         允许工具名称中包含下划线（感谢 Shenghou Ma），
+         错误修复，
+         从 goinstall 复制 tag_test.go，
+         更清晰地解释版本信息，
+         始终尊重 $GOBIN 环境变量，
+         更新以适配 go1 标签格式。
+* cmd/godoc: 规范化自定义路径重定向，
+            修复 App Engine 版本问题，
+            使用虚拟文件系统实现 -templates 标志。
+* codewalk/sharemem.xml: 修复文件引用。
+* crypto/tls: 不选择没有共同曲线的 ECC 密码套件。
+* doc: 添加《JSON-RPC：接口的故事》文章（感谢 Francisco Souza），
+       描述 Windows MSI 安装程序为实验性功能，
+       从软件包列表链接到 Go 项目仪表板，
+       更新维基教程模板和模板讨论，
+       以及许多细微修复。
+* exp/types: 泛化 GCImporter API。
+* go/build: cgoEnabled 不再为 cmd/dist 所知（感谢 Shenghou Ma），
+            修复导入检查。
+* godoc: 使“概述”部分可折叠。
+* misc/dist: 许多修复和调整。
+* misc/emacs: 修复缩进错误。
+* misc/goplay: 修复 IE8 上的错误（感谢 Yasuhiro Matsumoto）。
+* net: 忽略来自 syscall.Accept 的 ECONNABORTED（感谢 Devon H. O'Dell）。
+* os: 在 FileMode 缓冲区中添加缺失的字节（感谢 Stefan Nilsson）。
+* path/filepath: 在 Windows 的 EvalSymlinks 中将驱动器号转换为大写（感谢 Alex Brainman），
+                 更正 EvalSymlinks 中的注释（感谢 Alex Brainman），
+                 使用 Windows GetShortPathName API 强制 GetLongPathName 完成其工作（感谢 Alex Brainman），
+                 Windows 驱动器号不能是数字（感谢 Alex Brainman）。
+* run.bash: 编译代码演练文件。
+* runtime: 恢复最简单情况下的死锁检测（感谢 Rémy Oudompheng），
+           绕过死锁检测中的误报。
+* text/template: 修复包注释中的拼写错误。
+* windows: 安装程序修复（感谢 Joe Poirier）。
+</pre>
+
+<h2 id="2012-03-22">2012-03-22 (Go 1 发布候选版 2)</h2>
+
+<pre>
+与上周的快照类似，此快照是另一个 Go 1 发布候选版。
+此快照中的一个重要变更包括 Windows 安装程序的修复。此快照中的更改：
+* 5l, 6l, 8l：修复了栈分割逻辑中接近默认段大小的栈的问题。
+* archive/zip：将 r.zip 从磁盘移至 reader_test.go 中。
+* build：在构建过程中捕获 API 变更，
+    增加了 Windows 构建时的操作（感谢亚历克斯·布雷恩曼），
+    为耗时较长的运行时测试延长了超时时间（感谢马圣厚），
+    在测试前取消设置 GOPATH（感谢马圣厚）。
+* cmd/cgo：为 gccgo 添加了函数导出支持（感谢雷米·乌多芬），
+    修复了 gccgo 中 errno 的处理。
+* cmd/go：在 Darwin 上默认添加 -fno-common（感谢马圣厚），
+    不向 errPrintedOutput 添加详细信息，
+    修复了目录到导入路径的转换，
+    使构建错误更明显，
+    为 gccgo 创建的对象文件使用 .o 而非 .{5,6,8}，
+    解决了运行 cgo 时偶尔出现的 ETXTBSY 问题。
+* cmd/godoc：在 playground 中添加了 toys 和 tour 按钮，
+    通知用户 playground 不适用于本地 godoc，
+    将示例标题样式设为链接风格，
+    在 zip 文件中使用 *goroot 作为基础路径，
+    在 html 模板中使用 FormatText 格式化代码，
+    为标签页使用更短的标题。
+* cmd/gofmt：在用法中显示 ASCII（感谢松本泰弘）。
+* cmd/pack：在文件名中也将 '\\' 识别为路径分隔符（感谢马圣厚）。
+* crypto/tls：始终在被请求时发送证书消息。
+* doc/install：移除了对“Go 教程”的引用（感谢马圣厚）。
+* doc/play：使用 []rune 代替 []int（感谢松本泰弘）。
+* doc：添加了《Go 并发模式：超时处理，继续前进》文章（感谢弗朗西斯科·索萨），
+    添加了《Go image/draw 包》文章并将代码片段转换为 Go1 格式，
+    添加了《大量 Gobs 数据》文章（感谢弗朗西斯科·索萨），
+    添加了《Godoc：记录 Go 代码》文章（感谢弗朗西斯科·索萨），
+    添加了《JSON 与 Go》文章（感谢弗朗西斯科·索萨），
+    更新了 gccgo 安装说明，
+    对大多数文档进行了小幅更新。
+* flag：添加了示例。
+* gc：为新的布尔规则修复了结构体和数组比较（感谢安东尼·马丁），
+    在导入错误中使用带引号的字符串格式，
+    在内联展开 append 时保留参数。
+* go/build：澄清了排除以 '_' 或 '.' 开头的文件的原因（感谢马圣厚），
+    为 Import 函数使用了更清晰的参数名（src -> srcDir），
+    不为本地导入报告 Target，
+    修复了匹配逻辑。
+* go/printer, gofmt：修复了多行逻辑。
+* html/template：添加了 Templates 和 XXXEscape 函数，
+    修复了空指针错误，
+    修复了 Clone 时的恐慌。
+* io/ioutil：修复了 Stat 失败时的崩溃。
+* make.bat：修复了旧文件问题（感谢克里斯托弗·雷登），
+    如果旧的生成文件不存在，则不显示错误消息（感谢马圣厚），
+    正确处理包含空格的目录（感谢亚历克斯·布雷恩曼）。
+* misc/cgo/gmp：为 Go 1 更新（感谢马圣厚）。
+* misc/dashboard：移除了旧的 python 包 dashboard。
+* misc/dist：不再包含 cmd/cov 或 cmd/prof，
+    在 tarball 中强制设置权限为 0755 或 0644，
+    在构建前移除 exp 和 old 目录。
+* misc/vim：恢复了 fileencodings（感谢松本泰弘）。
+* net/http：对 triv.go 进行了更多现代化改造，
+    确保 triv.go 可以编译和运行（感谢罗伯特·亨克）。
+* net：移除了不必要的类型断言并修复了测试中的泄漏（感谢三木朗）。
+* os：IsNotExist() 在 Windows 上也应考虑 ERROR_PATH_NOT_FOUND（感谢马圣厚），
+    不假设 syscall.Write 会写入所有内容，
+    移除了错误谓词函数中的文档重复（感谢马圣厚），
+    在 Windows 上从 Stat(DevNull) 返回一些虚构数据（感谢亚历克斯·布雷恩曼）。
+* path/filepath：在 Windows 上实现了 Match 和 Glob（感谢亚历克斯·布雷恩曼）。
+* reflect：记录了 PkgPath、Method、StructField，
+    如果 MakeSlice 接收到错误的 len/cap 参数则引发恐慌。
+* run.bat：禁用了 test\bench\go1 中的测试以修复构建（感谢亚历克斯·布雷恩曼）。
+* runtime/cgo：Darwin 信号屏蔽（感谢三木朗），
+    Linux 信号屏蔽（感谢三木朗）。
+* runtime：在配置处理程序之前不处理信号，
+    在 windows/amd64 上自行管理栈以应对 badcallback 情况（感谢马圣厚），
+    移除了未使用的 goc2c.c（感谢马圣厚）。
+* sort：在文档中添加了时间复杂度（感谢斯特凡·尼尔松），
+    修复了 maxDepth 的计算以避免无限循环（感谢斯特凡·尼尔松）。
+* spec：删除了对 unsafe.Reflect、Typeof、Unreflect 的引用。
+* syscall：在 Linux 上测试 SCM_CREDENTIALS、SO_PASSCRED（感谢阿尔伯特·斯特拉斯海姆），
+    添加了通过 unix socket 传递 fd 的测试，
+    删除了 passfd_test.go。
+* test：在更多情况下使用了 testlib（感谢马圣厚）。
+* text/template：修复了标识符周围的几个解析错误，
+    变量不接受参数。
+
+<h2 id="2012-03-13">2012-03-13 (Go 1 正式版候选版 1)</h2>
+
+<pre>
+此每周快照非常接近我们期望的 Go 1 发布内容。目前仍有一些小的文档问题需要解决，并且在发布前还应处理少量错误，但绝大多数 Go 程序应完全不受我们从现在到正式发布期间所做任何更改的影响。
+
+如果您有兴趣帮助我们测试、渴望尝试 Go 1，或者只是好奇，那么此每周快照值得一试。我们很快将发布新的 App Engine Go 1 测试版 SDK，因此如果您是 App Engine 用户，也可以在那里进行尝试。
+
+为了帮助我们专注于任何剩余的错误并避免引入新的错误，我们将把注意力限制在严重修复和问题跟踪器中标记为 Go1-Must 的问题上。所有非必要的事项将推迟到 Go 1 正式版发布并在实际使用一段时间后处理。本次快照中的变更：
+*   archive/zip: 为非流式文件验证 CRC32 校验和，为 OS X 写入数据描述符签名；修复了读取它时的错误。
+*   build: 构建正确的、与 GOHOSTARCH 匹配的 cmd/dist（感谢 Shenghou Ma），在 run.bash 中重新启用了一些曾失效的测试（感谢 Shenghou Ma），移除了对 Make.inc 等文件的一些引用，并使用 run.go 来运行测试。
+*   builder: 对子仓库使用短测试（感谢 Shenghou Ma）。
+*   cgo, runtime: 诊断在非 Go 线程上的回调。
+*   cmd/api: 为所有构建上下文设置编译器，使其再次在 Windows 上工作，并使 gccgo 文件能更好地工作。
+*   cmd/cgo: 为 CGO_LDFLAGS 和 CGO_CFLAGS 添加文档，消除 const 相关警告。
+*   cmd/dist, cmd/go: 将 CGO_ENABLED 从 `go tool dist env` 移动到 `go env`（感谢 Shenghou Ma）。
+*   cmd/dist: 修复 Linux/ARM 的构建（感谢 Shenghou Ma），使用正确的 hg 标签获取 go 版本（感谢 Alex Brainman）。
+*   cmd/fix: 添加 net/http -> net/http/httputil 重命名规则。
+*   cmd/gc: 允许在导入路径中使用 `~`；在遍历过程中删除旧的 map 删除操作；避免混淆同名的非导出方法；如果设置了 $GOROOT_FINAL，则重写目标文件中的文件名；实现 `len(array)` / `cap(array)` 规则；在 Windows 上导入路径不能以斜杠开头（感谢 Shenghou Ma）；panic 和 recover 函数不能被内联；在错误信息中显示重复的键；未命名的结构体类型可以有方法。
+*   cmd/go: 添加 -compiler 选项；添加 env 命令并用于修复 misc/cgo/testso；允许 `go get` 使用任意 URL；允许通过 ssh 隧道使用 bzr、git 和 svn（感谢 Ingo Oeser）；在 Windows 上始终提供 .exe 后缀（感谢 Shenghou Ma）；在 `go help remote` 中文档说明导入路径元标签发现；在 run, test 中遵循构建标志（感谢 Rémy Oudompheng）；本地导入修复；使 `go get new.code/...` 能工作；重建外部测试包依赖；始终遵守 $GOBIN；为 `go list` 支持 -compiler 选项，修复 isStale 对 gccgo 的问题（感谢 Rémy Oudompheng）。
+*   cmd/godoc: 添加对提供模板的支持。修复 codewalk 处理程序（感谢 Francisco Souza）。移除路径中多余的 `/`（感谢 Ugorji Nwoke），支持 $GOPATH，简化文件系统代码，开启 +1 按钮。
+*   cmd/gofmt: 修复长时间测试中的竞态条件（感谢 Mikio Hara）。
+*   codereview: 修复对 Mercurial 2.1 的支持。
+*   crypto/x509: 在 Windows 的 systemVerify 中允许服务器门控加密（感谢 Mikkel Krautz），不要忘记释放证书上下文（感谢 Alex Brainman），不要在 PKCS#1 私钥中包含空的附加素数，强制路径长度约束；根证书获取器的新位置；使用 Windows API 构建证书链（感谢 Mikkel Krautz）。
+*   csv: 阐明负 FieldsPerRecord 的含义。
+*   database/sql: 添加关于连接状态、池的文档；确保 Stmt 被正确关闭（感谢 Gwenael Treguier）；修复在 Stmt.Query 错误时重复释放连接的问题；修复导致重复 Prepare 的拼写错误。
+*   database/sql: 添加 ErrBadConn。
+*   doc/go1: 自 r60 以来模板包已发生变化。
+*   doc/go_mem: init 创建的 goroutine 行为在 Go 1 中发生变化（感谢 Shenghou Ma）。
+*   doc/gopher: 翻转首页地鼠的眼睛。
+*   doc: 添加 "关于 go 命令" 文章，添加 C? Go? Cgo! 文章（感谢 Francisco Souza），添加 Go 的声明语法文章（感谢 Francisco Souza），添加更多地鼠图片，在 Go 1 兼容性说明中添加关于 `import .` 的注释，若干文档修复和改进，更新 Effective Go 的 init 章节，更新 progs/run（感谢 Shenghou Ma），更新参考地鼠图标，网站调整。
+*   encoding/asn1: 处理 2000 年之前的 UTCTime。
+*   encoding/binary: 改进包注释（感谢 Stefan Nilsson）。
+*   encoding/gob: 修复内存损坏问题。
+*   encoding/json: 文档说明 nil 切片编码为 `null`。
+*   exp/wingui: 已迁移至 code.google.com/p/gowingui。
+*   expvar: 为 String 方法添加锁，并在整个包中正确使用 RWMutex，在 String 方法中添加缺失的锁。
+*   fmt, log: 停止使用 unicode 包。
+*   fmt: 对包文档进行微调，以便在 godoc 中显示标题（感谢 Volker Dobler）。
+*   go/build, cmd/go: 添加对 .syso 文件的支持。
+*   go/build: 添加 NoGoError，添加依赖测试，不要解析 .syso 文件（感谢 Alex Brainman）。
+*   go/parser: 在内部错误时避免无限循环，改进错误同步。
+*   go/printer, gofmt: 多行返回语句的更好格式化。
+*   go/printer: 添加 Fprint 的示例。
+*   go/scanner: 改进 panic 诊断信息。
+*   go 规范: 已知无实现差异，修复类型标识定义中的不准确之处。
+*   io: 更好地文档说明 WriterAt。
+*   misc/dashboard: 移除过时的包构建器代码。
+*   misc/dist: 添加源码存档支持，添加 Windows 安装程序和 zip 支持，Darwin 的最低目标要求为 10.6（感谢 Shenghou Ma）。
+*   misc/emacs: 修复以句点结尾的注释后的额外缩进。
+*   misc/xcode: 为 Xcode 4.x 添加语言规范的示例安装（感谢 Emil Hessman）。
+*   net, net/rpc, reflect, time: 文档说明并发保证。
+*   net/http: 修复 Transport.CloseIdleConnections 导致的崩溃，从 ReadRequest 返回适当的错误。
+*   net: 为测试添加跳过消息（感谢 Mikio Hara），禁用外部监听及其他外部网络使用，不要为 DNS 消息使用 reflect（感谢 Rémy Oudompheng），文档说明 ReadMsgUnix, WriteMsgUnix，修复 Windows 构建器上的 TestDialTimeout，改进服务器和文件测试（感谢 Mikio Hara），使 Dial 和 Listen 的行为在不同平台上保持一致（感谢 Mikio Hara），移除对 bytes, fmt, strconv 的依赖，消除另一个 epoll 打印，使用 IANA 保留端口测试拨号超时（感谢 Mikio Hara）。
+*   os: 文档说明 FileInfo.Size 对于不规则文件是系统相关的，修复 SameFile 使其在 Windows 上对目录有效（感谢 Alex Brainman）。
+*   path/filepath/path_test.go: 修复并启用 TestAbs。
+*   path/filepath: 在 Windows 上禁用 AbsTest，在 Windows 的 EvalSymlinks 中检索真实文件名（感谢 Alex Brainman）。
+*   runtime/pprof: 在 Leopard 64 位系统上禁用测试。
+*   runtime: 添加 Compiler，修复 Windows/amd64 异常处理程序（感谢 Alex Brainman），内联对 notok 的调用，将 runtime.write 移回 C 语言实现在，在非 Go 线程收到信号时打印错误，移除未使用的 runtime·signame 和 runtime·newError，尝试扩展 32 位分配器的 arena 大小（感谢 Rémy Oudompheng），在设置 GOMAXPROCS 之前等待主 goroutine（感谢 Rémy Oudompheng）。
+*   strconv: 添加基于表的 isPrint 函数，移除对 bytes、unicode 和 strings 的依赖。
+*   sync/atomic: 在单处理器机器上禁用存储和加载测试（感谢 Mikio Hara）。
+*   syscall: 修复 mkall.sh、mksyscall_linux.pl 并为 Linux/ARM 重新生成（感谢 Shenghou Ma）。
+*   test/run: 在 ARM 系统上使用所有可用核心（感谢 Shenghou Ma）。
+*   test: 实际在 Windows 上运行测试（感谢 Alex Brainman），在 ddd.go 中添加继承接口测试，启用 ddd.go 中的方法表达式测试，在 run.go 中调用 go 命令，为 bug388.go 匹配 gccgo 错误消息，跳过目录中的隐藏文件（以点开头的文件）。
+*   testing: 当存在示例时不要打印“无测试”。
+*   time: 在短测试期间，不要担心 ticker 运行时间超过预期（感谢 Shenghou Ma），在 Unix, UnixNano 文档中提及接收者。
+*   unicode/utf16: 移除对 unicode 包的依赖。
+*   unicode/utf8: 移除对 unicode 包的依赖。
+*   windows: 使地鼠图标的背景透明（感谢 Volker Dobler）。<h2 id="2012-03-04">2012-03-04</h2>
+
+<pre>
+此快照包含对 go/build 包的重大重新设计。其中的 FindTree、ScanDir、Tree 和 DirInfo 类型已被替换为 Import 和 Package 类型。没有提供 gofix 工具。使用 go/build 的代码需要手动进行更新以使用该包的新接口。其他变更：
+*   6a/6l：添加IMUL3Q和SHLDL指令。
+*   所有包：移除未使用的未导出函数和常量（感谢 Rémy Oudompheng）。
+*   build：为LDFLAGS和GCFLAGS添加GO_前缀（感谢 Gustavo Niemeyer）。
+*   cmd/cc：修复数组越界访问问题（感谢 Anthony Martin），并扩展一些全局数组。
+*   cmd/dist：在Unix系统上强制对stdout/stderr进行行缓冲（感谢 Shenghou Ma），并识别CC="ccache clang"为clang。
+*   cmd/go：避免重复包含目录（感谢 Rémy Oudompheng），修复gc命令的-I标志（感谢 Gustavo Niemeyer），修复详细命令的显示问题（感谢 Gustavo Niemeyer），修复gccgo相关问题（感谢 Rémy Oudompheng），多项修复，测试-i不应禁用-c（感谢 Shenghou Ma）。
+*   cmd/vet：对于`Printf("%+5.2e", x)`不再报错（感谢 Shenghou Ma）。
+*   cmd/yacc/units.y：更新注释，在未设置$GOROOT时提供更清晰的错误信息（感谢 Shenghou Ma）。
+*   crypto/tls：为了API兼容性，强制将OS X目标版本设为10.6（感谢 Mikkel Krautz）。
+*   crypto/x509：修复Verify文档中的错字（感谢 Mikkel Krautz）。
+*   dist：将CC视为一个整体（感谢 Scott Lawrence）。
+*   doc/go1：为主要变更添加了理由讨论，并进行了细微修正和更新。
+*   doc：描述go/build包的API变更，详细说明cmd/vet可用的检查（感谢 Shenghou Ma），扩展code.html以更深入地讨论go工具，指导FreeBSD/Linux用户先删除旧版本，移除“面向C++程序员的Go”文档，移除路线图文档，移除教程，将codelab/wiki更新至Go 1（感谢 Shenghou Ma）。
+*   encoding/gob：修复debug.go的"// +build"注释（感谢 Shenghou Ma），进一步加固输入字符串的长度处理。
+*   encoding/json：移除MarshalForHTML；gofix将调用迁移到Marshal，转义来自Marshaler的输出。
+*   encoding/xml：修复匿名字段Unmarshal示例（感谢 Gustavo Niemeyer），修复xml测试标签用法（感谢 Gustavo Niemeyer）。
+*   gc：禁止使用绝对导入路径，修复逃逸分析、内联与闭包的组合错误，针对新的布尔规则修复字符串比较（感谢 Anthony Martin），拒绝包含特殊字符的导入路径（感谢 Anthony Martin）。
+*   go/ast：为ast.Print、ast.Inspect添加示例。
+*   go/doc, godoc：修复类型声明的范围。
+*   go/parser：检查导入路径限制，扩展针对错误导入的测试用例。
+*   go/printer, gofmt：改进了注释的放置。
+*   go/printer：修复可变参数函数调用的打印（感谢 Anthony Martin），修复针对新导入路径限制的测试（感谢 Anthony Martin），替换多行逻辑，简化exprList代码并增加更多测试。
+*   godoc：在顶层索引中添加示例链接，恢复高亮、选择和提示功能，文档部分的位置放置保持一致，在扁平目录模式下不显示不含包的目录，不显示testdata目录，修复codewalks功能。
+*   gotype：提供-comments标志。
+*   html/template：使doctype检查不区分大小写（感谢 Scott Lawrence），在入门示例中使用正确的方法签名（感谢 Mike Rosset）。
+*   io：文档说明I/O操作不一定对并行访问安全。
+*   ld：允许更多-L选项（感谢 Shenghou Ma），修复rodata节的对齐方式。
+*   misc：为go工具添加zsh补全（感谢 Rémy Oudompheng）。
+*   misc/bash：为go工具提供bash补全（感谢 Yissakhar Z. Beck）。
+*   misc/dashboard：修复UI模板中的错误，记录外部包的安装次数。
+*   misc/dist：用go实现二进制分发脚本。
+*   misc/gobuilder：以RFC3339格式发送提交时间。
+*   misc/xcode：将Xcode3特定文件移至子目录。
+*   net/http/cgi：添加空响应测试，修复空响应问题。
+*   net/http/httptest：使Server.Close等待未完成的请求结束。
+*   net/http/httputil：修复针对https URL的DumpRequestOut，减少https DumpRequestOut的竞态条件。
+*   net/http：添加被忽略的418状态码（根据RFC 2324），修复ProxyFromEnvironment的错误、文档，并添加测试，使一个测试在Windows上更严格可靠。
+*   net/rpc：静默连接关闭时的读取错误。
+*   net：为NetBSD添加存根（感谢 Benny Siegert），使测试的-external标志默认为true（感谢 Mikio Hara），重组测试文件（感谢 Mikio Hara）。
+*   os：诊断StartProcess期间的chdir错误，在Windows上实现UserTime/SystemTime（感谢 Alex Brainman），在Windows上实现sameFile（感谢 Alex Brainman），在Windows的(*Process).Wait结束时释放进程句柄（感谢 Alex Brainman），在Windows上进程退出后休眠5ms（感谢 Alex Brainman）。
+*   path/filepath：注明SplitList与strings.Split不同，引导用户远离HasPrefix。
+*   reflect：在DeepEqual中比较函数时不要panic，使Value.Interface返回不可变数据。
+*   runtime/pprof：支持OS X CPU性能分析。
+*   runtime：为runtime-gdb.py的prettyprinters添加完整性检查，检查ARM系统调用失败（感谢 Shenghou Ma），实现darwin和linux信号掩码，在主线程上运行init，根据虚拟地址空间限制调整arena大小。
+*   spec：禁止在导入路径中使用\uFFFD，将方法集、嵌入应用于所有类型而不仅仅是命名类型，围绕导出、标识符唯一性进行澄清，导入路径实现限制，函数内部变量必须被求值，使用术语“词法单元”而非“词法符号”。
+*   sync：添加Once示例，移除旧的WaitGroup示例。
+*   test/bench/shootout：更新post-Makefile。
+*   test：添加文档，杂项修复。
+*   testing：添加-test.example标志以控制示例的执行。
+*   text/template：添加展示使用自定义函数的示例，添加使用多个模板的示例，修复重定义错误。
+*   time：添加关于如何使用Duration常量的注释。
+</pre>
+
+<h2 id="2012-02-22">2012-02-22</h2>
+
+<pre>
+此每周快照包含对os和runtime包的变更。
+
+这应该是Go 1发布前最后一次重要的不兼容性变更。**翻译：**
+
+os 包中不再包含诸如 EINVAL 等错误常量，因为这些值会因底层操作系统而异。取而代之的是新增了一些可移植的函数，例如用于测试常见错误属性的 `IsPermission`，以及一些名称更符合 Go 风格的新错误值，如 `ErrPermission` 和 `ErrNoEnv`。
+
+`os.Getenverror` 函数已被移除。要区分不存在的环境变量和空字符串，请使用 `os.Environ` 或 `syscall.Getenv`。
+
+`Process.Wait` 方法已移除其 `option` 参数，相关的常量也已从包中删除。此外，独立的 `Wait` 函数也已移除；仅保留了 `Process` 类型的该方法。
+
+不可移植的 `Waitmsg` 类型已被可移植的 `ProcessState` 所取代。
+
+`runtime` 包导出的大部分 API 已被移除，其功能由其他包提供。使用 `runtime.Type` 接口或其具体实现类型的代码现在应使用 `reflect` 包。使用 `runtime.Semacquire` 或 `runtime.Semrelease` 的代码应使用通道或 `sync` 包中的抽象。
+
+`runtime.Alloc`、`runtime.Free` 和 `runtime.Lookup` 函数是为调试内存分配器而创建的不安全 API，没有替代方案。
+
+`runtime.Cgocalls` 和 `runtime.Goroutines` 函数已分别重命名为 `runtime.NumCgoCall` 和 `runtime.NumGoroutine`。
+
+`go fix` 命令将更新代码以适应这些变更。
+
+**其他变更：**
+
+*   5c, 6c, 8c, 6g, 8g: 修正边界检查（感谢 Shenghou Ma）。
+*   5g, 6g, 8g: 更积极地刷新已修改的全局变量。
+*   8a, 8l: 添加 EMMS 指令（感谢 Evan Shaw）。
+*   bufio: 当 Peek 操作成功时不再返回错误。
+*   build: 添加 `make.bash --no-clean` 选项，改进对 Windows 的支持。
+*   builder: 如果可能则复用现有工作区（感谢 Shenghou Ma），为 os.Wait 的变更进行更新。
+*   bytes: 为 nil 参数记录 `Compare`/`Equal` 的语义，并添加测试。
+*   cgo: 修复不透明类型的定义（感谢 Gustavo Niemeyer）。
+*   cmd/api: 为变量类型检查记录函数的返回类型（感谢 Rémy Oudompheng）。
+*   cmd/cgo: Bug 修复。
+*   cmd/dist: 添加 clang 特定的 `-Wno` 选项（感谢 Bobby Powers），修复在非 ARM 系统上安装 cmd/5g 的问题，修复 pprof 权限问题（感谢 Bobby Powers），使 `defaulttarg()` 中的目录检查更健壮（感谢 Shenghou Ma），交叉编译时使用正确的包目标（感谢 Alex Brainman）。
+*   cmd/gc: 正确类型检查返回语句中的表达式列表（感谢 Rémy Oudompheng），不再认为被提及 256 次的变量是未使用的（感谢 Rémy Oudompheng），对常量移位溢出报错（感谢 Rémy Oudompheng），修复包含 `_` 字段的结构体的比较，修复浮点常量 `%` 的错误，新的、更宽松的 bool 规则。
+*   cmd/go: 添加 `tool -n` 标志，`go test -i` 正确处理 cgo 包（感谢 Shenghou Ma）。
+*   codereview: 修复新克隆 URL 的提交消息（感谢 Shenghou Ma）。
+*   database/sql/driver: API 清理。
+*   doc: 多处修正和调整。
+*   encoding/gob: 为用户类型（而非基础类型）缓存引擎，捕获发生时的内部错误，修复相互递归的结构体切片。
+*   encoding/json: 忽略匿名字段。
+*   go/doc: 按名称顺序返回 Examples。
+*   go/parser: 虚数常量和 `!` 可以开始一个表达式。
+*   go/printer, gofmt: 改进逗号放置。
+*   go/printer: 重写选择器表达式时不丢失相关括号。
+*   godoc: 调整 `<pre>` 块中的行高，运行 "go doc foo" 时不打印虚假建议，修复绝对到相对路径的映射，修复标签不匹配验证错误（感谢 Scott Lawrence），导入示例代码支持，重新支持扁平目录视图。
+*   html/template: 添加 `Clone` 和 `AddParseTree`，不要通过 `Stringer` 间接访问，对文档进行微调以改善 HTML 排版。
+*   image: 添加 `Decode` 示例。
+*   ld: 为大型、无指针的未初始化数据添加 `NOPTRBSS`。
+*   math/rand: `Intn` 等函数在参数 `<= 0` 时应恐慌。
+*   misc/dist/windows: 发行构建器更新（感谢 Joe Poirier）。
+*   misc/goplay: 保持在工作目录，在临时目录构建。
+*   net, os, syscall: 删除 `os.EPLAN9`（感谢 Mikio Hara）。
+*   net/http: 添加可选的 `Server.TLSConfig` 字段。
+*   net/smtp: 先使用 EHLO，然后使用 HELO。
+*   net/textproto: 像浏览器一样接受格式错误的 MIME 头。
+*   net/url: 统一接收器名称。
+*   net: 使多播的 `LocalAddr` 返回组地址（感谢 Mikio Hara），使 `parseProcNetIGMP` 更健壮（感谢 Mikio Hara），更多 `selfConnect` 调试：如果 `internetSocket` 中 `ra == nil` 则恐慌，如果 `sockaddrToTCP` 错误地返回 nil 则恐慌，其他杂项修复。
+*   path, path/filepath: 完善文档（感谢 Rémy Oudompheng）。
+*   pprof: 添加 `Profile` 类型。
+*   runtime: 避免在 malloc 期间再次 malloc，定义 `NSIG` 以修复 Plan 9 构建（感谢 David du Colombier），修复 FreeBSD 线程创建期间的信号处理（感谢 Devon H. O'Dell），goroutine 配置文件、堆栈转储，在 FreeBSD 386, amd64 上实现 `runtime.osyield`（感谢 Devon H. O'Dell），允许 SIGTSTP, SIGTTIN, SIGTTOU 的默认行为，将未使用的内存释放给操作系统（感谢 Sébastien Paolacci），删除过时的文件（感谢 Mikio Hara）。
+*   spec: 使所有比较结果都是无类型的 bool，细化关于类型开关中变量的措辞，结构体比较仅比较非空字段。
+*   syscall: 在 Linux 的 `SysProcAttr` 中将 `Pdeathsig` 类型设为 `Signal`（感谢 Albert Strasheim），修复 `Error` 中的边界检查，强制 Windows 始终使用美国英语错误消息（感谢 Shenghou Ma）。
+*   test: 迁移到新的基于 Go 的测试框架。
+*   text/template: 求值函数字段。
+*   time: 如果找不到系统副本，则使用 Go 发行版的时区信息。
+
+---
+
+**2012-02-14**
+
+**翻译：**
+
+此版本包含一些需要客户端代码进行相应变更的包更改。
+
+`flate`、`gzip` 和 `zlib` 的 `NewWriterXxx` 函数不再返回错误。编译器会标记所有受影响的代码，这些代码随后必须手动更新。`os` 包的 `Exec` 和 `Time` 函数已被移除。调用方应改用 `syscall.Exec` 和 `time.Now`。`ShellExpand` 函数已重命名为 `ExpandEnv`。`NewFile` 函数现在接受 `uintptr` 参数，且 `*File.Fd` 方法返回 `uintptr`。
+
+`runtime` 包的 `Type` 类型及其方法已被移除。请改用 `reflect` 包。
+
+其他变更：
+*   8a, 8l: 新增 LFENCE, MFENCE, SFENCE 指令（感谢 Darren Elwood）。
+*   all.bat: 向 gobuilder 报告错误代码（感谢 Alex Brainman）。
+*   archive/zip: 隐藏 `*Writer` 类型的 `Write` 方法。
+*   build: 创建正确的 `$GOTOOLDIR`，移除 deps.bash（感谢 Anthony Martin），在 Windows 上拒绝 make.bash。
+*   builder: 为 Windows 设置 `$GOBUILDEXIT`（感谢 Alex Brainman）。
+*   bytes: 新增 `Reader`；如果缓冲区未排空，`WriteTo` 返回错误。
+*   cgo: 为 gccgo 添加返回 errno 的支持（感谢 Rémy Oudompheng）。
+*   cmd/api: 跟踪常量引用。
+*   cmd/cgo: 在 -godefs, -cdefs 输出中省略 //line 指令。
+*   cmd/dist: 修复（感谢 Alex Brainman, Gustavo Niemeyer, Mikio Hara, Shenghou Ma）。
+*   cmd/fix: 对 exp, old, deleted 包发出警告。
+*   cmd/gc: 在内联函数体的类型检查期间挂起安全模式。
+*   cmd/go: 大量修复；为 `go run` 和 `go tool` 连接 os.Stdin；`go get` 协议检测（感谢 Daniel Krech）；遵守 test -timeout 标志。
+*   cmd/vet: 对构造 'Println(os.Stderr, ...)' 发出警告（感谢 Shenghou Ma）。
+*   compress/gzip: 移除死代码（感谢 Alex Brainman）。
+*   container/heap: 添加示例。
+*   dashboard: 添加 gobuilder -fail 模式。
+*   database/sql: 更多测试；从 ScannerInto/ScanInto 移除 Into；将 ErrTransactionFinished 重命名为 ErrTxDone；支持 Tx.Exec 中的 ErrSkip（感谢 Andrew Balholm）；像 encoding/json 一样将指针视为可空类型（感谢 Andrew Pritchard）。
+*   debug/macho: 从包注释中移除冗长的 URL。
+*   dist: 防止在 Windows 上调用 fatal() 时发生递归循环（感谢 Daniel Theophanes）。
+*   doc: 在 'learn' 和 'reference' 页面添加 App Engine 文档；添加 playground.js；新增关于发布版本兼容性的文档；为二进制分发版更新 install.html，添加 install-source.html。
+*   effective_go: 使用新的 map 删除语法。
+*   encoding/binary: 新增 Size 以替代旧版 TotalSize 的功能；再次尝试描述 Read 和 Write 的数据类型；允许切片并说明。
+*   encoding/json: 记录缓冲。
+*   encoding/xml: 新增对 omitempty 标志的支持（感谢 Gustavo Niemeyer）。
+*   exp/norm: 合并 charinfo 和 decomposition 表。
+*   exp/types: 在 GcImporter 中使用 build.FindTree（感谢 James Whitehead）。
+*   flate: 删除 WrongValueError 类型。
+*   fmt: 对指针应用无效动词时进行诊断；正确扫描 FALSE。
+*   gc: bug 修复，改进错误消息。
+*   go/doc: 处理递归嵌入类型（感谢 Gary Burd）；不丢失具有未导出类型的已导出常量/变量；将预声明的 error 接口视为已导出类型。
+*   go/printer: 实现 SourcePos 模式。
+*   godoc: 在索引中列出示例；新设计；将独立示例视为 "whole file" 示例。
+*   html/template: 增加关于示例和文档的说明（感谢 Bjorn Tipling）。
+*   log/syslog: 返回用户提供的数据长度，而不是头部长度。
+*   make.bat: 移除双引号（感谢 Alex Brainman）。
+*   math: 修复 gamma 文档，链接到 OEIS。
+*   mime: 将一些内部细节取消导出。
+*   misc/dist: 为 Linux 添加二进制分发打包脚本；二进制分发打包脚本的新层次结构。
+*   net/http: 新增 ServeContent；在临时接受失败时不自旋；修复持久连接导致的客户端协程泄漏；修复文档中对 URL.RawPath 的引用（感谢 Bjorn Tipling）；对重复注册 panic；使用 mtime < t+1s 检查未修改（感谢 Hong Ruiqi）。
+*   net: 在 Close 期间避免 Shutdown；避免 TCP 自连接；在 Windows 上禁用 TestDialTimeout；在 Alpha GNU/Linux 上禁用多播测试；在 BSD 变体上禁止滥用 SO_REUSEPORT（感谢 Mikio Hara）；为多播监听器启用流上的标志（感谢 Mikio Hara）；使用 listenerBacklog（感谢 Mikio Hara）；如果未给定地址则优先监听 IPv4（感谢 Mikio Hara）。
+*   os/exec: 新增 Cmd.Waitmsg。
+*   os/signal: 恢复此包。
+*   regexp/syntax: 添加包和 Parse 注释。
+*   regexp: 允许在 Replace, ReplaceString 中进行替换。
+*   runtime, pprof: 新增线程创建分析。
+*   runtime, time: 在短模式下加速测试（感谢 Rémy Oudompheng）。
+*   runtime: 在 OABI 系统上提前退出（感谢 Shenghou Ma）；如果 64 位不可用则回退到 32 位 malloc；修复 32 位系统上的 "SysReserve returned unaligned address" bug（感谢 Shenghou Ma）；修复 grsec 支持（感谢 Gustavo Niemeyer）；在 386 上，修复所有线程的 FP 控制字，而不仅仅是初始线程；在 Select 内存块中将 lockorder 置于 pollorder 之前；使用 startpanic 使得只有一个线程处理传入的 SIGQUIT。
+*   spec: 从 'method set' 添加指向其使用位置的前向链接；澄清未类型化浮点数的实现限制；禁止递归嵌入接口；方法名称必须唯一；在已关闭通道上的发送计为 "proceeding"；字符串更像是切片而不是数组。
+*   strconv: 处理非常大的输入。
+*   strings: 为 Reader 添加 Seek 和 ReadAt 方法。
+*   sync/atomic: 在大小错误的系统上禁用 hammer pointer 测试。
+*   testing: 让 runtime 捕获 panic。
+*   text/template: 引导 HTML 用户使用 html/template。
+*   text/template/parse: 为节点添加深拷贝方法。
+*   time: 清理 MarshalJSON，添加 RFC3339 方法；使用 "2006-01-02 15:04:05.999999999 -0700 MST" 作为 String 格式。
+
+<h2 id="2012-02-07">2012-02-07</h2>
+
+<pre>
+此每周快照包含对 Go 工具的一次重组。仅将 go、godoc 和 gofmt 工具安装到 $GOROOT/bin（或 $GOBIN）目录下。  
+其余工具安装至 $GOROOT/bin/tool。  
+这样可将不常用工具（如 6g、cgo、govet 等）移出用户 PATH 环境变量范围。  
+取而代之的是，这些工具可通过 `go tool` 命令调用，格式为 `go tool 命令`。  
+例如，要检查 hello.go 文件的规范性，可输入 `go tool vet hello.go`。  
+输入 `go tool` 可查看可用工具列表。
+
+此次调整中，部分工具被赋予更简洁的名称：  
+　　6cov    → cov  
+　　6nm     → nm  
+　　goapi   → api  
+　　gofix   → fix  
+　　gopack  → pack  
+　　gopprof → pprof  
+　　govet   → vet  
+　　goyacc  → yacc  
+
+os/signal 包已迁移至 exp/signal。  
+
+新增名为 `dist` 的工具，用于处理 gc 工具链的构建及引导 go 工具。旧版构建脚本和 makefile 已被移除。其他变更：
+* 5a、6a、8a、cc：检入 y.tab.[ch] 文件。
+* 5l、6l、8l、ld：修复内存泄漏问题（感谢 Shenghou Ma）。
+* 5l、6l、8l：实现 -X 标志。
+* 5l：使 -v 选项输出更少的非必要杂项信息（感谢 Shenghou Ma），优化 patch() 中的常见情况（感谢 Shenghou Ma）。
+* 8a、8l：实现对 RDTSC 指令的支持（感谢 Shenghou Ma）。
+* 8g：对本地 pc 使用 uintptr 类型。
+* archive/zip：支持完整的 FileMode 标志范围（感谢 Gustavo Niemeyer）。
+* bufio：移除特殊错误类型，更新文档。
+* build：将“-c”标志移至 HOST_CFLAGS（感谢 Anthony Martin），移除不必要的编译指令（感谢 Anthony Martin）。
+* builder：移除 recover 代码块。
+* bytes：API 调整。
+* cgo：在 gccgo 版本的 C.GoString 中接受空指针（感谢 Rémy Oudompheng），在相关情况下在致命错误中打印行号（感谢 Rémy Oudompheng）。
+* cmd/dist：向环境变量输出添加 GOBIN（感谢 Gustavo Niemeyer），修复 bsubst 中的错误（感谢 Alex Brainman），修复在 openbsd 上的构建问题（感谢 Mikio Hara），为 runtime 包生成文件，忽略以 . 或 _ 开头的文件名，防止在创建 VERSION 时出现竞态条件（感谢 Gustavo Niemeyer）。
+* cmd/gc：方法名称的另一个特殊 (%hhS) 情况，描述调试标志（感谢 Anthony Martin），诊断导入路径中的反斜杠，禁止 `switch _ := v.(type)` 写法，不打印导出中结构体字面量的隐式类型，修复涉及 && 和 || 的表达式的代码生成重排序问题，在 mkopnames 中使用八进制转义（感谢 Anthony Martin），在错误消息中使用原始常量表达式（感谢 Rémy Oudompheng）。
+* cmd/go：通过 git 分支添加对发布标签的支持（感谢 Gustavo Niemeyer），构建：当对文件调用时打印导入错误（感谢 Kyle Lemons），测试目录完成后即清理，修复关于不存在工具的错误消息（感谢 Rémy Oudompheng），修复 gccgo 标准库的处理（感谢 Rémy Oudompheng），修复 `go clean -n` 和 `go clean -x` 时的 panic（感谢 Sanjay Menakuru），引入对 gccgo 的 "go build" 支持（感谢 Rémy Oudompheng），使 vcs 命令实际收集输出（感谢 Roger Peppe），将环境变量 CGO_CFLAGS 传递给 cgo（感谢 Jeff Hodges），记录失败导入的位置以供错误报告（感谢 Rémy Oudompheng）。
+* cmd/goapi：扩展嵌入接口。
+* cmd/goinstall：移除该工具，因为 'go get' 现已可用（感谢 Gustavo Niemeyer）。
+* cmd/ld：修复 gdbscript（感谢 Wei Guangjing）。
+* cmd/pack：将错误消息中的 gopack 更改为 pack。
+* codereview：杂项修复和改进。
+* crypto/elliptic：p224Contract 可能产生非最小化表示。
+* crypto/tls：连接到 SSLv3 服务器时提供更好的错误消息。
+* crypto/x509：使用不区分大小写的主机名匹配。
+* dashboard：支持子仓库，更新至 go1beta。
+* database/sql：允许扫描到 interface{} 中。
+* doc：根据近期变更更新 go1.html。
+* encoding/base32：添加 DecodeString 和 EncodeToString 辅助方法，解码时忽略换行符。
+* encoding/base64：解码时忽略换行符。
+* encoding/gob：记录 CommonType。
+* encoding/hex：规范化错误类型名称。
+* encoding/json：对可寻址的 T 值调用 (*T).MarshalJSON。
+* encoding/xml：修复具有子元素的 xml.Name 的解码问题（感谢 Gustavo Niemeyer），修复 Decoder.Skip 的文档。
+* exp/norm：添加了用于特定格式性能测量的基准测试，为准备表格格式更改进行了一些微小调整。
+* expvar：修订 API。
+* fix：将 image/{bmp,tiff} 添加到 go1pkgrename。
+* flag：允许 FlagSet 不写入 os.Stderr，描述 Duration 标志的有效输入。
+* fmt：添加对 NaN 映射键的测试，修复 Scan 中的缓存错误。
+* go/build：在 'generated by make' 和 package 声明之间添加空格，更新 syslist.go 的包注释。
+* go/doc：修复 ToHTML 中的 URL 链接（感谢 Gary Burd），将 error、rune 添加到预声明类型列表中，不丢失非导出类型的工厂函数，不显示导出匿名字段的方法，启用 AllMethods 标志（并修复逻辑）。
+* go/printer：不打印不正确的程序。
+* go/scanner：符合习惯的接收器名称。
+* go/spec：更新关于 map 类型的描述。
+* go/token：移除对 encoding/gob 的依赖。
+* gob：模糊测试，以及一个关于非常长类型名称的修复。
+* gobuilder：使用 go tool 构建和测试子仓库。
+* godoc：添加 URL 模式 m=methods，空文件系统树的诊断，修复标识符搜索，修复 URL "/" 的重定向循环，如果存在则提供到子目录的链接，排序 "other packages" 列表，更新 appinit.go 中的元数据。
+* gophertool：修复指向构建状态仪表盘的链接（感谢 Jongmin Kim）。
+* hgignore：添加 VERSION.cache（感谢 Gustavo Niemeyer），删除残留项，忽略 tmpltohtml。
+* html：添加包文档。
+* image：添加包文档，将 s/UnknownFormatError/ErrFormat/ 重命名，删除 image.Repeated 类型，从标准库中移除 image/bmp 和 image/tiff。
+* io/ioutil：记录 ReadFile 和 ReadAll 中的 EOF 行为。
+* io：API 调整。
+* libmach：为 Plan 9 添加存根（感谢 Anthony Martin）。
+* make.bash：不要移除 hgpatch。
+* math/big：添加对 Int 比特位的原始访问，API 和文档清理。
+* misc/goplay：使用 go tool "run"（感谢 Olivier Duperray）。
+* misc/osx：不设置 GOROOT 或修改配置文件，为 dist 工具更新，移除 image.bash，更新 readme。
+* net, syscall：为 windows 添加 IPv4 多播辅助函数（感谢 Mikio Hara）。
+* net/http/httputil：修复 DumpRequestOut 中的竞态条件，保留反向代理中的查询参数。
+* net/http：默认情况下不为 HEAD 请求设置 Content-Type 头（感谢 Patrick Mylund Nielsen），修复错误情况下的空指针引用（感谢 Volker Dobler），在响应读取错误时尽早关闭客户端 fd，在 POST 请求的客户端 jar 中设置 cookie（感谢 Volker Dobler）。
+* net/rpc：修复 Call.Error 上的数据竞争。
+* net：ListenMulticastUDP 在多个监听器上并发监听（感谢 Mikio Hara），在 linux/arm 上禁用常规多播测试（感谢 Mikio Hara），修复 Plan 9 构建（感谢 Anthony Martin），修复 windows 构建（感谢 Alex Brainman），将 DNSConfigError 移至可移植文件，移除类型 InvalidConnError 和 UnknownSocketError，将错误变量名 e、errno 替换为 err（感谢 Mikio Hara），在 windows 上运行 TestDialTimeout（感谢 Alex Brainman），更新注释以移除冗余的 "net" 前缀（感谢 Mikio Hara）。
+* os/exec：TestExtraFiles - 关闭任何泄漏的文件描述符，确保文件在泄漏 fd 测试中不会过早关闭。
+* os/signal：移至 exp/signal。
+* os/user：windows 实现（感谢 Alex Brainman）。
+* os：Process.handle 使用 syscall.Handle（感谢 Wei Guangjing），文件 windows 使用 syscall.InvalidHandle 代替 -1（感谢 Wei Guangjing），移除 SIGXXX 信号变量，将 FileStat.Sys 转换为 FileInfo 上的方法（感谢 Gustavo Niemeyer）。
+* path/filepath：修复并简化符号链接测试。
+* reflect：添加关于 Type.Field 分配的注释，测试 PtrTo 返回的类型与程序类型匹配。
+* runtime：添加 runtime.cputicks() 并用其初始化 fastrand（感谢 Damian Gryski），删除 UpdateMemStats，替换为 ReadMemStats(&stats)（感谢 Rémy Oudompheng），修复 float64 哈希，使用 GOTRACEBACK 决定是否显示运行时帧，使用每个 map 的哈希种子（感谢 Damian Gryski）。
+* spec：向斐波那契数列添加一个数字。
+* std：向无标签的字面量添加结构体字段标签。
+* strings：添加 Fields 示例。
+* syscall：添加 Timeval.Nano、Timespec.Nano，用于转换为 Duration，在 Plan 9 上缓存环境变量（感谢 Anthony Martin），修复 types_*.go 中的 // +build 注释，修复 types_linux.go 中的构建指令，更新引导脚本以与新的 go 命令同步（感谢 Mikio Hara）。
+* test：添加导致不正确 gccgo 错误的导入测试，添加关于接收器名为 _ 的测试，添加关于映射中 NaN 的测试，添加导致 gccgo 编译器崩溃的测试，不为没有 main 函数的文件使用 package main，修复错误头，浮点数到整数的测试用例，使 map nan 计时测试更稳健，匹配 gccgo 错误消息，测试具有相同元素类型的两个不同命名类型的 append，测试带有参数和导入的方法表达式，测试超出 len 的切片，测试 x := <-c 接受一般表达式。
+* testing：捕获 panic，呈现它们，并将测试标记为失败。
+* unicode：记录大型 var 块和 SpecialCase 变量。
+* vet：添加对无标签结构体字面量的检查。<h2 id="2012-01-27">2012-01-27</h2>
+
+<pre>
+本周快照将 `html` 包重命名为 `exp/html`。该包将不会包含在 Go 1 的发行版中，但可以从源代码安装。
+
+`archive/tar`、`archive/zip`、`compress/gzip`、`compress/zlib` 和 `crypto/bcrypt` 包中的错误变量已从 `FooError` 重命名为 `ErrFoo`。没有对应的 `gofix` 修复工具，但编译器将会标记出需要更新的代码。
+
+本周快照将许多包迁移至主 Go 代码库的子仓库。以下是新旧导入路径的对照：
+
+	crypto/bcrypt          code.google.com/p/go.crypto/bcrypt
+	crypto/blowfish        code.google.com/p/go.crypto/blowfish
+	crypto/cast5           code.google.com/p/go.crypto/cast5
+	crypto/md4             code.google.com/p/go.crypto/md4
+	crypto/ocsp            code.google.com/p/go.crypto/ocsp
+	crypto/openpgp         code.google.com/p/go.crypto/openpgp
+	crypto/openpgp/armor   code.google.com/p/go.crypto/openpgp/armor
+	crypto/openpgp/elgamal code.google.com/p/go.crypto/openpgp/elgamal
+	crypto/openpgp/errors  code.google.com/p/go.crypto/openpgp/errors
+	crypto/openpgp/packet  code.google.com/p/go.crypto/openpgp/packet
+	crypto/openpgp/s2k     code.google.com/p/go.crypto/openpgp/s2k
+	crypto/ripemd160       code.google.com/p/go.crypto/ripemd160
+	crypto/twofish         code.google.com/p/go.crypto/twofish
+	crypto/xtea            code.google.com/p/go.crypto/xtea
+	exp/ssh                code.google.com/p/go.crypto/ssh
+	net/dict               code.google.com/p/go.net/dict
+	net/websocket          code.google.com/p/go.net/websocket
+	exp/spdy               code.google.com/p/go.net/spdy
+	encoding/git85         code.google.com/p/go.codereview/git85
+	patch                  code.google.com/p/go.codereview/patch
+
+Gofix 工具将更新对这些包的导入语句以使用新的导入路径。依赖于这些包的项目需要通过 `go get` 命令来重新安装它们。</pre>其他变更：
+* 6c、8c：使浮点数代码具备NaN安全性。
+* 6l、8l：移除未使用的宏定义（感谢 Shenghou Ma）。
+* archive/tar：修复 TestNonSeekable 中的竞态条件。
+* archive/zip：新增 os.FileInfo 与 FileHeader 之间的转换函数。
+* build：不再编译所有 C 编译器（感谢 Shenghou Ma），
+    移除现已存在于子仓库的代码。
+* bytes：移除无用代码，完善文档，
+    恢复内存不足时的 panic，
+    将缓冲区大小溢出转为错误。
+* cgo：-cdefs 应将 unsafe.Pointer 转换为 void *（感谢 Shenghou Ma）。
+* cmd/gc：修复 order.c 中对 ninit 本身遗漏的递归调用。
+* cmd/go：错误修复，实现 go get 命令，
+    正确处理 'go run' 的 -n 和 -x 标志（感谢 Shenghou Ma），
+    解决 get lp.net/project/foo 的歧义问题（感谢 Gustavo Niemeyer），
+    根据用法字符串生成的文本更新 doc.go。
+* cmd/goapi：用于随时间跟踪导出 API 的新工具。
+* codereview：支持子仓库。
+* compress/flate：修复拼写错误，压缩率提升 3-4%，
+    哈希表长度从 1<<15 增加到 1<<17。速度提升 0%-16%，
+    使延迟匹配生效，
+    以额外算术运算为代价降低内存压力，
+    使用 append 替代 slice+counter。
+* crypto：将部分 FooError 重命名为 ErrFoo。
+* dashboard：修复新 xml 包的 -commit 问题。
+* database/sql：新增 NullInt64、NullFloat64、NullBool（感谢 James P. Cooper），
+    将 SQL 空值转换为 []byte 的 nil（感谢 James P. Cooper），
+    修复 Tx.Query（感谢 Blake Mizerany）。
+* doc：扩展关于 GOMAXPROCS 的常见问题解答，更新至 Go 1。
+* doc/go1：添加 encoding/xml 和 net/url 的变更（感谢 Gustavo Niemeyer），
+    增加更多关于 hash 和 net 的变更信息，删除对 html 的引用，
+    添加 flag、runtime、testing、image、mime、filepath.Walk 的文档，
+    记录子仓库。
+* encoding/binary：文档说明 PutVarint、PutUvarint 可能引发 panic。
+* encoding/varint：已删除 WriteXvarint。
+* encoding/xml：新增忽略标签的文档（感谢 Gustavo Niemeyer），
+    使 API 更接近其他包（感谢 Gustavo Niemeyer），
+    改进 []byte 处理（感谢 Gustavo Niemeyer），
+    移除 Marshaler 支持（感谢 Gustavo Niemeyer），
+    支持用 "-" 忽略字段（感谢 Gustavo Niemeyer）。
+* exp/ebnflint：在 'go test' 期间测试规范。
+* exp/norm：修复了由变更 10087 引入的一个隐蔽错误：随机偏移。
+* gc、runtime：处理浮点数 map 键。
+* gc：避免错误消息中出现 DOT，
+    不要尝试将类型不正确的键添加到哈希中（感谢 Jeff R. Allen），
+    修复求值顺序，
+    修复接口比较中的递归循环，
+    处理内置复数运算参数中的函数调用，
+    修复下标访问常量字符串时遗漏的类型检查，
+    允许内联函数使用 unsafe.Pointer，
+    放宽内联适用标准，
+    类型开关上的静态接口检查仅适用于具体 case 类型，
+    为递归接口错误添加测试用例。
+* go/ast：尊重 ImportSpec.EndPos（感谢 Scott Lawrence）。
+* go/build：向 Context 添加 BuildTags，允许 !tag。
+* go/doc：重写并添加大量测试。
+* go/parser：使用显式的 parser.Mode 类型。
+* go/printer、gofmt：尊重函数签名中的换行。
+* go/scanner：使用显式的 scanner.Mode 类型。
+* gob：为 debug.go 添加注释使其通常不被构建，
+    减小最大消息大小。
+* godoc：记录节点打印错误，
+    将概述移至 API 目录之前，
+    启动时更新元数据。
+* gofix：添加 -debug 标志以便更快诊断内部错误，
+    在 xmlapi 修复中处理 xml.Unmarshal（感谢 Gustavo Niemeyer），
+    更新 go1pkgrename 以支持子仓库。
+* goyacc：修复当 yydebug >= 2 时的索引错误。
+* ld：修复非 cgo 二进制文件的 Mach-O 代码签名（感谢 Mikkel Krautz）。
+* libmach：交叉编译支持（感谢 Shenghou Ma）。
+* math/big：x86-64、386 和 ARM 的 bitLen 函数的汇编版本（感谢 David G. Andersen），
+    bitLen 的返回类型为 int；在 amd64 上使用 MOVL（感谢 David G. Andersen），
+    为 Rat 和 Int 的 SetString 和 Scan 方法添加示例，
+    对内部 bitLen 函数使用的算法略有改进（感谢 David G. Andersen），
+    同时测试 bitLen 和 bitLen_g。
+* net/http：新增 Request.RequestURI 字段，
+    禁用针对 Transport 竞态/死锁错误的测试，
+    修复 Transport 死锁（感谢 Yoshiyuki Kanno），
+    使 ParseForm 忽略未知的内容类型（感谢 Roger Peppe），
+    解析 CONNECT 请求（感谢 Andrew Balholm）。
+* net/rpc：修复基准测试中的数据竞争，
+    修复 TestClientWriteError 测试中的竞态条件，
+    记录 Call 回复被丢弃。
+* net：Dial、ListenPacket 支持 "ip:protocol" 网络用于原始 IP 套接字（感谢 Mikio Hara），
+    当时间为零时实际重置截止时间，
+    一致的 OpError 消息（感谢 Mikio Hara），
+    修复拨号谷歌测试（感谢 Mikio Hara），
+    当 UDPConn 已连接时使 WriteTo 失败（感谢 Mikio Hara）。
+* regexp：移除残留的 Error 类型。
+* runtime：为零大小类型添加类型算法，
+    将 NumCPU 声明移入 debug.go。
+* spec：函数调用时，对 *nil 解引用将引发 panic。
+* syscall：在 OS X 上添加 NOTE_* 常量（感谢 Robert Figueiredo）。
+* test：显式使用变量以避免 gccgo 的 "not used" 错误。
+* text/template：为 Template 添加示例。
+
+---
+
+<h2 id="2012-01-20">2012-01-20</h2>
+
+<pre>
+本次每周快照将 exp/sql 包重命名为 database/sql，并将 utf8.String 从 unicode/utf8 移至 exp/utf8string。
+
+net 包的 SetTimeout 方法已更改为 SetDeadline。
+
+os 包中的许多函数现在接受 os.FileMode 参数而不是普通的 uint32。同时还定义了新的 os.ModeSticky 常量。
+
+对于 image.YCbCr，其第一个缓冲区元素的含义已更改，以匹配 image.RGBA 等其他图像类型的语义。
+
+crypto/hmac 中的 NewMD5、NewSHA1 和 NewSHA256 函数已弃用。请改用 New 函数，并显式传递哈希函数。</pre>其他变更：
+* buildscripts: 移动至 buildscript 目录（感谢 Shenghou Ma）。
+* bytes: 为 example_test.go 添加常规版权声明（感谢 Olivier Duperray）。
+* cmd/go: 从文档中移除对'gotest'的提及，在包扫描中跳过 _obj 目录。
+* container/heap: 改进包文档。
+* crypto/elliptic: 添加常数时间 P224 实现。
+* crypto/hmac: 添加 HMAC-SHA224 和 HMAC-SHA384/512（感谢 Luit van Drongelen）。
+* crypto/tls: 添加 FreeBSD 根证书位置（感谢 Shenghou Ma）。
+* crypto/x509: 移除对 rsa 的显式使用。
+* doc: 各项更新（感谢 Jongmin Kim、Scott Lawrence、Shenghou Ma、Stefan Nilsson）。
+* encoding/json: 允许标签名中使用 / 和 %，文档说明尖括号转义，修正注释，调整标签名测试（感谢 Mikio Hara）。
+* encoding/xml: 支持在字段中序列化/反序列化 xml.Name（感谢 Gustavo Niemeyer）。
+* exp/inotify: 修复 linux 测试中的数据竞争。
+* exp/proxy: 修复 URL 变更后的构建问题（感谢 Gustavo Niemeyer）。
+* exp/sql: 扫描到 []byte 时默认复制，将 NullableString 重命名为 NullString 并允许其作为参数使用。
+* exp/ssh: 为 uint32 和 uint64 类型添加序列化函数，处理仅含 '\n' 的版本，重命名（部分）字段（感谢 Christopher Wedgwood）。
+* exp/terminal: 修复非 Linux 系统使用 Makefile 的构建问题。
+* fmt: 启用并修复 malloc 测试。
+* gc: 为 error 类型不输出 pkgpath，不在函数外部因 return 报错（感谢 Scott Lawrence），导出内联中的 struct 字面量里的字段名若为嵌入内置类型则不应限定，修复嵌入接口的无限递归，为 esc.c 的 sink 添加 orig 以便 -mm 诊断再次生效，处理 string/arrayrune 转换的打印，移除冗余代码（感谢 Shenghou Ma）。
+* go/build: FindTree 返回的包名中不含反斜杠（感谢 Alex Brainman）。
+* go/doc: 收集 import，不遮蔽接收者，重写并完成测试框架，段落间仅打印一个换行。
+* go/parser: 表达式可包含注释。
+* go/scanner: 修正示例（感谢 Olivier Duperray）。
+* go/token: 将 Files() 替换为 Iterate()。
+* godoc: 为 cmd 文档标题添加锚点，移除 "need more packages?" 链接，通过 JSON 块指定 HTML 页面元数据，支持 HTML 元数据中的规范路径。
+* html/template: 修复 API 变更后的文档（感谢 Gustavo Niemeyer）。
+* html: 在外部内容中，检查 HTML 集成点是否在 breakout 中。
+* image/color: 将 modelYCbCr 重命名为 yCbCrModel（感谢 Benny Siegert），简化文档（感谢 David Crawshaw）。
+* image: 添加 PixOffset 方法。
+* math/rand: 缩短短模式下的测试时长，为全局生成器记录默认初始种子（感谢 Scott Lawrence）。
+* mime: 为保持一致性，让 FormatMediaType 接受完整类型。
+* misc/cgo/test: 使测试在 windows 上运行（感谢 Alex Brainman）。
+* net/http/cgi: 增加一个不稳定测试的超时时间。
+* net/http: 修改测试以使用 override 参数而非 chan，在关闭 HTTP 连接前记录 handler 的 panic，重定向时发送 jar 中的 cookie（感谢 Jeff Hodges），文档应使用正确签名的 NewRequest（感谢 Christoph Hack），稍微更新 Client 文档。
+* net/url: 清理 URL 接口（v2）（感谢 Gustavo Niemeyer）。
+* net: 测试中的日志格式保持一致（感谢 Mikio Hara），多项构建修复（感谢 Mikio Hara），在 fd_windows.go 中使用 NewTimer 而非 NewTicker。
+* old/netchan: 修复客户端 hashmap 上的数据竞争。
+* os/exec: LookPath 中微不足道的分配移除（感谢 Gustavo Niemeyer）。
+* os: 移除关于 NewSyscallError 特殊性的旧注释（感谢 Alex Brainman）。
+* path: 添加示例（感谢 Sanjay Menakuru）。
+* pkg: 添加和修复 "hand generated" 文件的版权（感谢 Olivier Duperray），为 windows 版本添加缺失的 godoc 注释（感谢 Alex Brainman）。
+* regexp: 添加 SubexpNames。
+* runtime: 为 FreeBSD/386 和 amd64 实现 runtime.usleep（感谢 Shenghou Ma），为 Darwin 实现 madvise 和 SysUnused（感谢 Dave Cheney）。
+* sync/atomic: 修复测试中的数据竞争。
+* syscall: 为 TimeSpec、TimeVal 添加 Unix 方法，修复 plan9 构建（感谢 Mikio Hara）。
+* test: 修改多个测试以不打印，修复 bug364 使其实际运行，匹配 gccgo 对 bug345 的错误消息，将 golden.out 拆分为每个测试的预期输出。
+* testing: 不恢复示例的 panic（感谢 Shenghou Ma），记录示例。
+* text/template/parse: 使用人类可读的错误打印。
+* text/template: 修复重定义时的 nil 错误。
+* time: 添加 Since 函数，返回自过去某个时间 t 以来经过的时间。
+
+<h2 id="2012-01-15">2012-01-15</h2>
+
+<pre>
+此周度快照包含两项可能要求客户端代码修改的包变更。
+
+image 包的 Tiled 类型已重命名为 Repeated。
+
+encoding/xml 包已更改以更地道地使用 struct 标签（struct tags）等。如果你使用了 xml 包，请阅读变更描述以了解你的代码是否受到影响：
+	http://code.google.com/p/go/source/detail?r=70e914beb409
+
+gc 编译器现已默认启用函数内联（Function inlining）。
+</pre>其他变更：
+* bytes：在 EOF 时读取 0 字节不应视为 EOF。
+* cgo：如果常量值无法解析，则从 DWARF 信息中获取；将 _cgo_export.h 写入对象目录而非源码目录。
+* cmd/go：添加用于并行处理的 -p 标志（类似 make -j）；为 build 和 install 命令添加 -v 标志；在导入路径参数中支持 ... 模式；修复构建期间的数据竞争；修复编译的导入目录列表；修复链接器参数；处理 cgo pkg-config 编译指令；处理到 cmd 目录的路径；在 fmt、vet 和 fix 中包含测试文件（感谢 Sanjay Menakuru）；在 10 分钟后终止测试进程；将参数传递给 run 命令（感谢 Eric Eisner）；依赖退出代码判断测试是否通过；在 go fix、go fmt、go vet 输出中使用相对路径。
+* cmd/gofmt：通过在 cmd/gofmt 上运行 gofmt 修复 simplify.go（感谢 Olivier Duperray）。
+* crypto/openpgp：各种清理；在检查 DSA 签名前截断哈希值。
+* crypto/tls：改进 TLS 客户端认证（感谢 Jeff R. Allen）；为新的 time 包更新 generate_cert.go。
+* dashboard：改进缓存，修复错误。
+* doc：更新《如何编写 Go 代码》以使用 go 工具；修复损坏的函数代码走查示例。
+* encoding/asn1：记录对 *big.Int 的支持（感谢 Florian Weimer）。
+* encoding/gob：修复将 []byte 解码为不兼容切片类型时的 panic（感谢 Alexey Borzenkov）。
+* encoding/json：不序列化特殊浮点值（感谢 Evan Shaw）。
+* encoding/xml：主要的 Go 1 兼容性修复（感谢 Gustavo Niemeyer）。
+* exp/proxy：新增包。
+* exp/sql：添加 time.Time 支持；在 EOF 时关闭 Rows；修复 QueryRow.Scan 写入 *[]byte 时可能的数据损坏。
+* exp/ssh：各种小修复（感谢 Dave Cheney）。
+* exp/terminal：添加 SetPrompt 并处理大型粘贴；为需要的（非 Linux？）系统添加到顶层 Makefile。
+* flag：添加 Duration 标志类型；将 Set 方法的 Value 接口更改为返回 error 而非 bool。
+* gc：改进错误信息；使用标量结构体字段时避免误报（感谢 Rémy Oudompheng）；改进闭包代码生成；禁止在包外声明变量；修复接口值的 switch 语句（感谢 Rémy Oudompheng）；内联 bug 修复；改进 unsafe.Pointer 类型检查错误信息（感谢 Ryan Hitchman）；限制导出递归接口的大小（感谢 Lorenzo Stoakes）。
+* go-mode.el：修复反引号的语法高亮（感谢 Florian Weimer）。
+* go/ast：从 ast.Fprint/Print 中移除不必要的返回值。
+* go/build：允许在 #cgo 标志中使用冒号；在链接命令末尾传递 CgoLDFLAGS。
+* go/doc：新的 API，不忽略匿名未导出字段，初始测试支持。
+* go/parser：移除未使用的 Parse* 函数。简化 ParseExpr 签名。
+* go/printer：如果 AST 包含 BadXXX 节点不会崩溃。
+* go/scanner：扫描速度提升 17%，移除 InsertSemis 模式。
+* goinstall：为 Google Code svn 仓库使用正确的 checkout URL。
+* gotest：使 _testmain.go 符合 gofmt 规则（感谢 Benny Siegert）。
+* goyacc：修复 units.y 构建失败（感谢 Shenghou Ma）。
+* html/template：重新启用测试用例并修复错误转义序列（感谢 Mike Samuel）。
+* html：“in select in table”插入模式（感谢 Andrew Balholm）；调整外部属性；外部元素 HTML 集成点、标签名调整；在 body 内解析 <frameset>（感谢 Andrew Balholm）；仅在添加外部内容时传播外部命名空间。
+* json：误用 ,string 选项时改进错误信息。
+* ld：解析但不实现 -X 标志。
+* log/syslog：添加 Alert 方法（感谢 Vadim Vygonets）。
+* make.bash：移除旧的残留（感谢 Alex Brainman）。
+* math/big：简化快速字符串转换。
+* math：修复 all_test.go 中的错别字（感谢 Charles L. Dorian）。
+* misc/windows：在安装脚本中添加 src/pkg/runtime/z* 文件（感谢 Alex Brainman）。
+* net/http：不忽略 Request.Write 的 Flush 错误；允许具有负 Max-Age 属性的 Cookie（感谢 Volker Dobler）。
+* net/textproto：读取单个头信息时避免数据损坏。
+* net：为 Unix 变体添加 IP 级别套接字选项辅助函数（感谢 Mikio Hara）；修复 ListenIP、ListenUDP 上的错误模式（感谢 Mikio Hara）；利用内核状态监听 TCP、Unix（感谢 Mikio Hara）；平台相关的默认套接字选项（感谢 Mikio Hara）。
+* os：添加 ModeCharDevice。
+* runtime：添加 NumCPU；删除 pcln walker 的重复实现；对 nil 函数值的调用使用明确的 panic 信息；在 FreeBSD 上启用 runtime.ncpu（感谢 Devon H. O'Dell）；通过删除代码使垃圾回收器更快；重新生成 defs_darwin_{386,amd64}.h（感谢 Dave Cheney）；修复 darwin/amd64 和 linux/arm 上的 runtime.usleep() bug（感谢 Shenghou Ma）。
+* spec：零大小变量的指针比较；更改关于 select 语句选择的措辞。
+* strconv：修复四舍五入边界情况；使用 Grisu3 算法加速 FormatFloat(x, *, -1, 64)（感谢 Rémy Oudompheng）；为已截短数字实现快速舍入路径（感谢 Rémy Oudompheng）；对非法八进制序列的反转义返回 ErrSyntax。
+* syscall：仅限 Linux 支持父进程终止信号（感谢 Albert Strasheim）；使 Environ 返回原始顺序。
+* testing：修复 defer 竞争；为 -timeout 标志使用 flag.Duration。
+* text/template：处理非 error 类型的 panic 值（感谢 Rémy Oudompheng）；在 map 上执行 range 时，如果可行则排序键。
+* time：添加 ParseDuration；修复 After 和 NewTicker 的文档。
+* windows：使用 ArbitraryUserPointer 作为 TLS 槽（感谢 Wei Guangjing）。
+</pre>
+
+<h2 id="2011-12-22">2011-12-22</h2>
+
+<pre>
+此快照包含 images/ycbcr 和 testing 包的变更，以及构建系统的变更。
+
+image/ycbcr 中用于管理 Y'CbCr 图像的类型已被移至 image 和 image/color 包。一个 gofix 模块将重写受影响的代码。
+
+testing 包的 B 类型（用于运行基准测试）现在拥有与 T 类型（用于测试）相同的方法，例如 Print、Error 和 Fatal。本周新增了一个名为 'go' 的命令，用于构建和测试 Go 程序。
+对于 Go 1，go 命令将取代我们目前使用的基于 Makefile 的方法。它尚未准备好供普遍使用，但 all.bash 脚本已使用它来构建整个代码树。如果您在构建每周快照时遇到问题，可以在运行 all.bash 之前执行 `export USE_GO_TOOL=false` 以回退到使用 Makefile。
+
+其他变更：
+*   archive/zip: 为 `FileHeader` 添加了 `SetModTime` 方法。
+*   build: 利用了 `env` 环境变量（感谢 Mikio Hara），
+	修复了使 `go install` 在 Windows 上正常工作的问题（感谢 Alex Brainman）。
+*   bytes: 添加了两个 `Buffer` 的示例。
+*   cgo: 支持导出内建类型（感谢 Maxim Pimenov）。
+*   cmd/go: 避免了针对包特定标志的无限循环（感谢 Mikio Hara），
+	修复了构建标准库的问题，
+	实现了 test 命令，
+	确保在 gcc-4.5 及更高版本中使用 pthread（感谢 Mikio Hara），
+	尊重 `$GCFLAGS`，
+	在帮助信息中一致使用空格（感谢 Roger Peppe），
+	以及许多其他改进。
+*   codereview: 在 codereview.py 中初始化了 "found" 变量（感谢 Miki Tebeka）。
+*   crypto/mime/net/time: 在 `+build` 标签中添加了 netbsd（感谢 Joel Sing）。
+*   crypto/tls: 不再假设 API 中存在 RSA 私钥。
+*   crypto/x509: 修复了访问器方法中接收者为 nil 时崩溃的问题。
+*   doc/effective_go: 讨论了重声明。
+*   doc: 删除了 Go 课程笔记，
+	在适用时引用了 http://build.golang.org/ （感谢 Robert Hencke），
+	建议使用 code.google.com/p/go 而不是 go.googlecode.com/hg。
+*   encoding/binary: 添加了 `Write` 和 `Read` 的示例，
+	增加了更多基准测试（感谢 Roger Peppe）。
+*   encoding/gob: 数组仅在其所有元素均为零值时才被视为零值。
+*   encoding/json: 清理了数组解码中遗留的变量（感谢 Rémy Oudompheng），
+	为 `Marshal` 和 `Unmarshal` 添加了示例。
+*   exp/ssh: 将辅助函数 `ClientAuthPublicKey` 重命名为 `ClientAuthKeyring`（感谢 Dave Cheney），
+	简化了 `Stdin/out/errPipe` 方法（感谢 Dave Cheney）。
+*   fmt: 加速了浮点数打印，清理了部分代码，
+	使 malloc 测试能够检查其计数。
+*   gc: 允许在生成的代码中使用 `unsafe.Pointer`，
+	避免在 `runtime` 包的定义中使用 `unsafe`，
+	为内联函数提供更准确的行号，
+	改进了标签的循环深度分析，
+	实现并测试了原始字符串中的 `\r`，
+	内联时允许空函数体，修复了 `_` 参数处理，
+	在错误消息中省略函数类型中的参数名称。
+*   go/ast, parser: 记住了与短变量声明对应的标识符对象。
+*   go/build: 添加了新的 `+build` 标签 `cgo` 和 `nocgo`。
+*   go/doc, godoc: 将导出过滤逻辑移入 go/doc 包。
+*   go/printer, gofmt: 对行间距进行了微调。
+*   go/scanner: 从原始字面量中去除了 CR 字符。
+*   gob: 为结构体值实现了 `isZero` 方法。
+*   godoc: 允许为方法添加示例（感谢 Volker Dobler），
+	显示匿名字段的方法。
+*   goinstall: 仅在适当时建议对错误导入使用 `-fix`。
+*   govet: 添加了对 printf 动词的检查，
+	将程序按检查套件拆分为每个文件一个。
+*   html: 进行了更多解析器改进（感谢 Andrew Balholm）。
+*   json: 添加了一些演示错误消息问题的测试，
+	在编码中使用 `strconv.Append` 变体以避免分配内存。
+*   ld: 添加了对 netbsd 签名注释节的支持（感谢 Joel Sing），
+	允许 `IMAGE_REL_AMD64_ADDR32NB` 重定位类型（感谢 Alex Brainman）。
+*   math/big: 修复了当参数同时也是接收者时 `Rand` 可能挂起的问题。
+*   misc/builder: 将默认构建主机设置为 build.golang.org。
+*   misc/dashboard: 删除了旧的构建仪表板代码，
+	对 Go 实现版本进行了改进和修复。
+*   misc/vim: 修复了 Go 文件类型检测（感谢 Paul Sbarra）。
+*   net, syscall, os: 在 epoll/kqueue 描述符上设置了 `CLOEXEC` 标志。
+*   net, syscall: 处理了接口地址和掩码（感谢 Mikio Hara）。
+*   net/http: 添加了 cookie jar 的接口（感谢 Volker Dobler），
+	测试修复（感谢 Alex Brainman）。
+*   net: 添加了 `DialTimeout`，
+	对 Makefile 条目进行了排序（感谢 Mikio Hara）。
+*   os, syscall: 开始了 NetBSD 支持（感谢 Christopher Nielsen）。
+*   os/exec: 添加了测试以验证 net 包的 epoll fd 不会传递给子进程，
+	在 darwin 上禁用了 ExtraFiles 测试。
+*   os: 不在 OS X 上信任 `O_CLOEXEC`，
+	确保 `Remove` 在 Windows 上返回正确的错误（感谢 Alex Brainman）。
+*   path, path/filepath: 添加了 `Dir` 函数作为 `Base` 的补充。
+*   path/filepath.Rel: 文档说明返回的路径始终是相对路径。
+*   runtime: 在 SIGILL 信号时不再 panic，直接崩溃。
+*   spec: 更精确地定义了换行符。
+*   sql: 添加了 `Rows.Columns` 方法。
+*   strconv: 修复了基于扩展浮点数转换的 bug，
+	实现了十进制数字的更快解析，
+	减少了多精度十进制数的缓冲区大小（感谢 Rémy Oudompheng）。
+*   syscall: 为 linux/arm 重新生成了 z-files（感谢 Mikio Hara），
+	对 Makefile、mkall.sh 和 mkerrors.sh 的条目进行了排序（感谢 Mikio Hara）。
+*   test/bench/go1: Go 1 基准测试套件的初稿。
+*   testing: 将 `Log` 与 `Println` 进行了比较（感谢 Robert Hencke），
+	使并行测试的信号发送更安全。
+*   text/template: 为空模板提供了更好的错误消息，
+	修复了函数参数为 nil 时的处理（感谢 Gustavo Niemeyer）。
+*   time: 为 `Time` 添加了 JSON 编组器（感谢 Robert Hencke），
+	新增了 `AddDate` 方法（感谢 Roger Peppe）。
+*   其他: 像 Makefile 一样使用 `$GCFLAGS` 和 `$GCIMPORTS`（感谢 Maxim Pimenov）。
+</pre>
+
+<h2 id="2011-12-14">2011-12-14</h2>
+
+<pre>
+此快照包含语言变更以及 goinstall 和 gofmt 的变更。
+
+现在，只要数据结构的元素本身可以比较，就分别为结构体和数组值定义了相等和不相等（`==` 和 `!=`）。详情请参见 Go 1 发布说明：
+	http://weekly.golang.org/doc/go1.html#equality
+
+`rune` 类型现在是 `int32` 的别名，字符字面量的默认类型为 `rune`。使用 `int` 来替代本应使用 `rune` 的地方的代码将无法通过编译。详情请参见 Go 1 发布说明：
+	http://weekly.golang.org/doc/go1.html#rune
+
+现在，Goinstall 期望 Google Code 的导入路径采用以下形式：
+	"code.google.com/p/go-tour/tree"
+它将拒绝旧样式的导入，例如 "go-tour.googlecode.com/hg/tree"。
+有一个 gofix 模块可以重命名此类导入。
+使用 `goinstall -fix` 来更新有问题的包。Gofmt 的命令行参数进行了微调。
+`-tabintent` 参数已重命名为 `-tabs`。
+`-spaces` 参数已被移除。
+
+其他变更：
+* 5c, 6c, 8c：支持 64 位 switch 值（感谢 Anthony Martin）。
+* 8c：处理 64 位 switch 值。
+* archive/tar：使用 struct 比较而非 DeepEqual（感谢 Christopher Wedgwood）。
+* archive/zip：使 zip 支持 os.FileMode（感谢 Roger Peppe）。
+* bufio：将最小读取缓冲区大小设为 16 字节。
+* build：在 Windows/amd64 上禁用 cgo；
+    规范化包结构，使其无需 Makefiles 即可构建。
+* bytes：更快的 Count、Index、Equal 实现。
+* cgo：添加基本的 gccgo 支持（感谢 Rémy Oudompheng）。
+* codereview：修复路径斜杠问题（感谢 Yasuhiro Matsumoto）。
+* compress/flate：修复越界错误。
+* contribute.html：不要填写审阅者字段（感谢 Florian Weimer）。
+* crypto/aes：通过减少间接调用提升速度（感谢 Taru Karttunen）。
+* crypto/dsa：不要截断输入的哈希值。
+* doc/go_tutorial：明确指出文件示例是特定于 Unix 的。
+* doc：新增 Defer、Panic 和 Recover 文章；
+    新增 Error Handling 文章；
+    新增 Go 1 发布说明文档。
+* encoding/gob：类型不匹配时提供更好的错误信息。
+* env.bash：导出 CGO_ENABLED 以便运行 cgo 测试（感谢 Alex Brainman）。
+* exp/sql：简化某些字符串转换。
+* exp/ssh：Wait 返回一个 *ExitError（感谢 Gustav Paul）。
+* exp/ssh：改进客户端 channel 关闭行为（感谢 Dave Cheney）。
+* fmt：如果 String 方法（等）行为异常，则避免递归。
+* gc：提供更好的错误信息；
+    内联（未使用 -l 时禁用）；
+    多处错误修复（感谢 Lucio De Re 和 Rémy Oudompheng）。
+* go/printer, godoc：在示例代码中打印注释。
+* go：实现 doc、fmt、fix、list、vet、build 和 install 命令。
+* gobuilder：构建完 go 树后使用 goinstall 安装包。
+* godoc：`<pre>` 标签不能出现在 `<p>` 标签内（感谢 Olivier Duperray）；
+    添加 opensearch 描述文档（感谢 Christoph Hack）；
+    文本换行。
+* gofix：添加 httputil 修复（感谢 Yasuhiro Matsumoto）。
+* gotest：更多地使用 go/build（感谢 Robert Hencke）。
+* gzip：在 Latin-1 和 Unicode 之间进行转换（感谢 Vadim Vygonets）。
+* html/template：本地定义 FuncMap 类型。
+* html：解析外部内容（MathML, SVG）的初步尝试；
+    更多的解析器改进（感谢 Andrew Balholm）。
+* http：打印 panic 堆栈跟踪后关闭连接（感谢 Roger Peppe）；
+    修复带有类 gzip 响应的失败的 Transport HEAD 请求。
+* json：将重命名的 byte 切片与 []byte 同样对待。
+* ld：针对 NetBSD 二进制文件的链接器支持初版（感谢 Christopher Nielsen）；
+    修复内存泄漏（感谢 Scott Lawrence）；
+    为 cgo 增加 Windows 上的默认栈大小。
+* math：删除非基于 Sqrt 的 Hypot；
+    实现、记录并修复特殊情况（感谢 Charles L. Dorian）。
+* misc/benchcmp：不要求行首必须有 "Benchmark"。
+* misc/osx：将 profile.go 重命名为 profile_go（感谢 Scott Lawrence）。
+* net/http：修复简单的示例服务器（感谢 Olivier Duperray）；
+    net/http：测试时删除临时文件和目录。
+* net/smtp：添加 CRAM-MD5 认证（感谢 Vadim Vygonets）。
+* reflect：修复 Slice cap（感谢 Gustavo Niemeyer）。
+* regexp：性能改进；避免为输入接口分配内存。
+* runtime：提升 gc 的“额外字节”检查（感谢 Christopher Wedgwood）；
+    Linux 的 madvise 和 SysUnused 支持（感谢 Sébastien Paolacci）；
+    使 gc_test 测试额外分配空间，而非总空间；
+    支持 NetBSD（感谢 Christopher Nielsen）。
+* spec：调整复数常量示例（感谢 Robert Hencke）；
+    底层类型为 uintptr 的值可转换为 unsafe.Pointer；
+    var x = 'a' 默认类型为 rune。
+* strconv：在错误信息中包含包名和函数名；
+    使 QuoteRune 等接受 rune 参数；
+    一些性能改进。
+* syscall：添加 Linux 下 flock() 系统调用的常量；
+    重新生成 darwin、freebsd 的 z 文件（感谢 Mikio Hara）；
+    重新生成 openbsd 的 z 文件；
+    当函数返回错误时，返回 error 而非 uintptr（感谢 Alex Brainman）。
+* test/bench：移动到 test/bench/shootout。
+* test/garbage：移动到 test/bench/garbage。
+* test：在 nilptr 测试中缩小数组大小。
+* time：允许睡眠测试运行时间过长 200%；
+    修复 Time.Add（感谢 Hector Chu）；
+    修复 daysIn 中的十二月处理（感谢 Peter Mundy）；
+    Time 的 gob 编组器（感谢 Robert Hencke）；
+    在 AfterFunc 中使用 Duration。
+* 其他：一揽子 time.Duration 相关清理。
+</pre>
+
+<h2 id="2011-12-06">2011-12-06</h2>
+
+<pre>
+此快照包含一个语言变更以及 strconv 和 go/doc 包的变更。这些包的变更需要对客户端代码进行修改。
+该语言变更向后兼容。
+
+数组、切片或映射的复合字面量中的类型省略已扩展到支持指向复合字面量的指针。
+类似下面的代码：
+    var t = []*T{&T{}, &T{}}
+现在可以写为：
+    var t = []*T{{}, {}}
+你可以使用 `gofmt -s` 来简化此类代码。
+
+strconv 包已获得更符合习惯且更高效的接口。
+客户端代码可以使用 gofix 进行更新。详情请参见文档：
+    http://weekly.golang.org/pkg/strconv/
+
+go/doc 包的 ToHTML 函数现在接受 []byte 参数，而非 string。</pre>**其他变更：**
+*   crypto/aes：消除了部分边界检查和截断操作（感谢 Rémy Oudompheng）。
+*   crypto/x509：如果父证书包含原始主题，则使用该原始主题。
+*   encoding/gob：不再为未导出的字段发送类型信息。
+*   exp/ssh：在认证期间允许接收 msgUserAuthBanner（感谢 Gustav Paul）。
+*   fmt：对浮点数进行基准测试；仅对字符串使用 Stringer 或 Error 接口。
+*   gc：为内联做准备而更改了导出格式；禁止通过接口比较来判断 map/func 是否相等；打印 map 类型时使用 gofmt 的间距格式。
+*   go/doc：从可能的标题候选行中排除以冒号 `:` 结尾的行。
+*   gobuilder：为包引入了 `-commit` 模式；暂时禁用了 `-package` 模式；采用了新的仪表盘协议。
+*   godoc：改进了 HTML 中示例的输出（感谢 Volker Dobler）。
+*   gofmt：处理复合字面量中的 `&T` 简化。
+*   goinstall：在 `-make=true` 时遵循 `-install=false` 标志。
+*   hash：重写了 Hash.Sum 方法的注释。
+*   html：更多的解析器改进（感谢 Andrew Balholm）。
+*   image：在比较 ColorModel 时避免进行函数比较。
+*   math：为 Sinh 和 Tanh 添加了特殊情况说明（感谢 Charles L. Dorian）。
+*   misc/dashboard：进一步的实现工作。
+*   net, syscall：从 UDPConn、IPConn 中移除了 BindToDevice（感谢 Mikio Hara）。
+*   net/mail：在测试中正确比较解析后的时间。
+*   os/exec：在 Windows 上使 LookPath 始终搜索当前工作目录（感谢 Benny Siegert）。
+*   runtime：为特定类型的算法做准备。
+*   strconv：转换速度提升了 34% 至 63%。
+</pre>
+
+<h2 id="2011-12-02">2011-12-02</h2>
+
+<pre>
+本周快照包括对 hash 包的更改，以及针对上一个快照中 time 和 os.FileInfo 更改的 gofix 修复。
+
+hash.Hash 的 Sum 方法现在接受一个 `[]byte` 参数，允许用户将哈希值追加到现有的字节切片中。使用 Sum 的现有代码可以将 nil 作为参数传递。Gofix 会自动完成此更改。
+
+**其他变更：**
+*   crypto/tls：清理了 Windows 上的证书加载逻辑（感谢 Alex Brainman）。
+*   exp/ssh：为 Session 添加了 Std{in,out,err}Pipe 方法（感谢 Dave Cheney）。
+*   dashboard：不再因奇怪的构建器名称而中断。
+*   exp/ssh：导出了类型信号，现名为 Signal（感谢 Gustav Paul）。
+*   os：添加了 ModeType 常量，用于掩码文件类型位（感谢 Gustavo Niemeyer）。
+*   text/template：用 AddParseTree 替代了 Add。
+*   go/doc：在 HTML 中检测标题并进行格式化（感谢 Volker Dobler）。
+</pre>
+
+<h2 id="2011-12-01">2011-12-01</h2>
+
+<pre>
+本周快照包括对 time、os 和 text/template 包的更改。其中，对 time 和 os 包的更改意义重大且相互关联。使用 time 包、text/template 包或 os 包的 FileInfo 类型的代码将需要修改。
+
+在 time 包中，现在只有一个类型 time.Time 来表示时间。请注意，time.Time 应作为值使用，这与通常使用指向大型结构体的指针 `*time.Time` 的旧代码相反。（请去掉 `*`。）任何先前接受 `*time.Time`、自 1970 年以来的 int64 秒数或自 1970 年以来的 int64 纳秒数的函数，现在都应接受 time.Time。特别是作为 int64 的替代品，该类型很好地文档化了其值的含义。
+
+无论您之前调用的是 time.Seconds、time.Nanoseconds、time.LocalTime 还是 time.UTC，替代它们的都是新函数 time.Now。
+
+如果您之前编写了如下代码：
+       t0 := time.Nanoseconds()
+       myFunction()
+       t1 := time.Nanoseconds()
+       delta := t1 - t0
+       fmt.Printf("That took %.2f seconds\n", float64(t1-t0)/1e9)
+现在可以写成：
+       t0 := time.Now()
+       myFunction()
+       t1 := time.Now()
+       delta := t1.Sub(t0)
+       fmt.Printf("That took %s\n", delta)
+在此代码片段中，变量 delta 的类型是新类型 time.Duration，它取代了众多以纳秒计数（但不是自 1970 年起）的 int64 参数。
+
+Gofix 可以完成上述转换以及其他一些转换，但它不会将显式的 int64 类型重写为 time.Time。在运行 gofix 后，您很可能需要编辑程序来更改这些类型。一如既往，请务必使用版本控制系统的 diff 功能查看 gofix 所做的更改。
+
+详情请参见：http://weekly.golang.org/pkg/time/。
+
+在 os 包中，FileInfo 结构体被替换为 FileInfo 接口，允许操作系统之外的代码实现该接口。引用 `*os.FileInfo`（指向旧结构体的指针）的代码现在应改为引用 os.FileInfo（新接口）。该接口仅包含几个方法：
+       type FileInfo interface {
+               Name() string       // 文件的基名
+               Size() int64        // 长度（字节）
+               Mode() FileMode     // 文件模式位
+               ModTime() time.Time // 修改时间
+               IsDir() bool        // Mode().IsDir() 的简写
+       }
+如果您需要访问操作系统内核提供的底层 stat_t，可以假设您持有的 FileInfo 实际上是一个 `*os.FileStat`，并且其 Sys 字段实际上是一个 `*syscall.Stat_t` 来访问它，例如：
+       dev := fi.(*os.FileStat).Sys.(*syscall.Stat_t).Dev
+当然，这在不同操作系统间不一定可移植。
+
+Gofix 将为您处理将 `*os.FileInfo` 重写为 os.FileInfo 的工作，并且它也会将诸如 `fi.Name` 之类的表达式重写为诸如 `fi.Name()` 之类的调用。
+
+详情请参见：http://weekly.golang.org/pkg/os/#FileInfo。模板包已更新，导出了新的、更简洁的 API。Set 类型已被移除。现在，模板通过一起解析自动关联；嵌套定义会隐式创建关联关系。只有相互关联的模板才能互相调用。这种方法大幅缩减了构造 API 的复杂度。html/template 包也相应更新。针对旧版 API 最简单常见的使用方式，gofix 提供了自动转换工具。未涉及 Set 类型的代码在运行 gofix 后很可能可直接使用；而使用了 Set 的代码则需手动修改。模板定义语言本身未作更改。
+
+详情请参见：http://weekly.golang.org/pkg/text/template/。
+
+其他变更：
+* cgo：新增从动态库回调的支持。
+* codereview：对非 src/ 目录文件进行 gofmt 检查（感谢 David Crawshaw）。
+* crypto/openpgp/packet：修复私钥校验和。
+* crypto/tls：新增 OpenBSD 根证书路径，不再依赖 map 的迭代顺序。
+* crypto/x509、crypto/tls：支持 PKCS#8 格式私钥。
+* dashboard：开始使用 Go 为 App Engine 重写实现。
+* encoding/xml：修复复制 bug。
+* exp/gui：将 exp/gui 和 exp/gui/x11 迁移至 http://code.google.com/p/x-go-binding。
+* exp/ssh：多项改进（感谢 Dave Cheney 和 Gustav Paul）。
+* filepath/path：修复 Rel 函数的缓冲区大小计算问题（感谢 Gustavo Niemeyer）。
+* gc：修复 Nconv bug（感谢 Rémy Oudompheng）及其他修复。
+* go/printer、gofmt：性能优化。
+* gofix：测试并修复重命名错误。
+* goinstall：新增 -fix 标志用于构建失败时对包运行 gofix；改进错误报告；仅在需要检出或更新时访问网络；支持 Google Code 子仓库。
+* html：解析器改进（感谢 Andrew Balholm）。
+* http：修复嗅探 bug 导致的短写入问题。
+* json：通过缓存 reflect 调用加速编码。
+* ld：对齐 ELF 数据段。
+* math/big：修复目标值泄漏到结果值的 bug（感谢 Roger Peppe）；采用递归细分法实现显著提速。
+* math：Cbrt 和 Sincos 函数加速（感谢 Charles L. Dorian）。
+* misc/osx：新增生成 OS X 安装包和磁盘镜像的脚本（感谢 Scott Lawrence）。
+* os：在 Windows 上调用 Open("") 时返回错误（感谢 Alex Brainman）。
+* runtime：确保系统调用时栈按 16 字节对齐（感谢 Alex Brainman）。
+* spec、gc：允许 string 与命名类型 []byte、[]rune 之间的直接转换。
+* sql：新增 Tx.Stmt 方法用于在事务中使用现有预处理语句；补充驱动文档和测试；无功能性变更。
+* strings：新增 ContainsAny 和 ContainsRune 函数（感谢 Scott Lawrence）。
+* syscall：新增 SUSv3 RLIMIT/RUSAGE 常量（感谢 Sébastien Paolacci）；修复 OpenBSD 系统调用中主机名/域名的临时解决方案；实现 Syscall15（感谢 Alex Brainman）。
+* time：修复 Timer 停止问题。
+
+<h2 id="2011-11-18">2011-11-18</h2>
+
+<pre>
+此快照包含部分语言变更。
+
+根据 Go 1 计划，现在禁止 map 和函数值的比较（与 nil 比较除外）。函数相等性在某些场景下存在问题，而 map 相等性比较的是指针而非内容。
+
+作为实验性特性，现在允许复制包含未导出字段的结构体。这使得包能够在 API 中返回不透明值。</pre>其他变更：
+* 6a, 8a：允许 `\$(-1)` 以与 `\$1`、`$(1)`、`$-1` 保持一致。
+* 6l：代码生成修复（感谢 Michał Derkacz）。
+* build：修复 Fedora 上 selinux `allow_execstack` 的检查（感谢 Bobby Powers）。
+* builtin：为内置函数 `delete` 添加文档。
+* cgo：不再因未声明的枚举/结构体而 panic（感谢 Rémy Oudompheng），
+      修复 g0 栈保护。
+* crypto/tls：修复握手消息测试。
+* crypto：更正了对 `Cipher` 接口的错误引用；应为 `Block`。
+* doc：对多个文档进行清理、补充和修正。
+* doc/install：添加 openbsd 安装指南（感谢 Joel Sing!）。
+* doc：添加 Go 语言之旅中文翻译的链接。
+* encoding/json：增加 marshal/unmarshal 基准测试，
+      将 `[]` 解码为空切片，而非 nil 切片，
+      使 `BenchmarkSkipValue` 更具一致性。
+* env.bash：检查 make/gmake 是否存在（感谢 Scott Lawrence）。
+* exp/sql：`NumInput()` 允许 -1 以忽略检查（感谢 Yasuhiro Matsumoto），
+      添加 `DB.Close`，修复错误，从 Driver 移除 `Execer`（仅保留在 Conn），
+      添加文档说明对于驱动程序，`io.EOF` 表示没有更多行，
+      添加公钥认证的客户端支持（感谢 Dave Cheney），
+      添加 direct-tcpip 客户端支持（感谢 Dave Cheney），
+      更改测试监听地址，失败时退出测试，
+      其他修复和改进（感谢 Dave Cheney）。
+* exp/terminal：将 `shell` 重命名为 `terminal` 并添加 `SetSize`。
+* fcgi：修复服务器能力发现。
+* fmt：在 `%#v` 中区分空切片/映射与 nil 切片/映射。
+* gc：改进错误信息、类型检查并进行大量修复，
+      移除 `m[k] = x, false` 语法（请使用 `delete(m, k)` 代替），
+      支持使用 Plan 9 yacc 进行构建（感谢 Anthony Martin）。
+* go/printer：使 `//line` 格式化幂等。
+* godefs：删除，已由 `cgo -godefs` 替代。
+* godoc：为 `-templates` 标志添加文档，修复远程搜索，
+      提供平铺式（非缩进）目录列表模式。
+* gofmt：保持 AST 中的 nil 节点不变（感谢 Rémy Oudompheng）。
+* html/template：在打印前解引用顶层值。
+* html：更多解析器改进（感谢 Andrew Balholm）。
+* http：修复使用 `http.ServeFile` 从当前工作目录提供服务的问题，
+      使 `Dir("")` 等同于 `Dir(".")`。
+* ld：修复 ldpe 的 `.bss` 段（感谢 Wei Guangjing）。
+* math/big：将 `nat{}` 替换为 `nat(nil)`。
+* math：更快的 `Lgamma`（感谢 Charles L. Dorian）。
+* mime：为 Windows 实现 `TypeByExtension`。
+* misc/bbedit：添加 error 和 rune 支持（感谢 Anthony Starks）。
+* misc/benchcmp：基准测试比较脚本。
+* misc/emacs：添加内置函数 `delete`（感谢 Bobby Powers）。
+* misc/kate：添加 error 和 rune（感谢 Evan Shaw）。
+* misc/notepadplus：添加 error 和 rune 支持（感谢 Anthony Starks）。
+* misc/windows：提供 MSI 格式的 Windows 安装程序（感谢 Joe Poirier）。
+* net, io/ioutil：移除对 `os.Time` 的使用（感谢 Anthony Martin）。
+* net/http：修复响应体 EOF 处理（感谢 Gustavo Niemeyer），
+      修复使用 `ReadFrom` 时的内容探测，
+      在测试中从备用 goroutine 使用 `t.Errorf`。
+* os：移除未文档化的 `Envs`（请改用 `os.Environ`）。
+* reflect：空切片/映射与 nil 不 `DeepEqual`，
+      使 `Value` 成为不透明结构体。
+* runtime, syscall：从 godefs 转换为 cgo。
+* runtime：为 Plan 9 添加 `nanotime`（感谢 Anthony Martin），
+      添加计时器支持，供 `time` 包使用，
+      避免 `make([]T, 0)` 的分配。
+* syscall：删除 `syscall.Sleep`，接管 env 实现，使用错误类型。
+* testing：在消息中添加 file:line 时间戳，将结果打印到标准输出。
+* text/template：重构 set 解析。
+* time：为 `Time` 添加 `ISOWeek` 方法（感谢 Volker Dobler）。
+* 多个包：避免函数比较，减少对 `os.EINVAL` 等的过度使用。
+
+<h2 id="2011-11-09">2011-11-09</h2>
+
+<pre>
+此周度快照按照 Go 1 计划重命名了多个 Go 包。
+客户端代码中的导入语句可以使用 gofix 自动更新。
+
+变更如下：
+	asn1              -> encoding/asn1
+	big               -> math/big
+	cmath             -> math/cmplx
+	csv               -> encoding/csv
+	exec              -> os/exec
+	exp/template/html -> html/template
+	gob               -> encoding/gob
+	http              -> net/http
+	http/cgi          -> net/http/cgi
+	http/fcgi         -> net/http/fcgi
+	http/httptest     -> net/http/httptest
+	http/pprof        -> net/http/pprof
+	json              -> encoding/json
+	mail              -> net/mail
+	rpc               -> net/rpc
+	rpc/jsonrpc       -> net/rpc/jsonrpc
+	scanner           -> text/scanner
+	smtp              -> net/smtp
+	syslog            -> log/syslog
+	tabwriter         -> text/tabwriter
+	template          -> text/template
+	template/parse    -> text/template/parse
+	rand              -> math/rand
+	url               -> net/url
+	utf16             -> unicode/utf16
+	utf8              -> unicode/utf8
+	xml               -> encoding/xml
+</pre>
+
+<h2 id="2011-11-08">2011-11-08</h2>
+
+<pre>
+此周度快照包含一些包变更。
+
+作为 Go 1 包重组的准备工作，多个包的源代码已被移动，但导入路径保持不变。此不一致性会导致此快照中的 goinstall 失败。如果您使用 goinstall，请在下个快照发布前保持同步到上个周度快照。
+
+html、bzip2 和 sql 包中返回 error 值的 `Error` 方法已重命名为 `Err`。
+
+http 包的一些非核心部分已移至 net/http/httputil。`Dump*` 和 `NewChunked*` 函数，以及 `ClientConn`、`ServerConn` 和 `ReverseProxy` 类型已从 http 移至 httputil。
+
+html/template 的 API 现在是 template API 的直接副本，而不是仅暴露一个 `Escape` 函数。对于 HTML 模板，请像使用 template 包一样使用 html/template 包。
+</pre>其他变更：
+* all: 在非代码上下文中将 os.EOF 重命名为 io.EOF（感谢 Vincent Vanackere），使用 gofix 排序导入。
+* archive/zip: 关闭通过 OpenReader 打开的文件（感谢 Dmitry Chestnykh）。
+* bufio: ReadLine 在错误时返回 nil 行，如文档所述。
+* builtin: 添加了基本类型和内置 error 类型的文档。
+* bytes: 添加了 Contains 函数。
+* exp/sql: 完成了事务实现，补充了类型和文档。
+* exp/ssh: 改进了客户端认证支持（感谢 Dave Cheney）。
+* gc: 对非接收型 channel 进行 range 操作时提供更好的错误信息；bug 修复和清理工作；检测未使用的类型开关变量；修复了符号名中包路径的转义问题；对指向指针的方法调用提供有帮助的错误信息；可移植地读取归档头（感谢 Ron Minnich）。
+* gob: 修复了多次注册同一类型时的 bug。
+* gofix: 避免了在 netudpgroup 中无 body 函数上发生 panic；按日期隐式确定修复顺序。
+* gofmt, gofix: 排序导入。
+* goinstall: 支持 launchpad.net/~user 分支（感谢 Jani Monoses）。
+* gopack: 不再在非 Go 对象中查找 Go 元数据。
+* gotest: 不运行没有预期输出的示例。
+* html: 解析器 bug 修复工作仍在继续（感谢 Andrew Balholm）。
+* http: 修复了嗅探器中的空白符处理；ParseForm 中只识别 application/x-www-form-urlencoded；ReadRequest 中支持 Trailers。
+* lib9: 添加了 ctime。
+* math: 更快的 Gamma 函数（感谢 Charles L. Dorian）；改进了 Tan 的精度（感谢 Charles L. Dorian）；改进了 Cos、Sin 和 Tan 的大角度测试（感谢 Charles L. Dorian）。
+* net: 在 windows 上实现了 LookupTXT（感谢 Alex Brainman）。
+* os, text, unicode: 重命名。
+* runtime/cgo: 将数据声明修复为 extern。
+* runtime: 为 freebsd 添加了 timespec 定义；添加了 windows 回调测试（感谢 Alex Brainman）；修复了 openbsd thrsleep 的原型；修复了 "set and not used" 问题；统一了跨操作系统的 mutex 代码；windows_386 的 sighandler 使用正确的 g（感谢 Alex Brainman）。
+* template: 修复了带指针接收器的格式化错误；使模板集中的重定义行为更一致。
+* test: 从源文件中清除执行位（感谢 Mikio Hara）；使 closedchan.go 在失败时以失败退出。
+* time: 更快的 Nanoseconds 调用。
+* websocket: 对错误的 websocket 请求返回 HTTP 错误响应。
+* xml: 允许解析 `<_></_>`。（感谢 David Crawshaw）。
+
+<h2 id="2011-11-02">2011-11-02 (新 error 类型)</h2>
+
+<pre>
+此快照引入了内置的 error 类型，其定义为
+
+       type error interface {
+               Error() string
+       }
+
+error 类型取代了 os.Error。请注意，方法名已从 String 改为 Error。包 fmt 的 Print 格式化同时支持 Stringer 和 error：通常情况下，无需同时实现 String 和 Error 方法。
+
+Gofix 可以更新大部分代码。如果你的包分散在多个文件中，使用 -force=error 命令行选项可能会有所帮助，它会强制 gofix 即使在特定文件是否需要修复不明显的情况下也应用 error 修复。和以往一样，在将 gofix 所做的更改提交到版本控制系统之前，阅读并测试这些更改是个好主意。
+</pre>
+
+<h2 id="2011-11-01">2011-11-01</h2>
+
+<pre>
+* 6l: 移除了对 -e 标志的提及——它不起作用。
+* cc: 将 cas 改为 newcase（感谢 Ron Minnich）。
+* crypto/openpgp/error: 在错误实现类型的名称中使用 Error。
+* crypto/rsa: 将公钥指数从 3 改为 65537。
+* crypto/tls: 为 alert 添加了 Error 方法。
+* doc: 添加了日语版 "A Tour of Go" 的链接；添加了 'all' make 规则来构建所有文档；指向 tour.golang.org 而不是 go-tour.appspot.com。
+* exp/norm: 修复了迁移到新 regexp 时引入的 bug。
+* exp/ssh: 修复了长度头泄露到通道数据中的问题（感谢 Dave Cheney）。
+* fmt: 显式处理 os.Error 值（与 Stringer 区分开）。
+* gc: 清理打印输出；修复了 [568]g -V 崩溃问题（感谢 Mikio Hara）；测试并修复了逃逸分析 bug。
+* go/build: 在测试中避免使用 os.Error。
+* go/doc: 移除了 os.NewError 的反启发式方法。
+* go/parser: 测试并修复了 := 作用域 bug。
+* gob: 分裂了 gobError 的使用，移除了不必要的嵌入。
+* gofix: 测试了导入的插入和删除。
+* goinstall: 针对常见站点智能选择版本控制系统（感谢 Julian Phillips）。
+* gopack: 将归档文件名长度改回 16。
+* html: 修复了测试中的打印参数；更多的解析器改进（感谢 Andrew Balholm）。
+* json: 正确处理 nil 切片（感谢 Alexander Reece）。
+* math: 改进了 Sin 和 Cos 的精度（感谢 Charles L. Dorian）。
+* misc/emacs: 修复了 gofmt 后的窗口恢复（感谢 Jan Newmarch）。
+* misc/vim: 添加了 rune 关键字（感谢 Jongmin Kim）。
+* misc/windows: 可用于 amd64（感谢 Alex Brainman）。
+* net: 文档说明了为什么在 windows 上不使用 SO_REUSEADDR（感谢 Alex Brainman）。
+* os: 不再将长度为 0 的读取解释为 EOF。
+* pkg: 从某些打印参数中移除了 .String()。
+* rpc: 避免了输入错误时的无限循环。
+* runtime/pprof: 添加了 OS X 有问题的文档说明。
+* runtime: 在 init 期间将主 goroutine 锁定到主 OS 线程。
+* spec: 定义初始化是顺序执行的。
+* strconv: 使用比 os.EINVAL、os.ERANGE 更好的错误信息。
+* syscall: 修复了 Plan 9 上的 Await 消息（感谢 Andrey Mirtchovski）。
+* template: 不将 error 用作 stringer；修复了执行未解析模板时的错误检查（感谢 Scott Lawrence）。
+* test/alias.go: 附加测试。
+* test: 与 error 相关的修复。
+* textproto: 防止 HTTP 头中的长行导致 HTTP 400 响应。
+* time: 添加了带数字时区格式的 RFC1123（感谢 Scott Lawrence）。
+</pre>
+
+<h2 id="2011-10-26">2011-10-26 (新 rune 类型)</h2>
+
+<pre>
+此快照引入了 rune 类型，它是 int 的别名，应用于 Unicode 码点。
+
+Go 的未来版本（Go 1 之后）将把 rune 改为 int32 而不是 int 的别名。持续使用 rune 是确保你的代码在此更改前后都能构建的方法。
+
+要测试你的代码是否 rune 安全，你可以使用您可以执行以下命令，该命令会构建一个编译器，其中 rune 是 int32 的别名而非 int 的别名：
+
+	GOEXPERIMENT=rune32 ./all.bash
+
+此外，请在代码上运行 govet 来识别那些可能需要更新其签名的方法。
+</pre>
+
+<h2 id="2011-10-25">2011-10-25</h2>
+
+<pre>
+* big：如果出错，让 SetString 返回 nil；新增 Rat.Inv 方法；现在可以无需显式初始化就使用零值 Rat。
+* codereview：在 `hg p` 中显示 LGTMs。
+* crypto/x509：修复证书生成中的名称问题。
+* exp/ssh：增加实验性 SSH 客户端；引入 Session 替代 Cmd 用于交互命令；服务器端清理（感谢 Dave Cheney）。
+* exp/types：修复在遇到未知类型时 parseBasicType 的崩溃问题。
+* fmt：格式化 nil interface 时不再 panic（感谢 Gustavo Niemeyer）。
+* go/ast, go/token：实际运行测试；修复 go/ast 测试。
+* gotest：增加显式 -help 标志，像 make 一样使用 $GCFLAGS。
+* govet：检查规范的动态方法签名。
+* html：改进解析（感谢 Andrew Balholm）；解析 `<select>` 标签；解析并渲染注释节点；移除 Tokenizer.ReturnComments 选项。
+* http：Transport：在 TLS InsecureSkipVerify 模式下，跳过主机名检查。
+* misc/vim：为 delete 增加高亮（感谢 Dave Cheney）。
+* net：在 Windows 上不设置 SO_REUSEADDR（感谢 Alex Brainman）。
+* os/inotify：移至 exp/inotify（感谢 Mikio Hara）。
+* runtime：在 mcpu 统计中包含引导 m（感谢 Hector Chu）。
+* syscall：对 Mount flags 使用 uintptr 类型。
+</pre>
+
+<h2 id="2011-10-18">2011-10-18</h2>
+
+<pre>
+本次每周快照包含一些可能需要修改代码的语言和包变更。请仔细阅读这些说明，因为变更很多，您的代码很可能会受到影响。
+
+映射（map）删除的语法已更改。形如以下代码：
+	m[x] = 0, false
+现在应写作：
+	delete(m, x)
+编译器目前仍接受 `m[x] = 0, false`；尽管如此，您可以使用 gofix 将这类赋值重写为 `delete(m, x)`。
+
+当任何结果变量被遮蔽时，Go 编译器将拒绝不带参数的 return 语句。因此变更而被拒绝的代码很可能存在 bug。
+
+仅接收的通道 (`<-chan T`) 无法被关闭。编译器将诊断此类尝试。
+
+映射迭代的第一个元素是随机选择的。依赖于迭代顺序的代码需要更新。
+
+程序初始化期间可能会运行 Goroutine。
+
+现在可以将字符串追加到字节切片。以下代码现在是合法的：
+	var b []byte
+	var s string
+	b = append(b, s...)
+
+gotry 命令及其关联的 try 包已被删除。这是一个有趣的实验，但最终未能证明其价值。
+
+gotype 工具已移至 exp/gotype，其关联的 go/types 包已移至 exp/types。已弃用的 go/typechecker 包已被删除。
+
+ebnflint 工具已移至 pkg/exp/ebnflint，其关联的 ebnf 包已移至 pkg/exp/ebnf。
+
+netchan 包已移至 old/netchan。
+
+http/spdy 包已移至 exp/spdy。
+
+exp/datafmt 包已被删除。
+
+container/vector 包已被删除。切片（slice）是更好的选择：
+	http://code.google.com/p/go-wiki/wiki/SliceTricks**其他变更：**
+* 5l/6l/8l：修正了ELFRESERVE诊断信息（感谢Anthony Martin）。
+* 6l/8l：支持OS X代码签名（感谢Mikkel Krautz）。
+* asn1：接受UTF8字符串作为ASN.1 ANY值。
+* big：为Rat.SetFrac正确处理别名。
+* build：添加缺失的nuke目标（感谢Anthony Martin），捕获未来对exp或old包的意外依赖，更健壮地检测gold 2.20（感谢Christopher Wedgwood），将$GCFLAGS传递给编译器，在deps.bash失败时停止。
+* crypto/tls：添加3DES密码套件，支持服务器端SNI，从Windows证书存储获取根CA（感谢Mikkel Krautz），使用Mac OS API获取根证书（感谢Mikkel Krautz），修复Windows根CA获取器中损坏的循环代码（感谢Mikkel Krautz），添加更多Unix根证书位置。
+* crypto/x509：添加处理PKIX公钥的代码，保留原始的Subject和Issuer。
+* csv：修复TrimLeadingSpace过于激进的问题。
+* exp/ssh：为客户端支持进行通用清理（感谢Dave Cheney）。
+* exp/template/html：修复cssEscaper中的bug。
+* exp/terminal：将终端处理从exp/ssh中分离出来。
+* exp/winfsnotify：Windows文件系统监视器（感谢Hector Chu）。
+* fmt：修复依赖map迭代顺序的测试。
+* gc：更改导出格式以为内联做准备，将FlagNoPointers传递给runtime.new，在错误和导入数据中保留uint8和byte的区别，更严格的多重赋值+测试，将uintptr视为可能包含指针。
+* go/scanner：移除AllowIllegalChars模式。
+* go/token：记录反序列化属性。
+* gob：避免为每个写入的消息进行复制。
+* godefs：添加枚举/常量测试数据（感谢Dave Cheney）。
+* godoc：在模板中生成包目录，而非在JavaScript中，执行"godoc builtin"时显示"未导出"的声明，使用-path显示正确的源名称。
+* gofix：明确修复顺序，添加mapdelete。
+* gofmt：修复//line处理，禁止对不完整程序进行重写。
+* gotest：避免与被测包名称冲突（感谢Esko Luontola），测试示例代码。
+* goyacc：在units后清理（感谢Anthony Martin），使其更符合gofmt规范。
+* html：添加Render函数，各种bug修复和改进，解析器改进（感谢Andrew Balholm）。
+* http：DoS保护：限制非Handler对Request.Body的读取，RoundTrippers不应修改Request，避免由nil URL引起的panic（感谢Anthony Martin），修复读取超时和关闭问题，移除Request.RawURL。
+* image/tiff：实现PackBits解码（感谢Benny Siegert）。
+* ld：修复"cannot create 8.out.exe"（感谢Jaroslavas Počepko）。
+* misc/emacs：添加"godoc"命令，类似于M-x man（感谢Evan Martin）。
+* misc/swig：删除二进制文件（感谢Anthony Martin）。
+* misc/windows：自动化工具链打包器（感谢Joe Poirier）。
+* net/windows：实现IP协议名称到数字的解析器（感谢Alex Brainman）。
+* net：为IPConn添加File方法（感谢Mikio Hara），允许在非标准DNS名称上使用LookupSRV，修复WriteToUDP返回的"unexpected socket family"错误（感谢Albert Strasheim），修复Dial失败时的套接字泄漏（感谢Chris Farmiloe），移除Dial中重复的错误信息（感谢Andrey Mirtchovski），从CloseRead和CloseWrite返回错误（感谢Albert Strasheim），在Windows上也跳过ICMP测试，除非是uid 0。
+* reflect：禁止通过未导出名称获取的Value调用Interface方法，使unsafe使用SliceHeader对GC友好。
+* rpc：写入错误时不要panic。
+* runtime：更快的字符串处理，修复用户设置MemProfileRate=0时的崩溃，修复gc期间从syscall返回时的崩溃（感谢Hector Chu），修复并行垃圾回收器中的内存泄漏。
+* scanner：当没有token时，使scanner.Position无效。
+* spec：定义多重赋值的顺序。
+* syscall/windows：dll函数加载和调用更改（感谢Alex Brainman）。
+* syscall：添加#ifdefs以修复ztypes_linux_arm.go中的手动修正（感谢Dave Cheney），调整Mount以适应更严格的FS实现。
+* testing：修复失败测试报告的时间。
+* utf8：添加Valid和ValidString。
+* websocket：调整hybi ReadHandshake以支持Firefox（感谢Luca Greco）。
+* xml：在Unmarshal中匹配Marshal的XMLName行为（感谢Chris Farmiloe）。
+</pre>
+
+<h2 id="2011-10-06">2011-10-06</h2>
+
+<pre>
+此周快照包含了对io、image和math包的变更，可能需要对客户端代码进行修改。
+
+io包的Copyn函数已重命名为CopyN。
+
+math包的Fabs、Fdim、Fmax、Fmin和Fmod函数已重命名为Abs、Dim、Max、Min和Mod。
+
+image包的部分内容已移至新的image/color包。这次拆分重命名了一些类型。新的名称更简洁：
+	image.Color              -&gt; color.Color
+	image.ColorModel         -&gt; color.Model
+	image.ColorModelFunc     -&gt; color.ModelFunc
+	image.PalettedColorModel -&gt; color.Palette
+	image.RGBAColor          -&gt; color.RGBA
+	image.RGBAColorModel     -&gt; color.RGBAModel
+	image.RGBA64Color        -&gt; color.RGBA64
+	image.RGBA64ColorModel   -&gt; color.RGBA64Model
+（类似地适用于NRGBAColor、GrayColorModel等）
+image.ColorImage类型保留在image包中，但已重命名：
+	image.ColorImage -&gt; image.Uniform
+image.Image的实现（image.RGBA、image.RGBA64、image.NRGBA、image.Alpha等）名称不变，并获得了很好的对称性：
+例如，一个image.RGBA是color.RGBA的图像。
+image.Black、image.Opaque等统一图像保持不变（尽管其类型从image.ColorImage重命名为image.Uniform）。
+相应的color类型（color.Black、color.Opaque等）是新的。
+image/ycbcr中尚无内容重命名。ycbcr.YCbCrColor和ycbcr.YCbCrImage类型最终将迁移到color.YCbCr和image.YCbCr，但时间待定。</pre>* 5g/6g/8g：修复循环查找错误，修复 -f()，重新对变量进行寄存器分配。
+* 5l/6l/8l：为动态ELF二进制文件添加 DT_DYNAMIC 动态标签。
+* archive/zip：读写Unix文件权限（感谢 Gustavo Niemeyer）。
+* build：清除源文件的可执行位（感谢 Mikio Hara）。
+* bytes：添加 EqualFold 函数。
+* cgo：允许flag指令中使用Windows路径字符（感谢 Joe Poirier），支持 mingw-w64 4.5.1 及更新版本（感谢 Wei Guangjing）。
+* codereview：增加额外的仓库健全性检查，修复 Mercurial 1.9.2 相关问题，修复 Windows 控制台中 hg change 的问题（感谢 Yasuhiro Matsumoto）。
+* crypto/elliptic：在错误打印中统一使用 %x。
+* doc/spec：删除关于 gccgo 限制的说明，现已修复。
+* doc：添加“使用GDB调试Go代码”教程，修复内存模型读可见性错误。
+* encoding/binary：PutX 函数要求缓冲区足够大小，添加基准测试，支持变长整数编码。
+* exec：添加 Command.ExtraFiles 字段。
+* exp/sql{,/driver}：新的数据库包。
+* exp/ssh：将通用代码移至 common.go（感谢 Dave Cheney）。
+* exp/template/html：持续开发中。
+* fmt：用切片替换通道缓存。
+* gc：基于 ncpu 限制辅助线程数量。
+* go/doc, godoc, gotest：支持读取示例文档。
+* go：新命令的文档说明和骨架实现。
+* gob：防止无效消息长度，允许在同一输入流上使用顺序解码器。
+* hgpatch：不使用 hg 退出状态（感谢 Yasuhiro Matsumoto）。
+* http：为 Response 添加 Location 方法，客户端关闭后不再发送 400 Bad Request。
+* index/suffixarray：索引序列化（到内存）速度提升4.5倍。
+* io/ioutil：添加注释说明 devNull 为何实现 ReaderFrom。
+* json：使用 strings.EqualFold 代替 strings.ToLower。
+* misc/emacs：修复缩进错误。
+* net：添加关闭功能：TCPConn.CloseWrite 和 CloseRead。
+* net：使用 AF_UNSPEC 代替单独的地址族（感谢 Mikio Hara）。
+* path/filepath：添加 Rel 作为 Abs 的补充（感谢 Gustavo Niemeyer）。
+* pkg/syscall：为Linux平台添加 Mkfifo。
+* regexp：移至 old/regexp，替换为 exp/regexp，性能优化。
+* runtime/gdb：修复通道的漂亮打印，优雅处理无法找到类型的情况。
+* runtime：检查select同步发送情况下的空值指针，加快终结器速度，修复malloc采样错误，修复map内存泄漏，修复虚假的死锁报告，修复linux/386上的usleep并重新启用并行GC（感谢 Hector Chu），并行化垃圾回收器标记+清除过程。
+* strconv：在常见情况下加快 Unquote 速度。
+* strings：添加 EqualFold、Replacer、NewReplacer。
+* suffixarray：添加构建基准测试（感谢 Eric Eisner）。
+* syscall：为openbsd添加GetsockoptByte、SetsockoptByte（感谢 Mikio Hara），为linux添加IPv4辅助数据（感谢 Mikio Hara），标记stdin、stdout、stderr为子进程不可继承（感谢 Alex Brainman），mksyscall_windows.pl 创建非系统调用包（感谢 Jaroslavas Počepko），更新多播套接字选项（感谢 Mikio Hara）。
+* testing：支持并行运行测试（感谢 Miki Tebeka）。
+* time：使月份/日期名称比较不区分大小写。
+* unicode：修复make表格。
+* vim：将GoFmt错误发送到位置列表（感谢 Paul Sbarra）。
+* websocket：添加hybi-13支持，添加互斥锁以实现websocket全双工。
+
+<h2 id="2011-09-21">2011-09-21</h2>
+
+<pre>
+本次快照包含多项改进、错误修复和新增包。
+
+* archive/tar：记录Header字段和Type标志（感谢 Mike Rosset）。
+* bytes：修复Replace函数使其确实复制（感谢 Gustavo Niemeyer）。
+* cgo：使用环境中的GOARCH（感谢 Jaroslavas Počepko）。
+* codereview：将CL消息保存到 $(hg root)/last-change。
+* crypto/bcrypt：新增包（感谢 Jeff Hodges）。
+* crypto/blowfish：暴露blowfish密钥调度（感谢 Jeff Hodges）。
+* doc：链接到golang-france。
+* doc：配置gold for gccgo时，使用 --enable-gold=default。
+* exp/norm：更改trie以生成更小的表。
+* exp/ssh：新增包，重构halfConnection为transport（感谢 Dave Cheney）。
+* exp/template/html：更多修复和改进。
+* filepath：修复Glob函数使其在不匹配模式时不返回错误。
+* gc：禁止无效的map键，处理复杂的CONVNOP。
+* gob：分配修复。
+* godoc：简化内部FileSystem接口。
+* http/cgi：清理环境（感谢 Yasuhiro Matsumoto）。
+* http：始终包含Content-Length头部，即使为0（感谢 Dave Grijalva），检查显式错误的Request.ContentLength值，修复TLS握手阻塞服务器接受循环，防止DumpRequest添加隐式头部。
+* httptest：添加NewUnstartedServer。
+* json：更清晰的Unmarshal文档，在UnmarshalJSON中跳过nil，（为对称）在MarshalJSON中也跳过。
+* net：查找IP地址时首先使用/etc/hosts（感谢 Andrey Mirtchovski）。
+* reflect：添加关于Value.String双重语义的注释。
+* runtime：为Windows实现pprof支持（感谢 Hector Chu），增加windows/amd64的栈系统空间（感谢 Hector Chu）。
+* suffixarray：在构建期间生成更少的垃圾（感谢 Eric Eisner），改进序列化代码使用gob代替encoding/binary。
+* sync/atomic：用LOCK XADD替换MFENCE。
+</pre>
+
+<h2 id="2011-09-16">2011-09-16</h2>
+
+<pre>
+本次快照包括对 image、path/filepath 和 time 包的更改。使用这些包的代码可能需要更新。
+
+image 包的 NewX 函数（NewRGBA、NewNRGBA 等）已被更改为接受 Rectangle 参数而非宽度和高度。
+Gofix 可以自动进行这些更改。
+
+path/filepath 包的 Walk 函数已被更改为接受 WalkFunc 函数值而非 Visitor 接口值。WalkFunc 类似于 Visitor 的 VisitDir 和 VisitFile 方法，但它同时处理文件和目录：
+	func(path string, info *os.FileInfo, err os.Error) os.Error
+要跳过遍历目录（类似于从 VisitDir 返回 false），WalkFunc 必须返回 SkipDir。
+</pre>time 包中 Time 结构体的 Weekday 字段已更改为一个方法。该值按需计算，避免了需要通过编程方式重新解析 Time 值以找到正确星期几的情况。
+
+对于 filepath 或 time 的 API 更改，没有 gofix 工具可自动修正，但旧 API 的实例会被编译器捕获。Weekday 的更改很容易手动更新。Walk 的更改可能需要更多考虑，但需要修正的实例会更少。
+
+*   **build：** 为核心包添加构建注释。
+*   **codereview：** 修复 Mercurial 1.9 中 `hg diff @nnn` 的问题。
+*   **crypto/tls：** 更稳健地处理非 TLS 连接，支持 SSLv3。
+*   **debug/elf：** 在测试中允许 SHT_NOBITS 段重叠的另一种情况。
+*   **exp/template/html：** 针对此自动转义 HTML 模板包的更多改进工作。
+*   **exp/norm：** 为标准 Unicode 测试集添加回归测试工具。
+*   **exp/regexp/syntax：** 修复无效输入导致的解析器崩溃，导入所有 RE2 解析测试并修复错误。
+*   **exp/regexp：** 添加 MustCompilePOSIX、CompilePOSIX 函数，支持最左最长匹配。
+*   **flag：** 使零值 FlagSet 可用。
+*   **gc：** 清理 if 语法。
+*   **go/build：** 处理 cgo、`// +build` 注释。
+*   **go/printer：** 使用 panic/defer 代替 goroutine 来处理错误。
+*   **go/token：** 支持序列化文件集。
+*   **godoc、suffixarray：** 切换到 exp/regexp。
+*   **godoc：** 在顶部显示与查询匹配的包，支持完整的索引序列化，使用 go/build 查找包中的文件。
+*   **gofmt：** 在标准输入上接受程序片段，添加 else 测试。
+*   **http/cgi：** 添加 OpenBSD 环境配置。
+*   **http：** 文档说明 Response.Body 非空。
+*   **image/png：** 不使用 goroutine 进行解码，以允许在初始化期间解码。
+*   **json：** 如果字段的标签是 "-"，则在编码和解码时忽略该字段。
+*   **ld：** 按需增长 dwarf includestack。
+*   **net、syscall：** 实现 SetsockoptIPMReq()，并为多播支持迁移到 Winsock v2.2（感谢 Paul Lalonde）。
+*   **net：** 添加 LookupTXT 函数。
+*   **os：** os.RemoveAll 在 Windows 上检查 wboth 错误码（感谢 Jaroslavas Počepko）。
+*   **path/filepath：** 修复 Visitor 文档（感谢 Gustavo Niemeyer），使 UNC 文件名工作（感谢 Yasuhiro Matsumoto）。
+*   **runtime：** 对 Windows 上的 channel 进行优化（感谢 Hector Chu），为 windows/386 系统调用返回 AX 和 DX 两个寄存器值（感谢 Alex Brainman）。
+*   **sync/atomic：** 添加 64 位 Load 和 Store 函数。
+*   **syscall：** 为 Linux 添加路由标志（感谢 Mikio Hara）。
+*   **test：** 添加从匿名字段继承私有方法的测试。
+*   **websocket：** 修复 Addr.String() 中的无限递归（感谢 Tarmigan Casebolt），将 websocket.WebSocketAddr 重命名为 *websocket.Addr。
+
+</pre>
+
+<h2 id="2011-09-07">2011-09-07</h2>
+
+<pre>
+本次每周快照包含改进和错误修复，包括修复由 gc 编译器中逃逸分析更改引入的问题。
+
+*   **build：** 清除 Go 文件的可执行位（感谢 Mike Rosset），如果 sudo.bash /usr/local/bin 出现问题则报错（感谢 Mike Rosset）。
+*   **exp/norm：** 添加 Reader 和 Writer，改进 quickSpan 的性能。
+*   **exp/regexp：** 错误修复和 RE2 测试。
+*   **exp/template/html：** 字符串替换重构，调整 js{,_test}.go 文件。
+*   **gc：** 添加 -p 标志以更早捕获导入循环，修复标签递归错误，修复零长度结构体求值，将栈分配的切片后备数组置零。
+*   **gc、ld：** 修复 Windows 文件路径问题（感谢 Hector Chu）。
+*   **go/parser：** 接受函数签名语法的边缘情况。
+*   **gobuilder：** 查找文档时忽略 _test.go 文件，增加日志记录。
+*   **godoc：** 针对 App Engine 使用的微调。
+*   **gofix：** 不转换字段名称中的 url（感谢 Gustavo Niemeyer）。
+*   **gofmt：** 缩进多行函数签名。
+*   **gopprof：** 正则表达式修复（感谢 Hector Chu）。
+*   **image/png：** 在 Decode 期间检查 zlib 校验和。
+*   **libmach：** 修复错误使用 memset 的问题（感谢 Dave Cheney）。
+*   **misc/goplay：** 修复模板输出。
+*   **net：** ParseCIDR 返回 IPNet 而非 IPMask（感谢 Mikio Hara），同步 CIDRMask 代码和文档。
+*   **os：** 在 Windows 上使用 GetFileAttributesEx 实现 Stat（感谢 Alex Brainman）。
+*   **runtime：** 修复 OpenBSD 386 上的 raisesigpipe 问题，在 windows/amd64 上实现异常处理（感谢 Hector Chu），测试并发 channel 消费者（感谢 Christopher Wedgwood）。
+*   **sort：** 使用堆排序作为快速排序的后备方案（感谢 Ziad Hatahet）。
+*   **sync/atomic：** 添加 LoadUintptr 函数，添加 Store 系列函数。
+*   **syscall：** 更新路由消息属性处理（感谢 Mikio Hara）。
+*   **template：** 修复死锁，必要时间接引用或解引用函数参数，略微简化参数可赋值性的测试。
+*   **url：** 在 ParseQuery 中处理分号。
+*   **websocket：** 修复 govet 发现的不正确打印语句（感谢 Robert Hencke）。
+
+</pre>
+
+<h2 id="2011-09-01">2011-09-01</h2>
+
+<pre>
+本次每周更新包含性能改进和错误修复。
+
+gc 编译器现在进行了逃逸分析，通过在安全的情况下将变量放在调用栈而非堆上，提高了程序性能。
+
+container/vector 包已被弃用，并将在未来某个时候移除。其他变更：
+* archive/tar：支持符号链接。（感谢 Mike Rosset）
+* big：修复 nat.scan 错误。（感谢 Evan Shaw）
+* bufio：处理跨缓冲区的 "\r\n"。  
+  添加 openbsd 支持。  
+  避免冗余的 bss 声明。  
+  修复未使用的参数。  
+  修复 windows/amd64 下使用最新 mingw-w64 的构建。（感谢 Hector Chu）
+* bytes：明确说明 NewBuffer 并非面向初学者。
+* cgo：说明如何释放资源。  
+  修复 GoBytes。（感谢 Gustavo Niemeyer）  
+  修复 windows amd64 的回调。（感谢 Wei Guangjing）  
+  注明 CString 结果必须被释放。（感谢 Gustavo Niemeyer）
+* cov：移除同义反复的 #define。（感谢 Lucio De Re）
+* dashboard：又一 UTF-8 修复。
+* doc/codelab/wiki：修复 Makefile。
+* doc/progs：修复 windows/amd64。（感谢 Jaroslavas Počepko）
+* doc/tmpltohtml：更新为新的 template 包。
+* doc：强调环境变量是可选的。
+* effective_go：转换为使用 tmpltohtml。
+* exp/norm：通过合并时重用空间，将 reorderBuffer 使用的字节缓冲区大小减半。  
+  对 norm 实现的若干小修复。  
+  添加了 []byte 版本方法的实现。
+* exp/template/html：为 ">" 属性添加一些测试。  
+  添加了 URL 属性的处理。  
+  区分 URL 值属性（如 href）。  
+  重新设计 escapeText 以识别属性边界。
+* exp/wingui：兼容 windows/amd64。（感谢 Jaroslavas Počepko）
+* flag：添加 Parsed，恢复 Usage。
+* gc：添加 openbsd 支持。  
+  逃逸分析。  
+  修复 Plan 9 构建。（感谢 Lucio De Re）  
+  修复除法错误。  
+  修复 pc/line 表。（感谢 Julian Phillips）  
+  修复一些虚假泄漏。  
+  使静态初始化更静态。  
+  移除 JCXZ；添加 JCXZW、JCXZL 和 JCXZQ 指令。（感谢 Jaroslavas Počepko）  
+  调整 #include 顺序。  
+  简化逃逸分析递归。  
+  微调并启用逃逸分析。
+* go/ast 清理：基于 FilterFile/FilterPackage 代码构建 File/PackageExports。  
+  调整过滤函数。  
+  修复 ast.MergePackageFiles 以收集关于导入的信息。（感谢 Sebastien Binet）  
+  泛化 ast.FilterFile。
+* go/build：添加测试支持并在 gotest 中使用。  
+  扫描时分离测试导入。（感谢 Gustavo Niemeyer）
+* go/parser：修复类型开关作用域。  
+  修复类型开关作用域。
+* gob：说明除非编译时包含 Debug，否则其无用。
+* gobuilder：增加日志限制。
+* godashboard：修复用户名中的 UTF-8。
+* godoc：减少索引大小的第一步。  
+  添加虚拟的 playground.js 以消除启动时的 godoc 警告。  
+  为索引 goroutine 添加系统化节流。  
+  修复 zip.go 中的错误。  
+  支持读取/写入（分割的）索引文件。  
+  生成包概要时使用虚拟文件系统。
+* gofix：忘记重命名 URL 类型。  
+  osopen：更改 O_CREAT 时 fixed=true。（感谢 Tarmigan Casebolt）
+* goinstall：对以 '/' 结尾的路径报错。（感谢 Tarmigan Casebolt）  
+  报错时报告缺少 $GOPATH。（感谢 Gustavo Niemeyer）  
+  选择最接近 runtime.Version 的标签。
+* gotry：添加缺失的 $。（感谢 Tarmigan Casebolt）
+* http：添加 MaxBytesReader 以限制请求体大小。  
+  添加文件协议传输。  
+  为更大的 suse 缓冲区调整测试阈值。  
+  删除错误修补。  
+  对无效请求，发送 400 响应。  
+  请求体过大时返回 413 而非 400。（感谢 Dave Cheney）  
+  支持设置 Transport 的 TLS 客户端配置。
+* image/tiff：添加解码基准测试。（感谢 Benny Siegert）  
+  解码器优化。（感谢 Benny Siegert）
+* image：添加 PalettedImage 接口，并使 image/png 识别它。（感谢 Jaroslavas Počepko）
+* io：添加 TeeReader。（感谢 Hector Chu）
+* json：添加结构体标签选项以将字面量包装在字符串中。  
+  正确计算 Indent 的偏移量。（感谢 Jeff Hodges）  
+  修复结构体标签名称带 ,opts 被忽略的解码错误。
+* ld：处理 Plan 9 ar 格式。（感谢 Lucio De Re）  
+  移除重复的 bss 定义。
+* libmach：支持从 Windows .exe 读取符号用于 nm。（感谢 Mateusz Czapliński）
+* math：修复 Pow10 循环。（感谢 Volker Dobler）
+* mime：ParseMediaType 现在返回 os.Error，而非空 map。  
+  媒体类型格式化程序。（感谢 Pascal S. de Kloe）  
+  文本字符集默认值。（感谢 Pascal S. de Kloe）
+* misc/dashboard：移除 json 包列表限制。
+* misc/emacs：优化标签检测。
+* net：添加 ParseMAC 函数。（感谢 Paul Borman）  
+  更改 IPv4 的 IPMask 内部形式。（感谢 Mikio Hara）  
+  禁用 openbsd 上的 "tcp" 测试。  
+  修复 windows 构建。（感谢 Alex Brainman）  
+  在特定接口上加入和离开 IPv6 组地址。（感谢 Mikio Hara）  
+  使用 IPv4len、IPv6len。（感谢 Mikio Hara）  
+  将内部字符串操作例程移至 parse.go。（感谢 Mikio Hara）
+* os：禁用 OpenBSD 上的 Hostname 测试。  
+  修复 WNOHANG Waitmsg。（感谢 Gustavo Niemeyer）
+* reflect：添加 Value.Bytes、Value.SetBytes 方法。
+* rpc：添加异步 rpc 调用基准测试。
+* runtime：添加 openbsd 386 defs.h。  
+  添加 openbsd 386 运行时支持。  
+  为 showframe 添加 runtime· 前缀。  
+  windows amd64 的 ctrlhandler。（感谢 Wei Guangjing）  
+  修复 windows/amd64 的栈清理。（感谢 Hector Chu）  
+  修复 void 警告。  
+  go 接口到 cdecl 回调。（感谢 Jaroslavas Počepko）  
+  在 goc2c 中处理字符串和字符字面量。  
+  使 arm 在 Ubuntu Natty qemu 上工作。  
+  openbsd 线程微调。  
+  简化栈跟踪。  
+  加速 cgo 调用。（感谢 Alex Brainman）  
+  使用 cgo 运行时函数调用 windows 系统调用。（感谢 Alex Brainman）  
+  修复 windows/amd64 回调并修复系统调用以允许在回调中使用。（感谢 Jaroslavas Počepko）
+* strconv：将 decimal 放在栈上。
+* spec：更新“实现差异”章节。
+* syscall：SOMAXCONN 在 winsock2 中应为 0x7fffffff。（感谢 Yasuhiro Matsumoto）  
+  添加 openbsd 386 支持。  
+  在 Linux 的 ParseNetlinkRouteAttr 中处理 RTM_NEWROUTE。（感谢 Albert Strasheim）  
+  在 BSD 变体的 ParseRoutingSockaddr 中处理路由条目。（感谢 Mikio Hara）  
+  openbsd amd64 系统调用支持。  
+  在 linux x86 上使用 vdso 页以实现更快的系统调用，而非 int $0x80。（感谢 Yuval Pavel Zholkover）
+* template/parse：使 if、range 和 with 具有通用表示形式。
+* template：修复模板文档的语法。（感谢 Bill Neubauer）  
+  range 遍历 channel。  
+  从公共视图中移除 else 和 end 节点。
+* test：在运行中将 GOROOT/bin 置于所有其他路径之前。
+* time：修复 Plan 9 构建。（感谢 Fazlul Shahriar）  
+  修复 windows 测试期间的时区。
+* type switches：测试病态情况。
+* version.bash：如果已存在，在 -save 时更新 VERSION。（感谢 Gustavo Niemeyer）
+* websocket：实现 WebSocket 协议新版本。（感谢 Fumitoshi Ukai）
+* windows/386：系统调用后清理栈。（感谢 Jaroslavas Počepko）
+* xml：正确编组 "parent>child" 标签。（感谢 Ross Light）<h2 id="2011-08-17">2011-08-17 (<a href="release.html#r60">r60 基础版本</a>)</h2>
+
+<pre>
+本次周报包含一些包结构重组。http 和 template 包的用户可能会受到影响。
+
+本次周报用 exp/template 替换了 template 包。原 template 包仍可作为 old/template 使用。old/template 包已被弃用，将在未来某个时间点移除。Go 代码库已更新为使用新的 template 包。我们鼓励旧 template 包的用户迁移到新版本。使用 template 或 exp/template 的代码需要将其导入行分别改为 "old/template" 或 "template"。
+
+http 包的 URL 解析和查询转义代码（如 ParseURL 和 URLEscape）已移至新的 url 包，并对部分名称进行了简化。客户端代码可通过 gofix 工具自动更新。
+
+* asn1：支持反序列化包含 int32 成员的结构体（感谢 Dave Cheney）。
+* build：支持在没有 cgo 或 hg 的环境下构建，支持不使用 hg 进行版本管理（感谢 Gustavo Niemeyer）。
+* builtin：为内置函数添加文档。
+* cgo：在 writeDefs 中省略重复符号（感谢 Julian Phillips）。
+* misc：添加对 OpenBSD 的支持。
+* doc/codewalk：新增马尔可夫链代码漫步。
+* exp/norm：添加了 trie 查找代码及相关测试，在 triegen.go 中生成 trie 结构以提高封装性，实现了分解和组合功能。
+* exp/template/html：新增用于自动转义 HTML 模板的实验性包。
+* exp/template：修复了对 nil 接口执行 range 操作时的 panic 问题，重命名了 Parse*File 和 Parse*Files 以提高清晰度，支持在 map 上使用字段语法（感谢 Gustavo Niemeyer），以及多项其他修复和更改。
+* gc：实现了对 nil chan 和 nil map 的支持。
+* go/parser：修复了 range 子句和类型字面量相关的问题。
+* godoc：为（伪）包 builtin 显示所有顶层声明。
+* goinstall：现在能真正报告所有新安装的公共包。
+* html：解析更多格式错误的标签。
+* http：修复了在 MultipartReader 出错后的 ParseMultipartForm 问题，修复了 DefaultTransport 的 RoundTrip 方法中的副作用（感谢 Dave Grijalva）。
+* json：修复了 []unmarshaler 的情况。
+* ld：将 addaddrplus4 设为静态（感谢 Lucio De Re）。
+* syscall：将多播地址处理移至 net 包。
+* net：支持 Plan 9（感谢 Fazlul Shahriar），为 Listener 接口添加 SetTimeout（感谢 Aleksandar Dezelin），为 OpenBSD 添加多播存根，为已接受的 TCP 连接返回正确的本地地址（感谢 Mikio Hara）。
+* reflect：在调用无效接口时 panic（感谢 Gustavo Niemeyer）。
+* rpc：实现了 ServeRequest 以同步处理单个请求，将 Server.Mutex 改为非导出。
+* runtime：改进了对 syscall.NewCallback 参数的检查（感谢 Alex Brainman），在回调期间正确安装 SEH（感谢 Alex Brainman），修复了 GC 位图损坏问题，修复了某些 select 语句的伪随机性问题（感谢 Gustavo Niemeyer）。
+* syscall：将 LazyDLL/LazyProc.Mutex 改为非导出。
+* test：在 errchk 中允许多个模式，新的 nil 语义。
+* time：即使格式字符串中未指定，也能解析小数秒。
+* url：新增包。
+* utf8：重命名了一些内部常量以移除前导下划线。
+* xml：在 xml.Marshal 中转义字符串 chardata。
+</pre>
+
+<h2 id="2011-08-10">2011-08-10</h2>
+
+<pre>
+本次周报包含性能改进和错误修复。
+
+没有对外接口的更改，但核心库中旧式 container/vector 包的导入也已被移除（感谢 John Asmuth, Kyle Consalus）。
+
+其他更改：
+
+* 5g：修复了“设置了但未使用”的错误（感谢 Dave Cheney）。
+* cmd/ld：修正了不匹配的打印格式和变量（感谢 Lucio De Re）。
+* errchk：添加了 -0 标志。
+* exp/norm：通过添加测试占位符修复了构建问题，生成规范化表的 maketables 工具。
+* exp/template：错误修复，确保即使出错也返回有效的 Set（感谢 Roger Peppe），当键不存在时在 map 上执行索引操作返回零值（感谢 Roger Peppe），将解析树拆分为单独的包 exp/template/parse，添加了 url 查询格式化过滤器。
+* faq：进行了许多小的调整以及几项新的讨论，包括变体类型和联合类型。
+* fmt：在 malloc 计数器中调用 UpdateMemStats。
+* go/build：为 GOROOT 使用 GOBIN 作为二进制文件路径。
+* gob：在 malloc 计数器中添加 UpdateMemStats 调用，避免了一些初始化时的内存分配，不对零值调用 GobEncoder。
+* gofmt：更新了测试脚本以便 'make test' 成功。
+* html：解析 doctype 令牌；合并相邻的文本节点。
+* http：向嗅探器添加了更多 MPEG-4 MIME 类型，并禁用了 MP4 嗅探，添加了在 index.html 中提供内容的测试（感谢 Yasuhiro Matsumoto），可配置且默认的请求头大小限制，在测试中打印错误时修正了格式标志（感谢 Alex Brainman），修正了提供 index.html 的路径（感谢 Yasuhiro Matsumoto）。
+* ld：在 PE 中添加一个空符号以使 dumpbin 正常工作（感谢 Wei Guangjing），如果顶层包不是 main 则链接失败。
+* misc/vim：godoc 命令（感谢 Yasuhiro Matsumoto）。
+* net：添加了对 openbsd 的支持（感谢 Joel Sing），修复了 Linux 上读取 /proc/net/igmp,igmp6 的错误（感谢 Mikio Hara），实现了 Windows 的 LookupMX 和 LookupAddr（感谢 Mikio Hara），在 LookupSRV 返回前对 SRV 记录排序（感谢 Alex Brainman）。
+* os：添加了对 openbsd 的支持（感谢 Joel Sing）。
+* runtime：添加了更多专用类型算法，修正了 Note 文档，在 Linux/FreeBSD/Plan9 上更快地创建 chan，openbsd amd64 运行时支持（感谢 Joel Sing），移除了不必要的锁（感谢 Hector Chu）。
+* scanner：修正了非法 UTF-8 编码的错误位置。
+* syscall：在 Windows 上延迟加载 DLL 函数（感谢 Alex Brainman），移动了 BSD mmap 系统调用（感谢 Joel Sing），更新了 BSD 变体的路由消息支持（感谢 Mikio Hara）。
+* test/bench：记录了近期对锁和运行时进行改进后的更改。
+* time：在 Time 结构中添加了纳秒，解析和格式化小数秒。
+</pre><h2 id="2011-07-29">2011-07-29</h2>
+
+<pre>
+本周版本包含性能改进及多项错误修复。
+
+* 6l：支持 OpenBSD。
+* archive/zip：处理包含超过 65535 个文件的 zip 文件，提升读取器效率并修复错误。
+* big：优化 printf 格式化及字符串转换。
+* build：修复 mingw-w64 相关问题（感谢 Wei Guangjing），及其他杂项修复。
+* cgo：新增 GoBytes 函数，修复 gmp 示例。
+* exp/norm：提供规范化库的 API。
+* exp/regexp：基于 exp/regexp/syntax 实现正则表达式 API。
+* exp/template：进一步调整与修复，将内部树结构转换为使用 exp/template。
+* fmt：按标准方式处理精度为 0 的格式化字符串。
+* gc：大量错误修复。
+* go/parser：在 ':' 处报告非法标签声明。
+* gob：发送空但非 nil 的映射。
+* godoc：允许文本文件包含换页符，新增 App Engine 配置并更新文档。
+* goinstall：当使用任何 URL 方案（而非仅 'http://'）时中止并发出警告，日志写入对应 GOPATH 下的 goinstall.log。
+* html：处理无分号的字符实体（感谢 Andrew Balholm），根据 HTML5 规范解析错误嵌套的格式化标签，将 html/testdata/webkit 与上游 WebKit 同步。
+* http：内容类型嗅探，使 serveFile 重定向为相对路径（感谢 Andrew Balholm），及其他修复。
+* image/tiff：当缺少 RowsPerStrip 时不再 panic（感谢 Benny Siegert）。
+* io/ioutil：提升 ioutil.Discard 性能（感谢 Mike Solomon）。
+* ld：检测所有循环导入，修复 ldpe 问题（感谢 Wei Guangjing），移除 cseekend 并重写 PE 写入（感谢 Alex Brainman），消除动态二进制文件中 ELF 节的重叠（感谢 Gustavo Niemeyer）。
+* net/textproto：在 ReadLine 和 ReadContinuedLine 中避免一次拷贝。
+* net：修复 Windows *netFD.ReadFrom 中的内存损坏（感谢 Alex Brainman）。
+* runtime：加速 entersyscall/exitsyscall，修复调度器竞态条件（感谢 Hector Chu），提高 goroutine 参数限制并改进错误信息，并行化相关的性能优化与修复，用 memclr 替代逐字节清零循环（感谢 Quan Yong Zhai）。
+* sort：修复 Float64Slice 排序；NaN 视为最小值（感谢 Florian Uekermann）。
+* src：移除部分 container/vector 的使用（感谢 John Asmuth）。
+* sync：优化 Once 快速路径。
+* unicode：修复罗马数字的大小写映射。
+</pre>
+
+<h2 id="2011-07-19">2011-07-19</h2>
+
+<pre>
+本周快照包含一项语言变更及 image 包的修改，可能需调整客户端代码。
+
+语言变更：除 "else" 体为另一个 "if" 外，"else" 代码块现在必须使用花括号。由于 gofmt 委终会添加花括号，程序通常不受影响，除非包含 "else for"、"else switch" 或 "else select"。请运行 gofmt 修复此类程序。
+
+image 包中 struct 类型（如 image.RGBA 和 image.NRGBA）的 Pix 字段已发生重大变更。但 image.Image 接口类型未改变，若未显式引用 Pix 字段，则无需修改代码。例如，若使用 image/jpeg 解码图像、通过 image/draw 合成、再用 image/png 编码，则代码行为与之前一致。
+
+若显式引用 Pix 字段，存在两点变更：其一，Pix[0] 现在指向 Bounds().Min 处的像素而非 (0, 0)；其二，Pix 切片的元素类型从 image.FooColor 改为 uint8。例如，image.RGBA 的像素数据按 R, G, B, A 顺序打包。对于 16 位/通道的色彩类型，像素数据存储为大端序的 uint8。
+
+多数 Pix 字段类型已变更，因此若代码在此次更改后仍能编译，通常无需进一步调整（除非使用了 image.Paletted 的 Pix 字段）。若出现编译错误，原先类似以下的代码：
+
+	// 获取像素 (x, y) 的 R, G, B, A 值。
+	var m *image.RGBA = loadAnImage()
+	c := m.Pix[y*m.Stride + x]
+	r, g, b, a := c.R, c.G, c.B, c.A
+
+现应改为：
+
+	// 获取像素 (x, y) 的 R, G, B, A 值。
+	var m *image.RGBA = loadAnImage()
+	i := (y-m.Rect.Min.Y)*m.Stride + (x-m.Rect.Min.X)*4
+	r := m.Pix[i+0]
+	g := m.Pix[i+1]
+	b := m.Pix[i+2]
+	a := m.Pix[i+3]
+
+此 image 包变更无法通过 gofix 自动修复：如何根据上下文将代码转换为高效且地道的实现依赖具体场景，难以自动化。可参考 http://codereview.appspot.com/4675076/ 中 image/draw/draw.go 的修改示例。
+</pre>**其他变更：**
+* **6l**：在 Windows 系统上将默认输出文件名改为 6.out.exe（感谢 Alex Brainman）。
+* **archive/zip**：新增 Writer；添加 Mtime_ns 函数，以更合理的格式获取修改时间。
+* **cc, ld, gc**：修复 Plan 9 构建问题（感谢 Lucio De Re）。
+* **cgi**：完成后关闭标准输出读取管道。
+* **cgo**：在生成的结构体中添加缺失的分号；Windows amd64 平台移植（感谢 Wei Guangjing）。
+* **codereview**：针对 Mercurial 1.9 的修复。
+* **dashboard**：以滚动计数方式列出“本周安装最多”。
+* **debug/elf**：读取 ELF 程序头（感谢 Matthew Horsnell）。
+* **debug/pe**：修复 Win64 的 ImportedSymbols（感谢 Wei Guangjing）。
+* **debug/proc**：移除未使用的包。
+* **doc/talks/io2010**：使用 gofix 更新并处理错误。
+* **exp/eval, exp/ogle**：移除 eval 和 ogle 包。
+* **exp/regexp/syntax**：新增 Prog.NumCap。
+* **exp/template**：API 更改、错误修复和调整。
+* **flag**：优化 -help 的显示效果。
+* **fmt**：修复 Scan(&int) 对单个数字的处理不当问题。
+* **gc**：修复闭包错误；支持使用 clang 构建（感谢 Dave Cheney）；将 struct{} 和 [0]byte 的大小设为 0 字节（感谢 Robert Hencke）；增强调试信息打印。
+* **gif**：修复本地颜色映射和坐标问题。
+* **go/build**：修复 Windows 相关问题（感谢 Alex Brainman）；为 cgo 包添加对 .c 文件的处理（感谢 Alex Brainman）；当未找到 GOROOT 时采用更宽松的失败条件。
+* **go/printer**：将最大连续换行数从 3 改为 2。
+* **gob**：注册更多 slice 类型（感谢 Bobby Powers）。
+* **godoc**：支持存储在 .zip 文件中的文件系统。
+* **goinstall, dashboard**：Google Code 现在支持 git（感谢 Tarmigan Casebolt）。
+* **hash/crc32**：添加 SSE4.2 支持。
+* **html**：更新注释中的章节引用以匹配最新的 HTML5 规范。
+* **http**：在 TestHandlerPanic 中清空管道输出以避免日志死锁；修复文件扩展名的 Content-Type（感谢 Yasuhiro Matsumoto）；为 zip 文件实现 http.FileSystem；使 FileServer 在路径不以斜杠开头时也能工作；在 ReverseProxy 中支持定期刷新。
+* **image/draw**：添加性能基准测试。
+* **json**：添加 omitempty 结构体标签选项；允许在结构体字段标签中使用 '$' 和 '-'（感谢 Mikio Hara）；将字符串中的 \r 和 \n 编码为例如 "\n" 而非 "\u000A"（感谢 Evan Martin）；在任何 JSON 字符串中转义 < 和 > 以防止 XSS 攻击。
+* **ld**：允许在写入缓冲区内执行 seek 操作；为 PHDR 添加 PT_LOAD PHDR 条目（感谢 David Anderson）。
+* **net**：Windows amd64 平台移植（感谢 Wei Guangjing）。
+* **os**：plan9：添加 Process.Signal 方法作为发送 notes 的方式（感谢 Yuval Pavel Zholkover）；禁止在成功的 Wait 之后调用 Process.Signal。
+* **path/filepath**：修复 Windows 路径相关问题（感谢 Alex Brainman）。
+* **reflect**：新增 Value.NumMethod；当方法索引超出类型范围时触发 panic。
+* **runtime**：加速 entersyscall 和 exitsyscall；修复 make(chan [0]byte) 导致的 panic；修复微妙的 select 错误（感谢 Hector Chu）；使 goc2c 能在 Plan 9 上构建（感谢 Lucio De Re）；使 TestSideEffectOrder 能成功运行两次；多项并行相关的优化和修复；为 Win64 实现 stdcall_raw 栈 16 字节对齐（感谢 Wei Guangjing）；字符串相关优化（感谢 Quan Yong Zhai）；跟踪运行中的 goroutine 数量。
+* **strconv**：在 atof 中处理 [-+]Infinity。
+* **sync**：为 WaitGroup 添加快速路径；改进 RWMutex 性能。
+* **syscall**：在 Linux 上添加 Flock；解析并编码 SCM_RIGHTS 和 SCM_CREDENTIALS（感谢 Albert Strasheim）。
+
+<h2 id="2011-07-07">2011-07-07 (<a href="release.html#r59">r59 的基础</a>)</h2>
+
+<pre>
+本周快照包含了对 strings、http、reflect、json 和 xml 包的更改。使用这些包的代码需要相应修改。这些更改大部分可以通过 gofix 自动完成。
+
+strings 包的 Split 函数自身被拆分为 Split 和 SplitN。SplitN 与旧的 Split 功能相同。新的 Split 等同于最后一个参数为 -1 的 SplitN。
+
+http 包引入了一个新的 FileSystem 接口来提供文件访问。FileServer 辅助函数现在接受一个 FileSystem 参数，而不是一个明确的文件系统根路径。通过实现你自己的 FileSystem，你可以使用 FileServer 来提供任意数据。
+
+reflect 包支持一种新的结构体标签方案，该方案允许多个包之间共享结构体标签。在此方案中，标签必须采用以下格式：
+        key:"value" key2:"value2"
+reflect.StructField 的 Tag 字段现在类型为 StructTag（一个字符串类型），它具有 Get(key string) string 方法，返回关联的值。json 和 xml 的客户端将需要更新。以下代码：
+        type T struct {
+                X int "name"
+        }
+应改为：
+        type T struct {
+                X int `json:"name"`  // 或 `xml:"name"`
+        }
+使用 govet 来识别需要更改为新语法的结构体标签。
+</pre>其他变更：
+* 5l、6l、8l：移除构建过程中对 ed 的依赖。
+* asn1：支持 T61 和 UTF8 字符串。
+* bufio：不再缓存读取错误（感谢 Graham Miller）。
+* build：使 version.bash 能识别分支。
+* cgi：测试不再依赖 CGI.pm。
+* codereview：使 --ignore_hgpatch_failure 重新生效，将同步操作限制于默认分支。
+* crypto/openpgp：添加密钥重新序列化功能，修复错误（感谢 Gideon Jan-Wessel Redelinghuys）。
+* crypto/tls：修复 generate_cert.go。
+* crypto/x509：防止 Verify 中出现证书链循环。
+* csv：新增包。
+* doc：从 apt-get 包列表中移除 ed。
+* docs：将 makehtml 中的 prog.sh 脚本功能整合进 htmlgen。
+* ebnflint：改进标准输入处理。
+* exp/regexp/syntax：新增基于 RE2 的正则表达式实验性实现。
+* exp/template：新增实验性模板包。
+* fmt：在 fmt 的 ScanState 接口中添加 SkipSpace 方法。
+* fmt：为保持文档一致性，将 errno 和 error 重命名为 err。
+* gc：避免错误消息中的包名歧义，修复包引用逻辑，修复 Plan 9 相关问题（感谢 Lucio De Re）。
+* go/build：在将路径与 GOPATH 比较前解析符号链接。
+* gob：在包文档的结构体中使用已导出字段。
+* godoc：忽略以 '.' 开头的目录，在 GOPATH 中搜索文档。
+* gofix：os/signal、path/filepath 和 sort 相关修复（感谢 Robert Hencke）。
+* goinstall：添加对通用主机的支持（感谢 Julian Phillips），仅向控制面板报告已成功安装的包，尝试通过 https 访问（感谢 Yasuhiro Matsumoto）。
+* gotest：添加 -test.benchtime 和 -test.cpu 标志。
+* html：修复与改进（感谢 Yasuhiro Matsumoto）。
+* http/cgi：添加 Handler.Dir 以指定工作目录（感谢 Yasuhiro Matsumoto）。
+* http：添加 StripPrefix 处理器包装器，假设 GET 请求的 ContentLength 为 0，改进对长度为 0 的 Request.Body 的处理，在复制 TLS 状态前显式执行 TLS 握手，文档说明 ServerConn 和 ClientConn 是低级别组件，公开 NewChunkedReader（感谢 Andrew Balholm），尊重处理器在响应中设置的 Connection: close。
+* image：更多测试，Paletted.Opaque 优化。
+* io.WriteString：如果对象具有 WriteString 方法，则使用该方法（感谢 Evan Shaw）。
+* ld：使用 -s 时省略 Go 符号表（感谢 Anthony Martin）。
+* ld：通过移除 section 重叠来修复 ELF strip（感谢 Gustavo Niemeyer）。
+* mime/multipart：解析 LF 分隔的消息，而不仅仅是 CRLF。
+* mime：允许小写的媒体类型参数（感谢 Pascal S. de Kloe）。
+* misc/dashboard：新功能与改进（尚未部署）。
+* misc/emacs：更新内置函数列表（感谢 Quan Yong Zhai）。
+* misc/vim：仅允许文件编码为 utf-8（感谢 Yasuhiro Matsumoto）。
+* os：修复 FileInfo.Name 文档，简化 WriteString，在 mkunixsignals.sh 中使用与 syscall 不同的符号。
+* path/filepath：使 TestWalk 能够在 Windows 上运行（感谢 Alex Brainman）。
+* reflect：添加 MethodByName 方法，允许对 String 值使用 Len。
+* regexp：文档说明 Regexp 是线程安全的。
+* runtime/cgo：检查 pthread_create 的错误（感谢 Albert Strasheim）。
+* runtime：添加 Semacquire/Semrelease 基准测试，改进 Semacquire/Semrelease 实现，移植到 windows/amd64（感谢 Wei Guangjing）。
+* sync：为 Once 添加快速路径，改进 Mutex 以允许连续获取，新增并改进基准测试。
+* syscall：重新生成 darwin/linux/freebsd 的 zerrors，支持 StartProcess 中的 tty 选项（感谢 Ken Rockot）。
+* testing：使 ResetTimer 不会启动/停止计时器，根据需要将基准测试精度缩放到 0.01ns。
+* time：两位年份补零。
+* unicode/maketables：更新调试数据。
+* windows：定义并使用 syscall.Handle（感谢 Wei Guangjing）。
+* xml：添加 Marshal 和 MarshalIndent。
+
+<h2 id="2011-06-23">2011-06-23</h2>
+
+<pre>
+此快照包含一项限制 goto 使用的语言变更。本质上，位于代码块外部的 "goto" 语句不能跳转到该代码块内部的标签。如果你的代码使用了 goto，则可能需要修改。此变更集展示了新规则如何影响 Go 代码库：
+    http://code.google.com/p/go/source/detail?r=dc6d3cf9279d
+
+os.ErrorString 类型已被隐藏。如果你的代码使用了 os.ErrorString，则必须修改。大部分使用 os.ErrorString 的情况可以用 os.NewError 替换。
+</pre>其他变更：
+* 5c：不使用R9和R10寄存器。
+* 8l：针对Plan 9系统的更多修复（感谢Lucio De Re）。
+* 构建系统：Make.ccmd文件调整为链接mach库（感谢Joe Poirier）。
+* 构建系统：排除在Plan 9系统上失败的包（感谢Anthony Martin）。
+* cc：修改：消除注释警告（感谢Dave Cheney）。
+* codereview.py：更新说明：`hg change -d`命令将放弃变更列表（感谢Robert Hencke）。
+* crypto/openpgp：新增ElGamal支持。
+* doc/faq：新增关于将`[]T`转换为`[]interface{}`的问题说明。
+* 文档：《Effective Go》中修正可变参数函数示例（感谢Ben Lynn）。
+* exec包：LookPath函数现在不会在`%PATH%`中搜索`c:cmd.exe`这类文件（感谢Alex Brainman），新增Plan 9系统支持（感谢Anthony Martin），优化Windows系统LookPath的错误信息（感谢Alex Brainman）。
+* fmt包：捕获对String等方法调用时可能发生的panic。
+* gc编译器：为nil指针调用值方法添加描述性panic信息，实现goto限制，unsafe.Alignof、unsafe.Offsetof、unsafe.Sizeof现在返回uintptr类型。
+* go/build：在脚本输入中包含Import对象。
+* godefs：添加基础测试（感谢Robert Hencke）。
+* goinstall：重构并通用化仓库处理代码（感谢Julian Phillips），暂时默认使用Makefile构建（可通过`-make=false`参数覆盖）。
+* gopprof：更新内存分配器列表。
+* http包：新增Server.ListenAndServeTLS方法，为request.Write添加缓冲处理，修复单请求头中包含多个cookie时req.Cookie(name)的问题，允许处理器显式移除Date头信息，写入Header时支持空值键名。
+* image包：为16位色深通道类型添加基础测试。
+* io包：明确Read、ReadAt、Copy、Copyn函数的EOF行为。
+* ld链接器：避免不必要的动态段构建（感谢Gustavo Niemeyer）。
+* libmach：修复FCMOVcc和FCOMI指令的反汇编（感谢Anthony Martin），修复Linux系统的跟踪功能（用于覆盖率测试）（感谢Anthony Martin）。
+* mime：修正RFC参考文献（感谢Pascal S. de Kloe）。
+* misc/gobuilder：Windows系统上改为单线程运行make命令（感谢Alex Brainman）。
+* misc/godashboard：goinstall报告现在支持子目录（感谢Yasuhiro Matsumoto）。
+* nacl、tiny：移除遗留代码（感谢Robert Hencke）。
+* net、syscall：为Windows系统添加接口支持（感谢Yasuhiro Matsumoto）。
+* os：将Waitmsg的String方法改为指针接收器（感谢Graham Miller）。
+* 运行时：避免在类似grsec的内核上双倍消耗内存（感谢Gustavo Niemeyer）。
+* 规范：禁止goto语句跳入代码块内部。
+* sync：在基准测试期间恢复GOMAXPROCS设置。
+* syscall：为Linux系统添加LSF支持（感谢Mikio Hara），为darwin、freebsd、linux系统添加套接字控制消息支持（感谢Mikio Hara），在StartProcess中添加tty支持（感谢Ken Rockot），修复Sizeof变更导致的构建问题。
+* 测试：添加goto限制的测试用例。
+* time：添加Plan 9系统支持（感谢Anthony Martin）。
+
+<h2 id="2011-06-16">2011-06-16</h2>
+
+<pre>
+本次快照包含对sort和image/draw包的变更，客户端代码需要相应调整。
+
+sort.IntArray类型已重命名为IntSlice，同样地StringArray和Float64Array也进行了重命名。
+
+image/draw包的Draw函数现在需要额外参数——合成运算符。若不确定具体用法，建议使用draw.Over。
+
+其他变更：
+* 构建系统：修复Plan 9系统的头文件（感谢Lucio De Re）。
+* cgo：支持Xcode 4.2中基于LLVM的新版Apple GCC。
+* crypto/openpgp：新增消息加密与签名功能。
+* doc/gopher：为App Engine添加佩戴护目镜的gopher标识。
+* 文档：更新3天Go语言课程的培训笔记。
+* exec包：确保Windows系统未设置PATHEXT环境变量时LookPath仍能正常工作（感谢Alex Brainman）。
+* exp/regexp/syntax：语法数据结构、解析器、转义字符、字符类实现。
+* exp/template：新模板包的词法扫描器。
+* fmt包：新增字符调试格式：%+q和%#U。
+* gc编译器：ARM架构帧压缩处理，支持`go print()`和`go println()`，规避goto缺陷。
+* go/build：修复改进，自包含测试。
+* go/printer、gofmt：`select {}`语句现在输出为单行。
+* godoc：用FileSystem接口替代直接的OS文件系统访问。
+* gofix：修正帮助输出中的缩进不一致问题（感谢Scott Lawrence）。
+* goinstall：使用go/build包扫描和构建代码包。
+* http/spdy：改进错误处理（感谢William Chan）。
+* http包：panic时使用runtime/debug.Stack()输出堆栈跟踪。
+* ld链接器：在debug_line头中直接输出文件名而非使用扩展操作码，修复Windows PE `__declspec(dllimport)`符号链接问题（感谢Wei Guangjing），将.rodata段设为只读（感谢Gustavo Niemeyer）。
+* mail包：解码RFC 2047的"B"编码。
+* mime/multipart：Windows系统测试后删除临时文件（感谢Alex Brainman）。
+* net包：导出Interface结构体所有字段（感谢Mikio Hara），调整源码结构以在Windows系统运行更多测试（感谢Alex Brainman），为win32添加sendfile支持（感谢Yasuhiro Matsumoto）。
+* os包：Plan 9系统修复OpenFile和Chmod，新增Process.Kill方法（感谢Yuval Pavel Zholkover）。
+* 运行时：修复Plan 9系统"残留goroutine问题"（感谢Yuval Pavel Zholkover）。
+* 规范：明确append函数规则和:=作用域规则，规范常量转换，unsafe.Alignof/Offsetof/Sizeof返回uintptr。
+* syscall、os、exec：为os.ProcAttr和exec.Cmd新增*syscall.SysProcAttr字段。
+* syscall：为darwin系统添加ptrace支持（感谢Jeff Hodges），mksyscall_windows.pl应输出Unix换行符（感谢Yasuhiro Matsumoto），更新BSD变体的BPF支持（感谢Mikio Hara），Perl脚本启用严格模式（感谢Yasuhiro Matsumoto）。
+* xml：处理非字符串类型的属性字段（感谢Maxim Ushakov）。
+
+<h2 id="2011-06-09">2011-06-09 (<a href="release.html#r58">r58基准版本</a>)</h2>
+
+<pre>
+本次快照包含对strconv、http和exp/draw包的变更。使用http或exp/draw包的客户端代码需要修改，使用strconv或fmt的"%q"格式化指令的代码建议检查。</pre>## 2011-06-09
+
+**2011-06-09（<a href="release.html#r58">r58基准版本</a>）**
+
+```
+本次快照包含对 `strconv`、`http` 和 `exp/draw` 包的变更。使用 `http` 或 `exp/draw` 包的客户端代码需要修改，使用 `strconv` 或 `fmt` 的 `"%q"` 格式化指令的代码建议检查。
+```
+
+`strconv` 包的 `Quote` 函数现在仅转义那些根据 `unicode.IsPrint` 分类为非可打印的 Unicode 码点。此前 `Quote` 会转义所有非 ASCII 字符。这也影响了 `fmt` 包的 `"%q"` 格式化指令。此前的引号行为仍然可以通过 `strconv` 新增的 `QuoteToASCII` 函数获得。
+
+`http` 包中大多数类型为 `map[string][]string` 的实例已被替换为新的 `Values` 类型。`http.Values` 类型提供了 `Get`、`Set`、`Add` 和 `Del` 辅助方法，使处理查询参数和表单值更为便捷。
+
+`exp/draw` 包已拆分为 `image/draw` 和 `exp/gui` 两个包。
+
+**其他变更：**
+*   **8l, ld**: 为 8l 的 Plan 9 本地编译进行初步调整（感谢 Lucio De Re）。
+*   **arm**: 浮点数改进（感谢 Fan Hongjian）。
+*   **big**: 提升了 nat 到字符串转换的速度（感谢 Michael T. Jones），`Rat` 的 `FloatString` 输出请求的精度（感谢 Graham Miller），支持 `big.Rat` 的 gobs 编码。
+*   **cgo**: 支持非 Intel 的 GCC 机器标志（感谢 Dave Cheney）。
+*   **compress/lzw**: 不再使用后台 goroutine，将解码器缓冲区大小从 3*4096 减少到 2*4096。
+*   **crypto/twofish**: 修复了 `Reset` 索引溢出错误。
+*   **crypto**: 重组、清理并添加了生成 CRL 的函数。
+*   **exec**: 导出 `Cmd` 中底层的 `*os.Process`。
+*   **gc**: 支持在 clang/2.9 下构建（感谢 Dave Cheney），为逃逸分析做准备工作，压缩栈帧。
+*   **go/build**: 新增的未完成包，用于构建 Go 程序。
+*   **godefs**: 不再假设前向类型引用是枚举（感谢 Robert Hencke）。
+*   **gofix, gofmt**: 修复了因 `exec` 变更引起的 diff 回归问题。
+*   **html**: 改进了属性解析，注明了包状态。
+*   **http**: 处理 `accept` 达到 `EMFILE` 时不再失败，修复了处理长度为 0 的 HTTP 请求的错误。
+*   **image/draw**: 修复了当 `r.Min` 移动时 `sp`/`mp` 未相应平移的裁剪错误。
+*   **image/gif**: 修复了图形扩展中的小错误。
+*   **image/tiff**: 支持 8 位以外的位深度（感谢 Benny Siegert）。
+*   **ld**: 修复并简化了 ELF 符号生成（感谢 Anthony Martin）。
+*   **libmach**: 使用标准化的格式初始化器（感谢 Jeff Hodges）。
+*   **mail**: 地址列表解析。
+*   **net**: 添加了网络接口标识 API（感谢 Mikio Hara），修复了 `net.Interfaces` 中的错误：正确处理弹性 `sdl_data` 大小（感谢 Mikio Hara）。
+*   **netchan**: 为导入器添加了 `drain` 方法（感谢 David Jakob Fritz）。
+*   **os**: 添加了 `Process.Kill` 和 `Process.Signal` 方法（感谢 Evan Shaw），修复了 Plan 9 下的 `Getenv` 问题（感谢 Yuval Pavel Zholkover）。
+*   **runtime**: 通过检查内存重叠改进了 `memmove`（感谢 Quan Yong Zhai），支持 Linux grsecurity 系统（感谢 Jonathan Mark）。
+*   **spec**: 处理了移位操作的一个边界情况。
+*   **testing**: 检查测试和基准测试是否影响 `GOMAXPROCS`（感谢 Dmitriy Vyukov）。
+*   **unicode**: 添加了 `IsPrint` 及相关属性、通用类别。
+
+## 2011-06-02
+
+```
+本次快照包含对 `exec` 包的变更，这将需要修改客户端代码。
+```
+
+`exec` 包已使用更便捷、简洁的 API 重新设计。以下代码：
+```go
+	args := []string{"diff", "-u", "file1.txt", "file2.txt"}
+	p, err := exec.Run("/usr/bin/diff", args, os.Environ(), "",
+		exec.DevNull, exec.Pipe, exec.DevNull)
+	if err != nil {
+		return nil, err
+	}
+	var buf bytes.Buffer
+	io.Copy(&buf, p.Stdout)
+	w, err := p.Wait(0)
+	p.Close()
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), err
+```
+可以重写为：
+```go
+	return exec.Command("diff", "-u", "file1.txt", "file2.txt").Output()
+```
+详情请参见 `exec` 包文档（`godoc exec`）。
+
+通过设置 `GOPATH` 环境变量，您可以使用 `goinstall` 在 Go 源码树之外构建和安装您自己的代码及外部库（并避免编写 Makefile）。
+详情请参见 `goinstall` 命令文档（`godoc goinstall`）。其他变更：
+* 5g：对齐修复。
+* 6l, 8l：修复带有大量动态库的 Mach-O 二进制文件。
+* 8l：在 Windows PE 中生成资源（.rsrc）。 (感谢 Wei Guangjing)。
+* asn1：修复空可选 RawValue 的序列化问题 (感谢 Mikkel Krautz)。
+* big：使 Int 和 Rat 实现 fmt.Scanner (感谢 Evan Shaw)，数值扫描速度提升约 8 倍，移除了一些不必要的转换。
+* cgo：限制 #cgo 指令以防止 shell 展开 (感谢 Gustavo Niemeyer)，支持 pkg-config 的 flags 和 libs 参数 (感谢 Gustavo Niemeyer)。
+* compress/flate：修复 Huffman 树错误，不再使用后台协程。
+* crypto/openpgp：添加对称加密文件的支持。
+* crypto/tls/generate_cert.go：修复 O_CREATE 拼写错误。
+* dashboard：当构建失败时发送通知邮件。
+* doc：在 effective go 中提及 go/printer 而非 container/vector，在“文档”页面添加“发布历史”链接，在“贡献”页面添加“每周快照历史”链接。
+* encoding/base64：添加 DecodeString 和 EncodeToString 函数。
+* encoding/binary：为 Read 添加非反射快速路径，为 Write 添加非反射快速路径。
+* encoding/hex：添加十六进制转储功能。
+* encoding/line：删除此包。其功能现已移至 bufio 包。
+* filepath：Abs 必须总是返回干净的路径 (感谢 Gustavo Niemeyer)。
+* fmt：修复 UnreadRune 中的错误，使 %q 对整数有效（输出带引号的字符字面量），在 Scan* 输入用尽时返回 EOF。
+* gc：检查接口字段中的参数声明 (感谢 Anthony Martin)，禁止类型转换中使用 ... (感谢 Anthony Martin)，在闭包引用外部变量时不再强制堆分配，修复 m[x], _ = y.(T)，实现新的位移规则，修补 y.tab.c 以在使用 Bison 2.5 时修复构建，放宽方法接收器的可赋值性 (感谢 Anthony Martin)，在遍历前进行整个树的类型检查。
+* go/scanner：不允许 "0x" 和 "0X" 作为整数 (感谢 Evan Shaw)。
+* godoc：为在本地应用引擎模拟器上运行 godoc 进行基础设置，在包列表页面显示包 dashboard 的广告。
+* goinstal：Windows 平台修复 (感谢 Alex Brainman)，使用 -v 时提供更详细的日志。
+* gotest, pkg/exec：在 Windows 上使用 bash 运行 shell 脚本 (感谢 Alex Brainman)。
+* http/spdy：重构接口，充实实现及帧类型 (感谢 William Chan)。
+* http：Transport 钩子用于注册非 http(s) 协议，添加客户端+服务器基准测试，捕获 Handler 协程的 panic，修复 Set-Cookie 日期解析，在可能时让客户端设置 Content-Length，允许 Transport 使用自定义 net.Dial 函数，在反向代理中传递 Set-Cookie，当设置了 Content-Encoding 时 ServeFile 不应发送 Content-Length。
+* image：添加 SubImage 方法。
+* image/gif：简化 blockReader.Read。
+* image/png：修复非从 (0, 0) 开始的图像的编码问题。
+* io, net, http：sendfile 支持。
+* io：添加 ByteScanner、RuneScanner 接口。
+* ld：添加 -w 以禁用 dwarf 信息，使错误明确来自 dwarf。
+* mail：新包。
+* mime/multipart：各种代码/文档修复。
+* misc/cgo：移除对 'destroy' 函数的引用。
+* misc/emacs：在 gofmt 后不再选择标记 (感谢 Eric Eisner)。
+* misc/gophertool：用于辅助 Go 开发的 Chrome 扩展。
+* misc/vim：将 Fmt 命令限制在 Go 缓冲区 (感谢 Yasuhiro Matsumoto)。
+* net：如果我们停止轮询，则移除套接字的任何待处理事件，更新 IP 多播套接字选项 (感谢 Mikio Hara)。
+* os：修复测试以使其在 Solaris 上工作，修复 EOF 时的 Readdir(0)，修复 Readdir, Readdirnames (感谢 Yuval Pavel Zholkover)，修复在反斜杠路径分隔符下的 os.MkdirAll (感谢 Yasuhiro Matsumoto)，在 Windows 上正确处理 OpenFile 标志参数 (感谢 Alex Brainman)。
+* path/filepath：移除字符串常量。
+* pkg：拼写调整，I-Z (感谢 Robert Hencke)。
+* quietgcc：修复拼写错误，遵守 $TMPDIR。
+* runtime：不垃圾回收 Windows 回调 (感谢 Alex Brainman)，修复 Linux 上的 mmap 错误返回 (感谢 Dmitry Chestnykh)，测试期间重置 GOMAXPROCS，在 Windows SEH 处理程序中保存 cdecl 寄存器 (感谢 Alexey Borzenkov)。
+* spec：精确使用非正式省略号和 Go 令牌，阐明位移规则。
+* strconv：添加 QuoteRune；类似于 Quote 但用于符文而非字符串。
+* strings：实现 UnreadByte, UnreadRune。
+* sync：在 Cond.Signal 时总是唤醒休眠的协程 (感谢 Gustavo Niemeyer)。
+* sync/atomic：修复 check64。
+* syscall：添加 ProcAttr 字段用于在 Windows 上传递未转义的命令行 (感谢 Vincent Vanackere)，为 Linux 和 BSD 添加路由消息支持 (感谢 Mikio Hara)。
+* template：修复与清理 (感谢 Gustavo Niemeyer)。
+* time：修复 Format 错误：午夜/正午是 12AM/PM 而非 0AM/PM。
+* unicode：使表格更小。
+</pre>
+
+<h2 id="2011-05-22">2011-05-22</h2>
+
+<pre>
+此快照包含了对 http 包的变更，这些变更将需要客户端代码进行相应修改。
+
+Client.Get 方法的 finalURL 返回值已被移除。该值现在可通过 http.Response 上的新 Request 字段访问。
+例如，此代码：
+
+	res, finalURL, err := http.Get(...)
+
+应重写为：
+
+	res, err := http.Get(...)
+	if err != nil {
+		// ...
+	}
+	finalURL := res.Request.URL.String()
+
+将 finalURL 值赋给 _ 的 http.Get 用法可以使用 gofix 自动重写。
+
+此快照还包含了对 append 函数的优化，在典型使用场景下可使其速度提升 2 到 5 倍。其他变更：
+* 5a, 6a, 8a, cc: 移除旧环境变量。
+* 5c, 5g: 修复与过于智能的 gcc 的构建问题。
+* 5l, 8l: 向二进制文件添加 ELF 符号表。
+* 5l: 删除 ARMv4 之前的指令实现及其他修复。
+* 6l, 8l: 像其他平台一样发出 windows dwarf 节（感谢 Alex Brainman）。
+* 6l: 修复 windows dwarf 节的发出（感谢 Wei Guangjing）。
+* 8g: 修复从 float 到 uint64 的转换（感谢 Anthony Martin）。
+* Make.cmd: 必要时创建 TARGDIR（感谢 Gustavo Niemeyer）。
+* asn1: 添加 big 支持。
+* big: 添加作用于指定位号的 Int 方法（感谢 Roger Peppe），改进字符串转换支持，支持 %v 和 # 修饰符，更好地处理未知格式。
+* cgi: 导出 RequestFromMap（感谢 Evan Shaw），为子进程设置 Request.TLS 和 Request.RemoteAddr。
+* cgo: 使用打包结构体修复 Windows 行为。
+* codereview: 添加发布分支支持，使用 JSON API 而非 XML 抓取获取元数据，处理 rietveld json 中的“null 视为缺失字段”。
+* compress/lzw: 静默丢弃过大的隐式码字。
+* compress/zlib: 实际使用 NewWriterDict 中提供的字典。
+* crypto/openpgp: 添加密钥生成支持，更改 PublicKey.Serialize 以包含标头。
+* crypto/rand: 添加用于数字生成的实用函数（感谢 Anthony Martin）。
+* crypto/tls: 导出已验证的证书链。
+* crypto/x509/crl: 添加包。
+* crypto/x509: 导出原始 SubjectPublicKeyInfo，支持 X.509 证书中的 DSA 公钥，支持解析和验证 DSA 签名（感谢 Jonathan Allie）。
+* doc/roadmap: 将“App Engine 支持”移至“已完成”下。
+* doc: 在 talks/、docs.html 和主页中添加 I/O 2011 演讲。
+* effective go: 在 String() 示例中解释值/指针，更新到新的 Open 签名。
+* exp/draw: 快速路径，用于将 YCbCr 或 NRGBA 绘制到 RGBA 上。
+* filepath: 使 EvalSymlinks 在 Windows 上工作（感谢 Alex Brainman）。
+* flag: 允许不同的标志集。
+* gc: 修复无效情况下的类型开关错误消息（感谢 Lorenzo Stoakes），修复 unsafe.Sizeof，保留用于错误的原始表达式。
+* go/ast, go/doc, godoc: 在过滤 AST 时考虑结构体字段和接口方法。
+* go/ast: 在过滤 AST 时考虑匿名字段并设置 Incomplete 位，正确维护包全局导入的映射。
+* go/doc, godoc: 在为 godoc 过滤时，不要移除声明的元素。
+* go/parser: 在 select 语句中接受带括号的接收操作，声明标识符时始终引入一个 ast.Object。
+* go/printer, gofmt: 修复 const/var 声明中 "=" 的对齐，修复表达式列表的格式（缺少空格）。
+* go/printer: 添加简单的性能基准测试，使测试遵循语法限制，为不完整的结构体/接口提供更准确的注释。
+* go/token: 更快的 FileSet.Position 实现。
+* go/types: 类型检查器 API + 测试基础设施。
+* godoc: 添加 -index 标志以启用/禁用搜索索引，如果没有搜索框，则不运行相应的 JS 代码。
+* gofmt: 更新 test.sh（排除语法不正确的文件）。
+* html: 解析空的、未加引号的和单引号属性值。
+* http/cgi: 正确设置请求 Content-Type（感谢 Evan Shaw），为 IRIX 和 Solaris 传递环境变量。
+* http/pprof: 修复 POST 读取错误。
+* http/spdy: 新的不完整包（感谢 Ross Light）。
+* http: Client.Do 应为 GET 和 HEAD 跟随重定向，添加 Header.Write 方法（感谢 Evan Shaw），添加 Request.SetBasicAuth 方法，添加 Transport.ProxySelector，添加 http.SetCookie(ResponseWriter, *Cookie)，在相对重定向中不要清理查询字符串，修复在缺少多部分表单时 FormFile 空指针解引用，用更简单的版本修复竞态测试，修复两个 Transport gzip+持久化崩溃，在请求中包含 Host 头，使 HEAD 客户端请求跟随重定向（感谢 Eivind Uggedal）。更新 cookie 文档以引用新的 RFC 6265，根据 RFC 6265 写入 cookie（感谢 Christian Himpel）。
+* image/bmp: 实现 BMP 解码器。
+* image/gif: 新包提供 GIF 解码器。
+* image/jpeg: 解码灰度图像，而非仅彩色图像。优化和调整。
+* image/png: 编码带 alpha 通道的调色板图像（感谢 Dmitry Chestnykh），加速不透明 RGBA 编码。
+* image/tiff: 实现解码器（感谢 Benny Siegert）。
+* image: 添加类型特定的 Set 方法，并在解码 PNG 时使用它们，使 AlphaColor.Set 符合通常的签名（感谢 Roger Peppe），png 和 jpeg 编码基准测试。
+* ld: 不发出对名为 "" 的动态库的引用，修复 Plan 9 上 rodata 段的对齐（感谢 Anthony Martin），使无共享库依赖的 ELF 二进制文件成为静态二进制文件。
+* make.bash: 在 Windows 上移除旧的 bash 版本的 gotest（感谢 Alex Brainman）。
+* make: 为 C 命令和库添加 nuke 目标（感谢 Anthony Martin）。
+* mime/multipart: 在 Part 上添加 FileName 访问器，添加 Writer，在 Reader EOF 时返回错误，而非 (nil, nil)。
+* misc/cgo/test: 运行测试。
+* misc/emacs: 在作为子进程调用 gofmt 时使用 UTF-8（感谢 Sameer Ajmani）。
+* misc/vim: 新的 Vim 缩进脚本。
+* net, http: 添加并使用 IP 地址作用域识别 API（感谢 Mikio Hara）。
+* net: 在 TestICMP 中默认使用 127.0.0.1 而非 localhost，在意外的 DNS SRV 响应时不要崩溃，在 BSD 变体上启用 SO_REUSEPORT（感谢 Mikio Hara），协议族自适应地址族选择（感谢 Mikio Hara），重新启用通配符监听（感谢 Mikio Hara），对 LookupSRV 返回的记录进行排序（感谢 Gary Burd）。
+* os: 使 Readdir 和 Readdirnames 在末尾返回 os.EOF，使 Setenv 更新 C 环境变量。
+* reflect: 允许在 Value.MapIndex 中使用未导出的键。
+* runtime, sync/atomic: 修复 arm cas。
+* runtime: 在“finalizer already set”错误中添加换行符（感谢 Albert Strasheim），优雅处理 Linux 上的线程不足（感谢 Albert Strasheim），修复 ARM 上函数参数未检查的警告（感谢 Dave Cheney），使 StackSystem 成为 StackGuard 的一部分（感谢 Alexey Borzenkov），可能修复由 cgo setenv CL 导致的 Windows 构建问题。
+* spec: 澄清整数除法的语义，澄清 range 子句的语义，修复产生式语法中的错误，收窄表达式和 select 语句的语法，换行不能在字符或 "" 字符串字面量中使用，受限表达式仍可使用括号。
+* strings: 使 Reader.Read 使用 copy 而非显式循环。
+* syscall: 添加 Windows 文件映射函数和常量（感谢 Evan Shaw），添加 IPv6 作用域区域 ID 支持（感谢 Mikio Hara），为 linux/386、linux/amd64、linux/arm 添加 netlink 支持（感谢 Mikio Hara），添加 Sendfile，正确调整 freebsd syscalls.master URL（感谢 Mikio Hara），更改 Overlapped.HEvent 类型，它是一个句柄（感谢 Alex Brainman）。
+* syslog: 修复跳过网络测试的问题（感谢 Gustavo Niemeyer）。
+* template: 支持字符串、整数和浮点字面量（感谢 Gustavo Niemeyer）。
+* xml: 修复 reflect 错误。<h2 id="2011-04-27">2011-04-27（<a href="release.html#r57">r57 基础版本</a>）</h2>
+
+<pre>
+本次快照包含了对 reflect 包的优化修订，旨在提升其运行效率。这是继上周版本的重大 API 更新后进行的调整。若您的代码涉及 reflect 包，可能需要额外修改，且这些修改无法全部自动完成（例如通过 gofix 工具）。有关此次变更的完整详情，请参阅：
+	http://codereview.appspot.com/4435042
+此外，Typeof 和 NewValue 函数已分别重命名为 TypeOf 和 ValueOf。
+</pre>**其他变更：**
+*   **5c**：对齐规则改为与 **5g** 匹配，就像 **6c** 匹配 **6g** 一样。
+*   **8g, 8l**：修复'set but not used'的GCC错误（感谢 Fazlul Shahriar）。
+*   **all-qemu.bash**：移除 DISABLE_NET_TESTS。
+*   **构建系统**：移除 DISABLE_NET_TESTS。
+*   **构建器**：并行构建多个目标。
+*   **cgo**：避免"不兼容的指针类型"警告（感谢 Albert Strasheim）。
+*   **codereview**：添加'hg undo'命令及其他多项修复。
+*   **compress/flate**：添加字典支持。
+*   **compress/zlib**：在 Reader/Writer 中添加 FDICT 标志（感谢 Ross Light）。
+*   **container/heap**：修复测试中的循环依赖。
+*   **crypto/openpgp**：改进对密钥环的处理。
+*   **crypto/rsa**：支持多于3个质数。
+*   **crypto/tls**：添加服务器端 OCSP Stapling 支持。
+*   **crypto/x509**：缓存证书链构建。
+*   **crypto**：将证书验证逻辑移至 x509 包。
+*   **仪表盘**：优先构建最新版本。
+*   **文档**：在 install.html 中提及 make 版本要求。
+*   **expvar**：为返回值可 JSON 序列化的函数添加 Func 函数。
+*   **fmt**：在测试中减少递归深度以使其能在 gccgo 下运行，调整 %U 的文档说明。
+*   **gc**：允许复数类型作为接收者类型（感谢 Robert Hencke），正确处理嵌入接口中的未导出方法名，解释为什么无效接收者类型是无效的，修复 copy([]int, string) 的错误消息（感谢 Quan Yong Zhai），修复'无效递归类型'错误（感谢 Lorenzo Stoakes），多项错误修复。
+*   **Go 语言规范**：尝试澄清关于"append"的语言表述，提及映射类型的索引操作。
+*   **go/types**：针对导出数据格式变更进行更新。
+*   **gob**：修复 GobDecoders 的间接接收者处理，修复映射序列化中的一个小错误，使 errorf 总是以"gob: "作为消息前缀，针对间接指向大字段的测试用例，使用 reflect 包中新的 Implements 和 AssignableTo 方法，解码字符串时分配的是字符串而非 []byte。
+*   **gobuilder**：允许"goos-goarch-foo"形式的构建器，尊重提供的 MAKEFLAGS（感谢 Dave Cheney）。
+*   **godoc**：为搜索框使用"search"输入类型（感谢 Dmitry Chestnykh）。
+*   **gofix**：添加对 reflect 包重命名的支持。
+*   **gofmt**：添加 -d (diff) 选项（感谢 David Crawshaw），在重写 AST 中的 nil 接口时不崩溃，排除无法无错误编译的测试用例，修复 gofmt 测试工具中的错误。
+*   **goinstall**：支持 GOPATH；在 Go 源码树外构建和安装，支持构建可执行命令。
+*   **gopack**：修复前缀错误，在未添加 unsafe 对象到归档文件时保留安全标志。
+*   **gotest**：添加计时，尊重 $GOARCH，生成符合 gofmt 规范的代码。
+*   **http/cgi**：将部分 PATH 环境变量复制到子进程，改进 Location 响应处理，传递一些默认环境变量。
+*   **http/fcgi**：新增包（感谢 Evan Shaw）。
+*   **http**：添加 NewRequest 辅助函数，在 Request 中添加 MultipartForm、ParseMultipartForm 和 FormFile，明确连接代理失败时的信息，错误修复和新增测试，在回复前消费请求体，不对 Set-Cookie 的 Domain 和 Path 进行引号包裹（感谢 Petar Maymounkov），修复 TestServerTimeouts 中的 IP 混淆问题，处理器超时支持，ServerConn、ClientConn：添加真正的 Close 方法（感谢 Petar Maymounkov），使客户端重定向策略可配置，限制 POST 大小，反向代理处理器。
+*   **image/jpeg**：添加编码器，解码为 YCbCr 图像而非 RGBA 图像。
+*   **ioutil**：添加 Discard。
+*   **json**：在 SyntaxError 中跟踪错误偏移量。
+*   **ld**：防御某些损坏的对象文件，不发出空的 dwarf PE 段（感谢 Alex Brainman），修复 Mac 上的 6l -d，诊断 -d 的无效使用，修复 Plan 9 符号表（感谢 Anthony Martin），移除 MachoLoad 限制。
+*   **make**：防止 rm 引发'text file busy'错误（感谢 Lorenzo Stoakes）。
+*   **mime/multipart**：添加 ReadForm 用于解析多部分表单，限制行长度以防滥用。
+*   **mime**：RFC 2231 续行 / 非 ASCII 字符支持，新增大量测试，少许解析修复。
+*   **misc/goplay**：修复 Firefox 中的 Tab 和 Shift+Enter 问题（感谢 Dmitry Chestnykh）。
+*   **net**：禁用又一个外部网络测试，修复 FreeBSD 上的 EAI_BADFLAGS 错误（感谢 Mikio Hara），修复 ParseIP（感谢 Quan Yong Zhai），修复 dialgoogle_test.go（感谢 Quan Yong Zhai），在加载 DNS 配置前尝试解析 /etc/hosts（感谢 Dmitry Chestnykh），在 FreeBSD、Linux、OS X / amd64、386 上使用 C 库解析器。
+*   **os/user**：新增用于查找用户的包。
+*   **os**：在 Windows 上使用 O_APPEND|O_CREATE 打开文件以实现追加（感谢 Alex Brainman），修复 Windows 上 ReadAt/WriteAt 的竞态条件（感谢 Alex Brainman），将 EPIPE 退出转换为 panic。
+*   **rc/env.bash**：修复在 Windows 的 msys 环境下构建的问题（感谢 Joe Poirier）。
+*   **reflect**：允许对数组进行切片操作，修复数组的 Copy 操作（感谢 Gustavo Niemeyer），在接口检查期间要求包限定符匹配，添加 Type.Implements、Type.AssignableTo、Value.CallSlice 方法，使 Set 行为与 Go 语言一致。
+*   **rpc**：允许方法的第一个参数是值类型而非指针类型，通过 HTTP 以及直接网络连接运行基准测试。
+*   **run.bash**：移除冗余的重新构建。
+*   **runtime/plan9**：针对 Plan 9 的警告修复（感谢 Lucio De Re）。
+*   **runtime**：多项错误修复，修复 GOMAXPROCS 与垃圾回收的交互错误（感谢 Dmitriy Vyukov），修复 mkversion 以输出有效的路径分隔符（感谢 Peter Mundy），更优雅的内存不足崩溃处理，在接口检查期间要求包限定符匹配，构建源码行表时跳过无行号的函数，将"过多的 EPIPE"转换为真正的 SIGPIPE。
+*   **src/pkg**：使包文档注释统一以"Package foo"开头。
+*   **syscall**：为 Linux 添加 Madvise 和 Mprotect（感谢 Albert Strasheim），为 Linux 添加 Mlock、Munlock、Mlockall、Munlockall（感谢 Albert Strasheim），为 darwin/386、darwin/amd64 添加 BPF 支持（感谢 Mikio Hara），修正 Windows CreateProcess 的输入参数（感谢 Alex Brainman），修复 linux/arm5 下的 Ftruncate（感谢 Dave Cheney），允许 StartProcess 在 Windows 上隐藏被执行的程序（感谢 Vincent Vanackere）。
+*   **test/bench**：更新计时；迁移到新机器。
+*   **time**：支持 Irix 6 的时区信息文件位置。
+*   **教程**：将 Open 的定义和使用现代化，在筛法程序中将无限循环替换为有限计数循环。
+*   **websocket**：在 websocket.Conn 中包含 *http.Request。
+*   **xml**：为非 UTF-8 字符集转换器添加解析器钩子。<h2 id="2011-04-13">2011-04-13</h2>
+
+<pre>
+weekly.2011-04-13
+
+此每周快照包括了对 reflect 包和 os.Open 函数的重大更改。使用 reflect 或 os.Open 的代码将需要更新，可以通过 gofix 工具自动完成此操作。
+
+reflect 包的 Type 和 Value 类型已更改。Type 现在是一个实现了所有可能类型方法的接口。不再对 reflect.Type t 进行类型开关，而是对 t.Kind() 进行开关。Value 现在是一个实现了所有可能值方法的结构体值。不再对 reflect.Value v 进行类型开关，而是对 v.Kind() 进行开关。有关完整详情，请参见此更改：
+        http://code.google.com/p/go/source/detail?r=843855f3c026
+
+os 包的 Open 函数已被三个函数取代：
+        OpenFile(name, flag, perm) // 与旧 Open 相同
+        Open(name) // 与旧 Open(name, O_RDONLY, 0) 相同
+        Create(name) // 与旧 Open(name, O_RDWR|O_TRUNC|O_CREAT, 0666) 相同
+
+要更新您的代码以使用新 API，请运行 "gofix path/to/code"。Gofix 无法完美处理所有情况，因此在提交更改之前，请阅读并测试它所做的修改。
+
+其他更改：
+*   archive/zip：新增 OpenReader 函数和 ReadCloser 类型（感谢 Dmitry Chestnykh）。
+*   asn1：实现长度八位字节的正确编组（感谢 Luit van Drongelen）。
+*   big：打印 nil 整数时不再崩溃。
+*   bufio：新增 ReadLine，用于取代 encoding/line。
+*   build：加快构建速度，减少输出信息。
+*   codereview：自动移植旧 diff，丢弃 self-clpatch 上的 Author: 行，识别不带尾部斜杠的代码 URL。
+*   crypto/block：移除已弃用的包。
+*   crypto/des：实现 DES 和 TDEA 的新包（感谢 Yasuhiro Matsumoto）。
+*   crypto/ecdsa, crypto/rsa：使用 io.ReadFull 从随机源读取（感谢 Dmitry Chestnykh）。
+*   crypto/rsa：新增三素数支持，新增预计算 CRT 值支持，调整 CRT 代码以符合 PKCS#1。
+*   crypto/x509：暴露完整的 DER 数据（感谢 Mikkel Krautz）。
+*   doc：新增 "Functions" 代码漫游（感谢 John DeNero）。
+*   doc/roadmap：新增关于工具和包的章节。
+*   fmt：允许对无符号整数使用 %U。
+*   gc：修复与优化。
+*   go/printer, gofmt：使用空格分隔导入重命名和导入路径。
+*   go/scanner：改进 TokenString 输出。
+*   go/types：为 AST 实现的新 Go 类型层次结构。
+*   godashboard：在 launchpad.net 显示包（感谢 Gustavo Niemeyer）。
+*   gofix：新增 -diff 选项，各种修复和辅助功能。
+*   gotest：修复错误处理中的一个错误，修复 [^.]_test 文件模式（感谢 Peter Mundy），处理 Windows 上 gomake 返回的 \r\n（感谢 Alex Brainman）。
+*   gotype：使用 go/types GcImporter。
+*   govet：使 printf 等的名称匹配不区分大小写。
+*   http：允许为 ServeFile 覆盖 Content-Type，客户端 gzip 支持，测试期间不再监听 0.0.0.0，完善服务器 Expect 处理及测试。
+*   image/ycbcr：新包。
+*   image：注册图像格式时允许使用 "?" 通配符。
+*   io：修复 n > 0 时的 Read 以及 os.EOF 相关问题（感谢 Robert Hencke）。
+*   ld：更正 Plan 9 编译器警告（感谢 Lucio De Re），ELF 头文件函数声明（感谢 Lucio De Re），修复 Mach-O X86_64_RELOC_SIGNED 重定位（感谢 Mikkel Krautz），修复 Mach-O bss 错误（感谢 Mikkel Krautz），修复 struct 字段名的 dwarf 解码（感谢 Luuk van Dijk），修复与优化（速度提升 25%）。
+*   log：通用化获取和设置标志与前缀。
+*   misc/cgo/life：在 Windows 上启用构建和测试（感谢 Alex Brainman）。
+*   misc/vim：新增带有 Fmt 命令的插件（感谢 Dmitry Chestnykh），更新类型高亮以适应新 reflect 包。
+*   net：默认禁用组播测试（感谢 Dave Cheney），对 LookupMX 返回的记录进行排序（感谢 Corey Thomasson）。
+*   openpgp：修复不当的 := 遮蔽（感谢 Gustavo Niemeyer）。
+*   os：将 Open 重命名为 OpenFile，新增新的 Open 和 Create 函数，修复 Plan 9 中的 Readdir（感谢 Fazlul Shahriar）。
+*   os/inotify：测试文件使用 _test 而非 _obj。
+*   pkg/path：在 Windows 上启用测试（感谢 Alex Brainman）。
+*   reflect：新的 Type 和 Value API。
+*   src/pkg/Makefile：除非失败，否则精简每个目录的 make 输出。
+*   syscall：在 Linux 上添加 DT_* 和 MADV_* 常量（感谢 Albert Strasheim），在 Linux、FreeBSD、OS X 上添加 Mmap、Munmap，修复 Plan 9 中的 StartProcess（感谢 Fazlul Shahriar），修复 Windows 的 Signaled（感谢 Alex Brainman）。
+*   test/bench：在 Windows 上启用构建和测试（感谢 Alex Brainman）。
+</pre>
+
+<h2 id="2011-04-04">2011-04-04</h2>
+
+<pre>
+此快照包含对 net 包的更改。如果您的代码使用了 Dial 或 LookupHost 函数，则需要进行更改。
+
+laddr 参数已从 net.Dial 中移除，cname 返回值已从 net.LookupHost 中移除。新的 net.LookupCNAME 函数可用于查找给定名称的规范主机。您可以使用 gofix 更新您的网络代码。
+
+gofix shell 脚本已被一个 Go 程序取代，这使得测试速度显著加快。
+</pre>其他变更：
+*   asn1：新增解析 Kerberos 所需的扩展。
+*   bufio：清理了 Write 和 WriteString 函数（感谢 Evan Shaw）。
+*   bytes, strings：简化了 Join 函数（感谢 Evan Shaw）。
+*   crypto/cipher：错误的 CTR IV 长度现在会触发 panic。
+*   crypto/tls：将 NPN 支持扩展到客户端；添加了 X509KeyPair 函数，用于从内存中解析证书。
+*   crypto/x509：解析扩展密钥用法（Extended Key Usage）扩展（感谢 Mikkel Krautz）。
+*   debug/gosym：移除了 gotest 运行预备命令的需求。
+*   fmt：为 %q 实现了精度（输入长度）值，例如：%.20q。
+*   go/parser：修复了局部类型声明的解析作用域（感谢 Roger Peppe），包名不能是空标识符。
+*   go/printer, gofmt：移除了针对多行原始字符串的特殊处理。
+*   gopack：添加了 P 标志，用于从文件名信息中移除前缀。
+*   gotest：添加了 -test.timeout 选项；用 Go 编写的编译程序替换了 shell 脚本；在 Windows 上正确执行 gomake（感谢 Alex Brainman）。
+*   gotry：移入其自己的目录，与 gotest 分离。
+*   gotype：支持更多测试，添加了一个新测试。
+*   http：添加了 Transport.MaxIdleConnsPerHost；在 URL 转义中使用大写十六进制字符（感谢 Matt Jones）。
+*   httptest：添加了 NewTLSServer。
+*   misc/kate：重新组织，移除了 closed()（感谢 Evan Shaw）。
+*   misc/notepadplus：支持 notepad++（感谢 Anthony Starks）。
+*   net：实现非阻塞连接（感谢 Alexey Borzenkov）。
+*   os：修复了 MkdirAll("/thisdoesnotexist") 的问题（感谢 Albert Strasheim）；Plan 9 支持（感谢 Yuval Pavel Zholkover）；添加了一些缺失的 Plan 9 错误（感谢 Andrey Mirtchovski）；修复了 Stat 返回的 FileInfo.Name（感谢 David Forsythe）。
+*   path/filepath.Glob：添加了错误返回值；在出错时不会丢失已知的匹配项。
+*   path/filepath：添加了 Plan 9 支持（感谢 Andrey Mirtchovski）。
+*   scanner：像 Go 语言那样处理行注释。
+*   syscall：Plan 9 支持（感谢 Yuval Pavel Zholkover）；StartProcess 的 Chroot 和 Credential（感谢 Albert Strasheim）；为 freebsd/386、freebsd/amd64 添加了 BPF 支持（感谢 Mikio Hara）；在 linux/386 上使 [Raw]Syscall6 传递第 6 个参数（感谢 Evan Shaw）。
+
+<h2 id="2011-03-28">2011-03-28</h2>
+
+<pre>
+此每周版本包含了测试支持的改进。
+
+现在可以通过 gotest 工具进行内存和 CPU 性能分析。当使用 -test.memprofile 和 -test.cpuprofile 标志调用时，Gotest 将生成内存和 CPU 性能分析数据。详情请运行 "godoc gotest"。
+
+我们还引入了一种方法，使得在无需进行穷尽测试时可以快速运行测试。Gotest 新增的 -test.short 标志，结合 testing 包中新增的 Short 函数，允许您编写可以在正常模式或“简短”模式下运行的测试；all.bash 脚本现在使用简短模式来减少安装时间。
+Makefile 也了解了这个标志 - 您只需运行 "make testshort" 即可。
+</pre>其他变更：
+* .hgignore：忽略所有已安装的go包（感谢Evan Shaw）。
+* 构建：添加all-qemu.bash，修复多个ARM问题，
+        增加SWIG支持并提供两个SWIG示例，
+        诊断Ubuntu有问题的gold副本，
+        处理version.bash中损坏的awk（感谢Dave Cheney），
+        重新启用无需gomake的clean.bash（感谢Gustavo Niemeyer）。
+* cgo：修复索引越界错误。
+* 代码审查：允许以`weekly.DATE`形式提交的CL。
+* crypto/ecdsa：截断哈希值。
+* crypto/openpgp：添加DSA签名支持。
+* 仪表盘：移除旧的python/bash构建器，更新README。
+* 文档：在install.html中解释发布版和每周版标签。
+* exec：为Run函数记录dir选项（感谢Gustavo Niemeyer）。
+* flag：记录Nflag函数（感谢Fazlul Shahriar）。
+* gc：移除拒绝有效代码的临时...错误。
+* go/ast：实现NewPackage，
+        合并CaseClause和TypeCaseClause。
+* go/parser：通过复制token字面量修复内存泄漏，
+        正确解析标识符。
+* go/printer、gofmt：避免指数级布局算法，
+        gofmt：简化结构体格式化并尊重换行符。
+* go/scanner：解释包含Windows文件名的行注释（感谢Alex Brainman）。
+* go/token：使用数组而非映射实现token-&gt;string表。
+* gob：优化以减少内存分配，
+        在bootstrapType中使用指针以确保接口行为正确。
+* gobuilder：识别以`weekly.DATE`形式提交的CL。
+* godefs：处理volatile关键字。
+* godoc：添加-template标志以指定自定义模板，
+        修复Windows路径问题（感谢Yasuhiro Matsumoto）。
+* gofix：httpserver - 将`rw.SetHeader`重写为`rw.Header.Set`。
+* gofmt：添加性能分析标志。
+* gopprof：修复错误：大段滚动时不旋转180度，
+        更新内存分配函数列表。
+* gotest：修复生成的_testmain.go中的gofmt问题。
+* http：添加NewProxyClientConn，
+        避免请求多个文件范围时崩溃，
+        不对304响应进行分块，
+        导出Transport，添加keep-alive支持。
+* ld：当存在不安全导入时返回大于0的退出码。
+* misc/bbedit：移除closed关键字（感谢Anthony Starks）。
+* misc/emacs：gofmt：失败时不覆盖当前缓冲区。
+* misc/vim：移除'closed'作为内置函数。
+* net：添加FileConn、FilePacketConn、FileListener（感谢Albert Strasheim），
+        不强制唤醒epoll/kqueue以添加新事件，
+        让操作系统特定的AddFD例程唤醒轮询线程，
+        为epoll和kqueue/kevent使用预分配缓冲区。
+* path/filepath：添加EvalSymlinks函数，
+        修复在符号链接的GOROOT下运行时的TestEvalSymlinks。
+* path：适用于Windows（感谢Yasuhiro Matsumoto）。
+* rpc：增加server_test超时时间（感谢Gustavo Niemeyer），
+        优化以减少内存分配。
+* runtime：修复darwin/amd64线程的虚拟内存占用（感谢Alexey Borzenkov），
+        修复对goroutine的gdb支持，
+        更多栈分割修复，
+        用于setitimer的特定操作系统类型和代码，
+        为freebsd-386更新defs.h（感谢Devon H. O'Dell）。
+* strings：Map：字符串未改变时避免内存分配。
+* syscall：GetsockoptInt（感谢Albert Strasheim），
+        修复Windows的StartProcess（感谢Alex Brainman），
+        允许非阻塞系统调用，
+        将扩展名从.sh重命名为.pl，因为这些文件是Perl脚本。
+* test：启用使用`v, ok := &lt;-ch`语法的测试（感谢Robert Hencke）。
+* time：当无法设置测试时区时提供有用的提示信息。
+        在sys.go中隔离系统调用引用。
+
+<h2 id="2011-03-15">2011-03-15</h2>
+
+<pre>
+本周的发布引入了新的版本标签方案。我们计划继续发布每周版本，但已将现有的标签从"release"重命名为"weekly"。现在"release"标签将每月或每两个月应用于一个精心挑选的稳定版本。
+
+原先标记为"release.2011-03-07.1"的修订版本（现为"weekly.2011-03-07.1"）已被提名为我们的首个稳定版本，并被赋予标签"release.r56"。当每个稳定版本被标记时，我们将在新的golang-announce邮件列表上发布公告：
+  http://groups.google.com/group/golang-announce
+
+您可以继续使用`hg update release`来保持Go安装更新，但现在您只需在我们标记新的稳定版本时更新，我们会在此处宣布。如果您希望保持在最新前沿，应使用`hg update weekly`切换到每周标签。
+
+本周的发布对语言规范以及http、os和syscall包进行了重大更改。您的代码可能需要进行修改。它还引入了新的gofix工具。
+
+closed函数已从语言中移除。通道接收的语法已更改为返回可选的第二个值，一个表示通道是否已关闭的布尔值。此代码：
+	v := &lt;-ch
+	if closed(ch) {
+		// 通道已关闭
+	}
+现在应写为：
+	v, ok := &lt;-ch
+	if !ok {
+		// 通道已关闭
+	}
+
+现在声明未使用的标签是非法的，就像声明未使用的局部变量是非法的一样。
+
+新的gofix工具可以查找使用旧API的Go程序，并将其重写为使用更新的API。在您更新到新的Go版本后，gofix可以帮助您对程序进行必要的更改。Gofix将处理下文描述的http、os和syscall包的更改，我们将更新该程序以跟上未来库的变更。
+
+Hijack和Flush方法已从http.ResponseWriter接口中移除，可通过新的http.Hijacker和http.Flusher接口访问。RemoteAddr和UsingTLS方法已从http.ResponseWriter移至http.Request。http.ResponseWriter 接口的 SetHeader 方法已被替换为返回响应头的 Header() 方法。调用方代码需要修改。原先的代码：
+```go
+rw.SetHeader("Content-Type", "text/plain")
+```
+现在应该写作：
+```go
+rw.Header().Set("Content-Type", "text/plain")
+```
+
+os 和 syscall 包的 StartProcess 函数现在将最后三个参数分别接收为 *os.ProcAttr 和 *syscall.ProcAttr 类型的值。原先的代码：
+```go
+os.StartProcess(bin, args, env, dir, fds)
+```
+现在应该写作：
+```go
+os.StartProcess(bin, args, &os.ProcAttr{Files: fds, Dir: dir, Env: env})
+```
+
+gob 包现在可以编解码实现了 gob.GobEncoder 和 gob.GobDecoder 接口的类型值。这使得拥有未导出字段的类型能够传输自描述信息；典型的例子是 big.Int 和 big.Rat。
+
+其他变更：
+* 5l、6l、8l：通过省略类型、字符串、go.string 的符号减少约40%的二进制大小。
+* 5l、8l：输出缺失的节符号（感谢 Anthony Martin）。
+* 6l、8l：修复 gdb 崩溃问题。
+* Make.cmd：同时清理 _test* 文件（感谢 Gustavo Niemeyer）。
+* big：为 Int 类型实现自定义 Gob(En/De)coder。
+* build：移除 Make.cmd 中的重复依赖（感谢 Robert Hencke），在 misc/cgo/test 中运行 gotest。
+* codereview.py：如果用户不是 CL 作者，则不建议使用 -d 选项（感谢 Robert Hencke）。
+* compress/lzw：对多种输入大小进行基准测试。
+* crypto/ecdsa：新增包。
+* crypto/elliptic：为每条曲线添加 N 值。
+* crypto/openpgp：错误修复和修复命名错误的函数。
+* crypto/tls：修复编译错误（感谢 Dave Cheney）。
+* doc：《Effective Go》：进行了一些小的清理，更新了常见问题解答。"hello, world" 示例大小现在是1.1MB，从1.8MB下降，更新 codelab wiki 以修复 template.Execute 参数顺序。
+* flag：按排序顺序遍历标志，以获得更友好的信息。
+* fmt：不再导出 EOF = -1。
+* fmt：使 ScanState.Token 更通用（感谢 Roger Peppe）。
+* gc：诊断未使用的标签，修复名为 _ 的返回值处理，在导出元数据中包含所有依赖项，使 unsafe.Pointer 成为独立的类型种类，而不是等同于 *any。
+* go/ast、go/parser：在解析时填充标识符作用域。
+* go/ast：为 ast.Print 和 ast.Fprint 添加 FileSet 参数。
+* go/parser：常量声明中的第一个常量必须有值。
+* gob：效率和可靠性修复。
+* gofmt：移除 -trace 和 -ast 标志。
+* goinstall：处理文件名中的 $(GOOS) 和 $(GOARCH)，在不使用 cgo 时处理 .c 文件，以及处理 .s 文件（感谢 Gustavo Niemeyer）。
+* gopack：省略时间戳，使输出确定。
+* gotype：用于类型检查 Go 程序的命令行工具。
+* govet：处理 print 格式字符串中的 '*'。
+* hash：新的 FNV-1a 实现（感谢 Pascal S. de Kloe）。
+* http/cgi：子进程支持（例如 Apache 下的 Go CGI）。
+* http：使 Cookie 代码遵循 IETF 草案（感谢 Petar Maymounkov），为修复的 HTTP/1.0 保持活动问题添加测试，在 client_test.go 中不访问外部网络，修复请求 URL 为 nil 时传输层崩溃的问题，将 Transport 接口重命名为 RoundTripper，即使设置了 DISABLE_NET_TESTS=1 也运行测试。
+* httptest：在 Write 时将 Recorder 状态码默认设为 200。
+* io/ioutil：清理 ReadAll 和 ReadFile。
+* ioutil：添加 NopCloser。
+* ld：在数据布局期间保留符号大小。
+* lib9、libmach：将 GOOS 引用更改为 GOHOSTOS（感谢 Evan Shaw）。
+* libmach：修正字符串比较以恢复 darwin 上的 6cov（感谢 Dave Cheney）。
+* misc/vim：为 Vim 添加缩进脚本（感谢 Ross Light）。
+* net、os、syslog：Solaris 支持修复。
+* net：不循环清空唤醒管道。
+* nm：记录 -S 标志。
+* openpgp：添加 PublicKey KeyId 字符串访问器。
+* rpc：优化，添加基准测试和内存分析，使用 httptest.Server 进行测试（感谢 Robert Hencke）。
+* runtime：通过在调度器解锁时唤醒来减少锁争用，调度器、cgo 重组，将非调试 malloc 接口从 debug.go 分割到 mem.go。
+* spec：澄清 return 语句规则。
+* strings：添加 IndexRune 测试、ASCII 快速路径、更好的基准测试名称；添加 BenchmarkIndex。
+* syscall：为 linux 实现 Mount 和 Unmount，为 linux 实现 Reboot。
+* time：修复 Time.ZoneOffset 文档（感谢 Peter Mundy）。
+* tls：将 PeerCertificates 移至 ConnectionState。
+
+</pre>
+
+<h2 id="2011-03-07">2011-03-07（<a href="release.html#r56">r56 的基础版本</a>）</h2>
+
+<pre>
+此版本包含对 reflect 和 path 包的更改。
+使用 reflect 或 path 的代码可能需要更新。
+
+reflect 包的 Value.Addr 方法已重命名为 Value.UnsafeAddr。
+使用 Addr 方法的代码将必须改为调用 UnsafeAddr。
+
+path 包已拆分为两个包：path 和 path/filepath。
+path 包处理斜杠分隔的路径，与操作系统无关。
+filepath 包实现本地操作系统的原生文件路径。
+path 包中特定于操作系统的功能（如 Walk）已移至 filepath。
+</pre>其他变更：
+* 构建工具：修复问题并简化流程（感谢 Dave Cheney），在构建 $PATH 中将 $GOBIN 置于 /bin、/usr/bin 之前。
+* bzip2：加快解压缩速度。
+* cgo：修复 dwarf 类型解析（感谢 Gustavo Niemeyer），将临时源文件置于 _obj 目录（感谢 Roger Peppe），修复涉及零参数回调的错误。
+* compress/lzw：优化。
+* 文档：新增关于“implements”的常见问题，新增关于大型二进制文件的常见问题，新增关于栈与堆分配的常见问题，在路线图中加入国际化部分，在 code.html 中描述平台特定规范。
+* fmt：允许 Fscan 等函数的递归调用（感谢 Roger Peppe），使 %#p 抑制前导 0x。
+* gc、gopack：在文档中补充一些缺失的标志。
+* gc：修复名为 main 的包的初始化问题（感谢 Gustavo Niemeyer）。
+* gob：使递归映射和切片类型正常工作及其他修复，初步支持 GobEncoder/GobDecoder 接口。
+* gobuilder：新增 -package 标志以构建外部包，新增 -v 标志用于详细输出。
+* gofmt：排除不符合 Go 语言规范的测试文件。
+* goinstall：防护恶意文件名（感谢 Roger Peppe）。
+* goyacc：提供 -p 标志以设置名称前缀，更新文档。
+* http：新增 cookie 支持（感谢 Petar Maymounkov），允许处理器发送非分块响应，导出 ParseHTTPVersion，公开 Client 的 Transport，使用 WriteProxy，将 ClientTransport 重命名为 Transport。
+* http/cgi：新包。
+* http/httptest：新包。
+* image：为常见文件格式添加解码测试。
+* io/ioutil：新增 TempDir 函数。
+* mime/multipart：Header 类型从 map 改为 MIMEHeader。
+* path/filepath：新增操作系统特定的路径支持（感谢 Gustavo Niemeyer）。
+* reflect：新增 PtrTo 函数，新增 Value.Addr 方法（原 Addr 现为 UnsafeAddr）。
+* runtime：在 linux/arm 上使用内核提供的 compare-and-swap。
+* spec：对函数的作用域规则进行细微澄清。
+* sync/atomic：新包，用于暴露原子操作。
+* syscall：重新生成 zerrors_freebsd_amd64.go（感谢 Mikio Hara），规避 FreeBSD execve 内核错误（感谢 Devon H. O'Dell）。
+* template：记录分隔符。
+* testing：在每次基准测试运行前执行 GC（感谢 Roger Peppe）。
+* unsafe：修复文档。
+* websocket：测试中使用 httptest.Server（感谢 Robert Hencke）。
+* xml：允许嵌套指令（感谢 Chris Dollin）。
+
+<h2 id="2011-02-24">2011-02-24</h2>
+
+<pre>
+此版本包含对 http 包的更改以及一处小幅语言变更。
+如果你的代码操作了 http Headers 或在 if 语句中省略了条件，则需要进行修改。
+
+新的 http.Header 类型替代了 http.Request 和 http.Response 中 Header 和 Trailer 字段的 map[string]string。
+可以通过其 Get、Set、Add 和 Del 方法操作 Header 值。
+详见 http://golang.org/pkg/http/#Header
+
+现在 if 语句中必须包含条件。
+此前，条件默认为 true，如同 switch 和 for 语句一样。
+以下代码现在是非法的：
+	if x := foo(); {
+		// 始终执行的代码
+	}
+可通过以下方式实现相同效果：
+	if x := foo(); true {
+		// 代码
+	}
+或更简单的形式：
+	{
+		x := foo()
+		// 代码
+	}
+</pre>**其他变更：**
+* 6l：新增 `-Hwindowsgui` 标志以支持构建 Windows GUI PE 文件（感谢 Alex Brainman），PE 文件修复（感谢 Wei Guangjing）。
+* 8l, 6l：允许在 Windows 上创建更多操作系统线程（感谢 Alex Brainman）。
+* 构建系统：减少递归 make 中子 shell 的使用，并移除 make.bash 中未使用的 NaCl 条件（感谢 Dave Cheney）。
+* 代码审查：修复了处理空差异的 clpatch 问题（感谢 Gustavo Niemeyer）。
+* compress/bzip2：新增包。
+* compress/lzw：实现了一个解码器。
+* crypto/openpgp：新增包。
+* crypto/rand：为小型请求添加了读取缓冲区以提高速度（感谢 Albert Strasheim）。
+* crypto/rsa：在需要时对 OAEP 结果进行左填充。
+* crypto/tls：将协议协商失败设为致命错误。
+* fmt：在 Scanln 中遇到换行符时，停止向 Scanner 的 Scan 方法提供字符。
+* gc：修复了 interface 错误信息，使字符串常量比较改为无符号比较（感谢 Jeff R. Allen）。
+* Go 语言规范：对 channel 类型进行了微小说明。
+* go/ast, parser：if 语句中的条件现在是必需的。
+* gob：仅计算一次用户类型的相关信息。防止纯递归类型。
+* godoc：接受符号链接作为提供给 `-path` 的路径名；添加了 robots.txt；在读取过滤器文件时记录错误。
+* html：支持对 HTML 注释进行分词。
+* http：添加了代理支持（感谢 Yasuhiro Matsumoto）；使用 net/textproto 实现（感谢 Petar Maymounkov）；在代理请求中发送完整 URL；引入了 Client 和 ClientTransport 的初始版本。
+* image/png：支持更多格式（感谢 Mikael Tillenius）。
+* json：仅使用字母数字标签；使用 base64 编码 []byte（感谢 Roger Peppe）。
+* ld：检测因 NOSPLIT 导致的栈溢出；移除 rpath；支持弱符号。
+* misc/dashboard/builder：使用 UTF-8 编码与 hg 通信。
+* misc/dashboard：在构建失败时通知 golang-dev。
+* net：*netFD.Read 在 Windows 上遇到 EOF 时返回 os.EOF（感谢 Alex Brainman）；为 UDPConn 添加 IPv4 多播（感谢 Dave Cheney）；更准确的 IPv4-in-IPv6 API 测试（感谢 Mikio Hara）；拒绝无效的 net:proto 网络名称（感谢 Olivier Antoine）。
+* netchan：允许使用任意连接（感谢 Roger Peppe）。
+* os：添加了 ENODATA 和 ENOTCONN（感谢 Albert Strasheim）。
+* reflect：添加了几句话解释 Methods 的工作原理；为 ArrayOrSliceType 添加了一个秘密方法以确保它仅由数组和切片实现；在 CommonType 中添加了 pointer word（为未来工作占位符）。
+* runtime-gdb.py：Go 字符串的 gdb 美化打印器现在能正确处理长度。
+* runtime：各种错误修复，更完整的栈跟踪；为 runtime.GOROOT 记录 $GOROOT_FINAL。
+* spec：删除了关于选择器可作用于指向接口类型的指针的错误说明。
+* sync：添加了 Cond（感谢 Gustavo Niemeyer）。
+* syscall：为 mlockall 添加了 MCL_* 标志（感谢 Albert Strasheim）；为 win32 实现了 chmod()（感谢 Yasuhiro Matsumoto）。
+* test/bench：更新了新 GC 的性能测试时间。
+* testing：重命名命令行标志以避免冲突（感谢 Gustavo Niemeyer）。
+* textproto：引入了 Header 类型（感谢 Petar Maymounkov）。
+* websocket：使用新接口访问 Header。
+
+---
+
+<h2 id="2011-02-15">2011-02-15</h2>
+
+<pre>
+此版本包含了对 io、os 和 template 包的更改。
+您可能需要更新您的代码。
+
+io.ReadByter 和 io.ReadRuner 接口类型已分别重命名为
+io.ByteReader 和 io.RuneReader。
+
+os 包中的 ForkExec 函数已被新的 StartProcess 函数取代，
+并围绕 Process 类型构建了新的 API：
+	http://golang.org/pkg/os/#Process
+
+template.Execute 的参数顺序已颠倒，以符合
+"目标优先"的约定，与 io.Copy、fmt.Fprint 等保持一致。
+
+Gotest 现在可以处理使用基于 Make.cmd 的 makefile 的目录中的 package main。
+
+上一版本的内存分配运行时问题尚未完全修复。
+使用 ulimit -v 遇到的虚拟内存耗尽问题已修复，
+但在使用 GOMAXPROCS > 1 时，垃圾回收器仍存在已知问题。其他变更：
+* 5l：停止生成 64 位 eor 指令。
+* 8l：Plan9 支持的进一步改进（感谢 Yuval Pavel Zholkover）。
+* archive/zip：处理带数据描述符的文件。
+* arm：可用的窥孔优化器。
+* asn1：将 true 编码为 255，而非 1。
+* buffer.go：小幅优化，扩展注释。
+* build：在 DISABLE_NET_TESTS=1 时移除 syslog（感谢 Gustavo Niemeyer）；允许 clean.bash 在新检出环境中运行；将"所有测试通过"消息改得更醒目；修复 GOROOT 中的空格问题（感谢 Christopher Nielsen）。
+* bytes：修复 buffer.ReadBytes 中的错误（感谢 Evan Shaw）。
+* 5g：改进 int64 代码生成；避免使用 MVN 指令。
+* cgo：非编译时不运行 cgo（感谢 Gustavo Niemeyer）；修复 _cgo_run 时间戳文件顺序（感谢 Gustavo Niemeyer）；修复有符号枚举的处理（感谢 Gustavo Niemeyer）；支持依赖操作系统的 #cgo 指令（感谢 Gustavo Niemeyer）；重命名内部函数 f 以避免与可能的同名 C 全局变量冲突。
+* codereview：修复 Windows 上的 hgpatch 问题（感谢 Yasuhiro Matsumoto）；记录仓库和基础版本；使用 cmd.communicate（感谢 Yasuhiro Matsumoto）。
+* container/ring：用 Do() 替换 Iter()。
+* crypto/cipher：为 OCFB 模式添加重新同步功能。
+* crypto/openpgp/armor：错误修复。
+* crypto/openpgp/packet：新增子包。
+* crypto/tls：从文件加载证书链；选择最佳密码套件，而非最差。
+* crypto/x509：添加名称约束支持。
+* debug/pe：修复 ImportedSymbols（感谢 Wei Guangjing）。
+* doc/code：更新以反映包名无需唯一。
+* doc/codelab/wiki：一系列修复（感谢 Andrey Mirtchovski）。
+* doc/install：针对新版 Mercurial 的更新。
+* encoding/line：修复 EOF 后返回的行。
+* flag：允许为整型标志输入十六进制（0xFF）和八进制（0377）格式。
+* fmt.Scan：扫描二进制指数浮点格式 2.4p-3，以及十六进制（0xFF）和八进制（0377）整数。
+* fmt：文档中说明 %%；同时为浮点数添加 %b 说明。
+* gc, ld：检测过期或不兼容的目标文件；不再保留 main 包名。
+* gc：修正方法缺失错误中的接收器（感谢 Lorenzo Stoakes）；修正非规格化常数的舍入（感谢 Eoghan Sherry）；修复 select 接收错误。
+* go/printer, gofmt：更智能地处理多行原始字符串。
+* go/printer：行注释必须始终以换行符结尾；移除“Styler”概念和 HTML 模式。
+* gob：允许 Decode(nil) 并丢弃下一个值。
+* godoc：使用 IsAbs 测试绝对路径（修复 Win32 问题）（感谢 Yasuhiro Matsumoto）；即使没有同名命令也不隐藏包查找错误。
+* gotest：为 main 程序启用单元测试。
+* http：添加支持超时的 Server 类型；为 ClientConn 和 ServerConn 添加流水线支持（感谢 Petar Maymounkov）；处理未分块、无长度的 HTTP/1.1 响应。
+* io：添加 RuneReader。
+* json：更正 Marshal 文档。
+* netchan：优雅处理已关闭的连接（感谢 Graham Miller）。
+* os：实现新的 Process API（感谢 Alex Brainman）。
+* regexp 测试：使一些基准测试更有意义。
+* regexp：添加对从 RuneReader 接口读取的文本进行匹配的支持。
+* rpc：提高对错误的容错性，正确丢弃值（感谢 Roger Peppe）。
+* runtime：检测 Windows 上失败的线程创建；更快的分配器和垃圾回收器；修复虚拟内存耗尽问题；实现 Windows 控制台控制处理程序（SIGINT）（感谢 Hector Chu）；更详细的 panic 跟踪和行号处理；改进 Windows 回调处理（感谢 Hector Chu）。
+* spec：调整可赋值性概念；允许导入名为 main 的包；澄清新声明指针类型的方法集；修复一些拼写错误（感谢 Anthony Martin）；修复 Typeof() 返回类型（感谢 Gustavo Niemeyer）；升级到 Unicode 6.0。
+* sync：诊断对未锁互斥锁的 Unlock 操作；新增 Waitgroup 类型（感谢 Gustavo Niemeyer）。
+* syscall：添加 SetsockoptIpMreq（感谢 Dave Cheney）；为 darwin、freebsd 添加 sockaddr_dl 和支持路由消息的 sysctl（感谢 Mikio Hara）；不将 NULL 用于零长度读写；实现 Windows 版 Fsync（感谢 Alex Brainman）；在 Windows 上使 ForkExec 获取 ForkLock（感谢 Hector Chu）；使 Windows API 返回 errno 而非 bool（感谢 Alex Brainman）；移除过时的套接字 IO 控制（感谢 Mikio Hara）。
+* template：添加简单的格式化器链接（感谢 Kyle Consalus）；允许使用前导 '*' 通过指针间接访问。
+* testing：在测试输出中包含经过时间。
+* windows：将剩余的 __MINGW32__ 实例替换为 _WIN32（感谢 Joe Poirier）。
+</pre>
+
+<h2 id="2011-02-01">2011-02-01</h2>
+
+<pre>
+此版本对 channel（通道）操作进行了重大更改，并对 log 包进行了小幅修改。如果您的代码在非阻塞通信中使用了 channel（通道）或使用了 log 包的 Exit 函数，则需要进行修改。
+
+非阻塞 channel（通道）操作已从语言中移除。使用带有 default 子句的 select 语句始终可以实现等效操作。如果 select 中存在 default 子句，该子句将（仅）在没有其他 case 就绪时执行，从而允许避免在通信中阻塞。
+
+例如，旧的非阻塞发送操作：
+
+	if ch &lt;- v {
+		// 已发送
+	} else {
+		// 未发送
+	}
+
+应改写为：
+
+	select {
+	case ch &lt;- v:
+		// 已发送
+	default:
+		// 未发送
+	}
+
+类似地，这个接收操作：
+
+	v, ok := &lt;-ch
+	if ok {
+		// 已接收
+	} else {
+		// 未接收
+	}
+
+应改写为：
+
+	select {
+	case v := &lt;-ch:
+		// 已接收
+	default:
+		// 未接收
+	}
+</pre>此次变更是为重新定义接收操作的"comma-ok"语法做铺垫。在后续版本中，接收表达式将返回接收的值以及一个可选布尔值，用于指示通道是否已关闭。这些变更将分两阶段进行，以防止这一语义变更悄然破坏使用"comma-ok"接收语法的代码。目前没有计划为发送操作引入布尔表达式形式。
+
+向已关闭的通道发送数据将立即引发恐慌。此前，未指定数量的发送操作会在引发恐慌前静默失败。
+
+log包的Exit、Exitf和Exitln函数已分别重命名为Fatal、Fatalf和Fatalln，使其与testing包的命名保持一致。
+
+已移除对"tiny"操作系统的移植支持。该移植未经维护和测试，最初仅作为演示Go语言可在裸机运行的玩具项目。源代码当然会保留在仓库历史记录中，如有需要仍可恢复使用。
+
+本次发布还调整了内存分配器的内部结构，为后续垃圾回收器的变更做准备。如遇问题请告知我们。
+目前存在一个已知问题但尚未调试：
+	http://code.google.com/p/go/issues/detail?id=1464&amp;。
+
+本次发布的其他变更：
+* 5l：文档化-F参数，在旧版ARM平台强制启用（软件浮点模拟）
+* 6g：修复临时变量的寄存器化（感谢Eoghan Sherry），修复uint64(uintptr(unsafe.Pointer(&amp;x)))转换
+* 6l：重定向CMOV*指令（感谢Gustavo Niemeyer），windows/amd64移植支持（感谢Wei Guangjing）
+* 8l：新增PE动态导出、在Windows PE中生成DWARF信息及代码生成修复（感谢Wei Guangjing）
+* bufio：当缓冲区为空时Flush操作变为空操作
+* bytes：新增Buffer.ReadBytes、Buffer.ReadString方法（感谢Evan Shaw）
+* cc：新增为类型和变量生成Go代码的模式
+* cgo：在Go文件中定义CGO_CFLAGS和CGO_LDFLAGS（感谢Gustavo Niemeyer），windows/386移植支持（感谢Wei Guangjing）
+* codereview：修复Windows兼容性（感谢Hector Chu），优化文件模式处理，改进ASCII/Unicode转换逻辑
+* crypto/dsa：新增DSA支持
+* crypto/openpgp：新增s2k功能
+* crypto/rand：使用defer释放互斥锁（感谢Anschel Schaffer-Cohen）
+* crypto/rsa：修正SignPKCS1v15的文档说明
+* crypto：新增包，作为哈希函数标识符的公共存储库
+* doc/codelab/wiki：更新适配模板变更，添加至run.bash脚本
+* doc/spec：明确地址操作符说明
+* ebnflint：错误时以非零状态退出
+* encoding/base32：新增包（感谢Miek Gieben）
+* encoding/line：实现io.Reader接口
+* exec：LookPath使用自定义错误（感谢Gustavo Niemeyer）
+* fmt/doc：定义字符串的宽度和精度规范
+* gc：改进struct == struct的错误提示，修复发送优先级，处理类型开关中的无效名称，为单操作阻塞/非阻塞select添加特例代码
+* go/scanner：修复构建问题（调整扫描器EOF行号统计）
+* gob：改进调试信息与注释，修复嵌套接口编码，当编码无公共字段的非空结构体时报告错误
+* godoc：为白名单非Go文件建立全文索引，显示非Go文件行号（错误修复）
+* gofmt -r：match(...)参数允许为nil，添加缺失的保护条件
+* govet：将Panic加入函数检测列表
+* http：新增主机模式匹配（感谢Jose Luis Vázquez González），Get方法支持相对路径重定向
+* json：处理大写浮点指数（1E100格式）（感谢Pieter Droogendijk）
+* ld：新增-I选项设置ELF解释器，增强DWARF生成中反射类型信息的解码鲁棒性
+* lib9：更新至Unicode 6.0.0标准
+* make.bash：严格化selinux测试（仅在启用时报告问题）
+* misc/vim：导入/删除命令（感谢Gustavo Niemeyer），将'syntax sync'设为较大值（感谢Yasuhiro Matsumoto）
+* net：修复测试中的竞态条件，LookupHost返回完整域名
+* netchan：避免测试中的竞态条件，修正导入文档（感谢Anschel Schaffer-Cohen）
+* os：新增ETIMEDOUT常量（感谢Albert Strasheim）
+* runtime：为C类型生成Go定义，实现Windows回调函数（感谢Alex Brainman），修复Walk网页浏览器示例（感谢Hector Chu），使select调度更公平，优先使用固定栈分配器替代通用内存分配器，简化堆映射与内存分配
+* scanner：修复Scan和Pos返回的位置信息，Init中禁止预读
+* suffixarray：Lookup使用二分查找双端定位（感谢Eric Eisner）
+* syscall：补充缺失的网络接口常量（感谢Mikio Hara）
+* template：将映射键视为零值而非不存在（感谢Roger Peppe）
+* time：支持取消After事件（感谢Roger Peppe），支持Solaris时区数据目录
+* token/position：新增SetLinesForContent方法
+* unicode：更新至Unicode 6.0.0标准
+* unsafe：补充Pointer文档中的缺失用例
+
+<h2 id="2011-01-20">2011-01-20</h2>
+
+<pre>
+本次发布从语言中移除了float和complex类型。
+
+浮点字面量的默认类型现为float64，复数字面量的默认类型现为complex128。
+
+使用float或complex的现有代码必须改用显式尺寸类型。
+
+双参数构造函数cmplx现更名为complex。
+</pre>
+
+<h2 id="2011-01-19">2011-01-19</h2>
+
+<pre>
+5g（ARM）编译器现已启用寄存器分配。如发现由此引发的错误，请使用5g -N禁用寄存器分配器并告知我们。
+
+xml包现支持通过指定"parent>child"形式的结构体标签提取嵌套XML标签。示例详见XML文档：http://golang.org/pkg/xml/</pre>* 5a、5l、6a、6l、8a、8l：处理内存不足情况及大内存分配（感谢 Jeff R. Allen）。
+* 8l：PE 格式变更（感谢 Alex Brainman）。
+* ARM：修复与改进。
+* cc：修复超长整型条件判断。
+* cgo：新增复数浮点类型 complex float 与 complex double（感谢 Sebastien Binet），
+        在 _cgo_main.c 中将所有提供的符号定义为函数。
+* codereview：不再发送无文件的变更列表（感谢 Ryan Hitchman）。
+* crypto/cipher：新增 OFB 模式。
+* expvar：新增 Float 类型。
+* fmt：补充说明 string 和 []byte 的 %X 格式化行为。
+* gc、runtime：确保对 channel 的 range 操作在多 goroutine 环境下的安全性。
+* gc：修复带类型常量声明问题（感谢 Anthony Martin）。
+* go spec：调整常量类型相关语言描述。
+* go/scanner：将 Init 函数参数从 *token.FileSet 改为 *token.File。
+* godoc：恢复"正在建立索引"提示信息，
+        避免搜索结果片段中的双重 HTML 转义，
+        再次支持使用限定标识符（如 "math.Sin"）作为查询字符串，
+        对生成的 HTML 进行窥孔优化，
+        移除格式化区块前的制表符。
+* gofmt、go/printer：避免在可能破坏代码结构的位置插入额外换行符。
+* http：修复响应中的 Content-Range 和 Content-Length 头（感谢 Clement Skau），
+        修复相对协议 URL 解析；新增 ParseRequestURL 函数，
+        正确处理 HEAD 请求，
+        支持相对 URL 解析。
+* math：在 Frexp、Ilogb、Ldexp 和 Logb 函数中处理非规格化数（感谢 Eoghan Sherry）。
+* net、syscall：在 Recvmsg 中返回源地址信息（感谢 Albert Strasheim）。
+* net：新增 LookupAddr 函数（感谢 Kyle Lemons），
+        新增 unixpacket 网络类型（感谢 Albert Strasheim），
+        避免因无法打开 /etc/services 导致的空指针解引用（感谢 Corey Thomasson），
+        实现 Windows 超时机制（感谢 Wei Guangjing）。
+* netchan：不阻塞发送操作；实现流控制功能（感谢 Roger Peppe）。
+* regexp：拒绝裸问号 '?' 模式（感谢 Ben Lynn）。
+* runtime/cgo：不在虚拟 _cgo_main.c 中定义 crosscall2。
+* runtime/debug：新增用于打印运行中 goroutine 堆栈跟踪的包。
+* runtime：新增单次暂停的 GC 统计信息，
+        修复 ARM 架构下 reflect.call 边界情况，
+        在 panic 时打印信号信息。
+* spec：明确 int 与 uint 具有相同大小。
+* syscall：修正 OS X 上的 WSTOPPED 标志值，
+        修正 GNU/Linux 抽象 Unix 域套接字地址长度，
+        修正 SockaddrUnix 结构长度。
+* tutorial：使标准输入、输出、错误流在 Windows 上正常工作。
+* windows：实现异常处理机制（感谢 Hector Chu）。
+</pre>
+
+<h2 id="2011-01-12">2011-01-12</h2>
+
+<pre>
+json、gob 和 template 包已发生变更，使用这些包的代码在本次更新后可能需要调整。它们将不再读写未导出的结构体字段。使用 json 或 gob 序列化结构体时，未导出字段将被静默忽略。尝试将 json 或 gob 数据反序列化到未导出字段将产生错误。从模板访问未导出字段将导致 Execute 函数返回错误。
+
+Godoc 现支持正则表达式全文搜索，该功能已在 golang.org 上线。
+
+其他变更：
+* ARM：初步实现 ARM 优化器。
+* bytes.Buffer：修复 UnreadByte 的 bug。
+* cgo：将 unsafe.Pointer 导出为 void*，修复枚举常量冲突，调整输出对齐（感谢 Gustavo Niemeyer）。
+* crypto/block：标记为已弃用。
+* crypto/openpgp：新增错误处理和 armor 编码。
+* crypto：新增 twofish 包（感谢 Berengar Lehr）。
+* doc/spec：从规范中移除 Maxalign 定义。
+* encoding/line：新增从 io.Reader 读取行数据的包。
+* go/ast：修正 Index 和 TypeAssert 表达式的结束位置。
+* gob：将 (en|dec)code(Ui|I)nt 从函数改为方法。
+* godefs：改进枚举处理逻辑。
+* gofmt：避免执行非法代码重写，重写器匹配仅作用于表达式。
+* goinstall：初步支持 cgo 包（感谢 Gustavo Niemeyer）。
+* hg：在 .hgignore 中添加 cgo/_cgo_* 模式。
+* http：修复重定向时显示的文本内容。
+* ld：修复 Mach-O 格式的动态符号导出问题，允许符号在动态符号表中导出。
+* log：新增 exit 和 panic 方法。
+* net：在 Windows 上使用 closesocket API 替代 CloseHandle（感谢 Alex Brainman）。
+* netchan：为适配 gob 变更导出结构体字段。
+* os：为 *File 新增 Sync 方法，封装 syscall.Fsync。
+* runtime/cgo：新增回调函数以支持 SWIG。
+* runtime：在 cgo 回调引发 panic 时恢复调度器栈位置。
+* suffixarray：采用更快速的创建算法（感谢 Eric Eisner）。
+* syscall：修复 mksysnum_linux.sh 脚本（感谢 Anthony Martin）。
+* time.NewTicker：当间隔时间 &lt;= 0 时引发 panic。
+* time：新增 AfterFunc 函数以在指定时长后调用函数（感谢 Roger Peppe），修复使用多个 Ticker 时的计时精度问题（感谢 Eoghan Sherry）。
+</pre>
+
+<h2 id="2011-01-06">2011-01-06</h2>
+
+<pre>
+本次更新包含多项修复与变更：</pre>* 构建：Make.pkg：为 cgo 使用已安装的 runtime.h。
+* cgo：禁止使用 C.errno。
+* crypto/cipher：修复 OCFB，使 NewCBCEncrypter 返回 BlockMode。
+* 文档：6l：修复 -L 标志的文档，将 golanguage.ru 添加到外语文档列表，Effective Go：更清晰地解释重新引发恐慌的效果，更新 Effective Go 以适应模板 API 变更，更新贡献指南要求在变更描述前添加前缀。
+* encoding/binary：拒绝具有实现相关大小的类型（感谢 Patrick Gavlin）。
+* exp/evalsimple：修复对 s[:2] 等切片的处理（感谢 Sebastien Binet）。
+* fmt：提高格式字符串处理效率，规范化格式字符串的处理。
+* gc：为复数常量的组成部分返回常量浮点数（感谢 Anthony Martin），将复数除法赋值语句重写为 l = l / r 形式（感谢 Patrick Gavlin），修复 &amp;^= 操作符。
+* go/ast：提供完整的节点文本范围信息。
+* gob：在某个容易混淆的位置生成更友好的错误信息。
+* godoc：修复 godoc -src（感谢 Icarus Sparry）。
+* goinstall：添加 -clean 标志（感谢 Kyle Lemons），引入 checkout 概念（感谢 Caine Tighe），修复针对 bzr 的 -u 选项（感谢 Gustavo Niemeyer）。
+* http：允许响应状态行中包含空 Reason-Phrase。
+* io：修复 Copyn 的 EOF 处理。
+* net：修复 Listener 的关闭（感谢 Michael Hoisie）。
+* regexp：修复性能缺陷，使锚定搜索快速失败，修复前缀匹配问题。
+* runtime/cgo：修复 FreeBSD/amd64 上的栈保护机制（感谢 Anthony Martin）。
+* strconv：atof：将 'E' 添加为指数的有效符号（感谢 Stefan Nilsson），更新关于 'E' 和 'G' 的 ftoa 注释。
+* strings：修复 FieldsFunc 的描述（感谢 Roger Peppe）。
+* syscall：修正 Linux Splice 的定义，使 Access 的第二个参数统一为 uint32 类型。
+</pre>
+
+<h2 id="2010-12-22">2010-12-22</h2>
+
+<pre>
+本周发布内容较少。最重要的变化是解决了一些遗留的 cgo 问题。
+
+* cgo：处理对共享库中符号的引用。
+* crypto/elliptic：添加序列化和密钥对生成功能。
+* crypto/hmac：添加 HMAC-SHA256 支持（感谢 Anthony Martin）。
+* crypto/tls：添加 ECDHE（椭圆曲线 Diffie-Hellman 临时密钥）支持，添加用于生成测试握手脚本的支持代码。
+* darwin, freebsd：忽略写入失败（在打印或恐慌期间）。
+* exp/draw：移除 Border 函数。
+* expvar：为 StringFunc 的输出添加引号，与 String 输出保持一致。
+* hash/crc64：修复 Sum 函数中的拼写错误。
+* ld：允许重定位指向 ELF .bss 段符号，忽略 stab 符号。
+* misc/cgo/life：修复并添加到构建。
+* regexp：为 Regexp 添加 HasMeta、HasOperator 和 String 方法。
+* suffixarray：实现了 FindAllIndex 的正则表达式搜索。
+* test/bench：在 regexp 加速后更新 regex-dna 的基准测试数据。
+* time：对格式说明进行更详细的解释。
+</pre>
+
+<h2 id="2010-12-15">2010-12-15</h2>
+
+<pre>
+crypto/cipher 包已启动，用于取代 crypto/block。
+作为变更的一部分，rc4.Cipher 的 XORKeyStream 方法签名已从
+        XORKeyStream(buf []byte)
+改为
+        XORKeyStream(dst, src []byte)
+以实现 cipher.Stream 接口。如果您正在使用 crypto/block，需要在它完成后迁移到 crypto/cipher。
+
+smtp 包的 StartTLS 现在接受一个 *tls.Config 参数。
+
+reflect 包的 ArrayCopy 已重命名为 Copy。新增了 Append 和 AppendSlice 函数。
+
+print/println 引导函数现在输出到标准错误。要写入标准输出，请使用 fmt.Print[ln]。
+
+Go 发行版中新增了一个工具 govet。Govet 是一个 Go 程序的静态检查器。目前及可预见的未来，它只检查对 print 调用的参数。
+
+用于为 C 代码编写 Go 绑定的 cgo 工具已更改，不再使用存根 .so 文件（如 cgo_stdio.so）。使用标准 Makefile 的基于 cgo 的包应能正常构建，无需任何更改。任何替代的构建机制都需要更新。
+
+C 和 Go 编译器（6g、6c、8g、8c、5g、5c）现在根据结构体包含字段的最大对齐要求进行对齐；以前它们是按字边界对齐结构体的。这可能会破坏尝试混合 C 和 Go 的非 cgo 代码。
+
+NaCl 支持已被移除。最近的链接器变更一个月前破坏了 NaCl 支持，并且没有已知的用户。如有需要，可以从代码库历史记录中恢复 NaCl 代码。* 5g/8g, 8l, ld, prof: 修复32位值的输出问题（感谢 Eoghan Sherry）。
+* [68]l 和 runtime: 对接口和 goroutine 的 GDB 支持。
+* 6l, 8l: 支持链接 ELF 和 Mach-O 格式的 .o 文件。
+* all: 简化未使用第二变量的双变量 range 语句（感谢 Ryan Hitchman）。
+* arm: 更新软浮点支持。
+* codereview: 非活动时保持安静（感谢 Eoghan Sherry）。
+* compress/flate: 实现 Flush 功能，等同于 zlib 的 Z_SYNC_FLUSH。
+* crypto/tls: 在证书生成示例中使用 rand.Reader（感谢 Anthony Martin）。
+* dashboard: 修复项目标签过滤器。
+* debug/elf, debug/macho: 添加 ImportedLibraries, ImportedSymbols。
+* doc/go_mem: goroutine 退出并非特殊事件。
+* event.go: 修复 gocheck 导致的另一个打印故障。
+* gc: 修复若干错误，
+        针对不完整 chan 类型报告语法错误（感谢 Ryan Hitchman）。
+* go/ast: 修复 ast.Walk。
+* gob: 文档中说明值编码使用的字节数，
+        修复发送零长度顶层 slice 和 map 的问题，
+        Register 应使用原始类型而非间接类型。
+* godashboard: 支持提交包含非 ASCII 字符名称的项目（感谢 Ryan Hitchman）。
+* godefs: 防御包含填充字段的结构体。
+* godoc: 添加文本搜索功能，使用 -fulltext 标志启用。
+* gofmt: 将 "x, _ = range y" 简化为 "x = range y"。
+* gopack: 允许在 .a 文件中包含 ELF/Mach-O 目标文件而不清除 allobj。
+* go/token,scanner: 修正注释使 godoc 正确对齐。
+* govet: 出错时继续处理下一个文件（感谢 Christopher Wedgwood）。
+* html: 改进解析功能。
+* http: ServeFile 处理用于部分请求的 Range 头。
+* json: 检查无效的 UTF-8 编码。
+* ld: 允许无符号的 .o 文件，
+        支持读取 ELF 目标文件，
+        支持读取 Mach-O 目标文件。
+* math: 将 float64 偏置常量从 1022 改为 1023（感谢 Eoghan Sherry），
+        将 MinFloat 常量重命名为 SmallestNonzeroFloat。
+* nm: 静默忽略 .a 文件中的 .o 文件。
+* os: 修复 RemoveAll 测试。
+* os/inotify: 新包（感谢 Balazs Lecz）。
+* os: 使 MkdirAll 支持符号链接（感谢 Ryan Hitchman）。
+* regexp: 提速约30%；同时简化括号相关代码。
+* runtime/linux/386: 将 FPU 设置为64位精度。
+* runtime: 移除地址0处的防御性映射。
+* suffixarray: 添加 Bytes 函数。
+* syscall: 为 linux/386, linux/amd64 添加网络接口常量（感谢 Mikio Hara）。
+* syscall/windows: 限制 OpenProcess() 的访问权限参数，
+        从错误消息中移除 \r 和 \n（感谢 Alex Brainman）。
+* test/bench: 修复 timing.sh（感谢 Anthony Martin）。
+* time: 修复 Ticker 中的错误：使用 channel 而非内存进行关闭。
+* token/position: 提供 FileSet.File 方法，提供文件迭代器。
+* xml: 禁止无效的 Unicode 码点（感谢 Nigel Kerr）。
+
+</pre>
+
+<h2 id="2010-12-08">2010-12-08</h2>
+
+<pre>
+此版本包含一些包的变更。如果您使用 crypto/tls 或 go/parser 包，您的代码可能需要相应修改。
+
+crypto/tls 包的 Dial 函数现在接受一个额外的 *Config 参数。大多数用法可以通过传递 nil 来获得与之前相同的默认行为。详情请参阅文档：
+        http://golang.org/pkg/crypto/tls/#Config
+        http://golang.org/pkg/crypto/tls/#Dial
+
+go/parser 包的 ParseFile 函数现在以 *token.FileSet 作为其第一个参数。这是一个指向用于存储位置信息的数据结构的指针。如果您不关心位置信息，可以传递 "token.NewFileSet()"。详情请参阅文档：
+        http://golang.org/pkg/go/parser/#ParseFile
+
+此版本还将专利授权文本从 LICENSE 文件分离到一个单独的 PATENTS 文件中，并将其更改为更类似于 WebM 的授权形式。这些澄清是应 Fedora 项目的要求进行的。
+
+其他变更：
+* [68]l: 为内置结构化类型生成调试信息，支持在 gdb 中美化打印。
+* 8l: 在 Windows PE 的导入表中添加 dynimport（感谢 Wei Guangjing）。
+* 8l, runtime: 修复 Plan 9 386 构建（感谢 Yuval Pavel Zholkover）。
+* all: 修复对 Printf 等函数的错误调用。
+* bufio: 使 Reader.Read 实现 io.Reader 语义（感谢 Roger Peppe）。
+* build: 允许通过 HOST_AR 指定归档工具（感谢 Albert Strasheim）。
+* bytes: 添加 Buffer.UnreadRune, Buffer.UnreadByte（感谢 Roger Peppe）。
+* crypto/tls: 修复证书生成示例的构建（感谢 Christian Himpel）。
+* doc/install: 描述 GOHOSTOS 和 GOHOSTARCH。
+* errchk: 接受多个源文件（感谢 Eoghan Sherry）。
+* exec.LookPath: 返回 os.PathError 而不是 os.ENOENT（感谢 Michael Hoisie）。
+* flag: 修复布尔错误报告中的格式错误，
+        处理对 flag.Parse 的多次调用。
+* fmt: 添加 %U 格式用于码点的标准 Unicode 表示。
+* gc: 修复匿名接口的方法偏移量（感谢 Eoghan Sherry），
+        在 import . 中跳过未定义的符号（感谢 Eoghan Sherry）。
+* go/scanner: 移除 Tokenize - 仅在测试中使用过
+* gobuilder: 添加 buildroot 命令行标志（感谢 Devon H. O'Dell）。
+* html: 反转义数字实体（感谢 Ryan Hitchman）。
+* http: 添加 EncodeQuery 辅助函数，用于构造查询字符串。
+* ld: 修复 64 位 reflect 值的 dwarf 解码（感谢 Eoghan Sherry）。
+* math: 提高 Exp2 的精度（感谢 Eoghan Sherry）。
+* runtime: 添加 Goroutines 函数（感谢 Keith Rarick）。
+* sync: 针对 armv5 的小命名修复（感谢 Dean Prichard）。
+* syscall, net: 在 Linux 上添加 Recvmsg 和 Sendmsg（感谢 Albert Strasheim）。
+* time: 使 After 函数使用更少的 goroutine 和主机进程（感谢 Roger Peppe）。
+</pre>
+
+<h2 id="2010-12-02">2010-12-02</h2>
+
+<pre>
+此版本中的一些包变更可能需要您更新代码，如果您使用了 bytes、template 或 utf8 包。在所有情况下，任何过时的代码将无法编译，而不会产生错误行为。bytes 包已发生变更。其 Add 和 AddByte 函数已被移除，因为它们的功能现已由新引入的内建函数 "append" 提供。任何使用这些函数的代码都需要进行如下修改：
+s = bytes.Add(s, b)    ->    s = append(s, b...)
+s = bytes.AddByte(b, c)    ->    s = append(s, b)
+s = bytes.Add(nil, c)    ->    append([]byte(nil), c)
+
+template 包已发生变更。如果你的代码调用了 HTMLFormatter 或 StringFormatter 函数，或者实现了自己的格式化函数，则需要更新代码。格式化器类型的函数签名已更改为：
+        func(wr io.Writer, formatter string, data ...interface{})
+以允许向格式化器传递多个参数。模板本身无需更新。
+查看变更详情及示例：
+        http://code.google.com/p/go/source/detail?r=2c2be793120e
+
+此次 template 包的变更使得为格式化器实现多词变量实例化成为可能。之前只能写：
+        {field}
+或
+        {field|formatter}
+现在还可以写：
+        {field1 field2 field3}
+或
+        {field1 field2 field3|formatter}
+这些字段将作为连续参数传递给格式化器，类似于 fmt.Print 的方式。
+
+utf8 包已发生变更。EncodeRune 的参数顺序已反转，以遵循“目标参数在前”的惯例。
+任何使用 EncodeRune 的代码都需要更新。
+
+其他变更：
+* [68]l: 修正了全局变量和数组范围的 dwarf 位置信息。
+* big: 修复了当 b < 0 时 (*Rat) SetFrac64(a, b) 的问题（感谢 Eoghan Sherry）。
+* compress/flate: 修正了注释中的拼写错误（感谢 Mathieu Lonjaret）。
+* crypto/elliptic: 使用雅可比变换以获得更好的性能。
+* doc/code.html: 修正了对 "gomake build" 的引用（感谢 Anschel Schaffer-Cohen）。
+* doc/roadmap: 更新了 gdb 状态信息。
+* doc/spec: 修正了一些遗漏和类型错误。
+* doc: 修正了一些拼写错误（感谢 Peter Mundy）。
+* exp/eval: 针对 parser.ParseFile API 变更的构建修复（感谢 Anschel Schaffer-Cohen）。
+* fmt: Scan 现在接受 Inf 和 NaN，
+        允许使用 "% X" 和 "% x"。
+* go/printer: 保留函数参数列表中的换行（感谢 Jamie Gennis）。
+* http: 在下一个请求前消费请求体。
+* log: 确保写入操作是原子的（感谢 Roger Peppe）。
+* path: Windows 下支持 Split（感谢 Benny Siegert）。
+* runtime: 修复了 Windows 上 SysFree 以真正释放内存的问题（感谢 Alex Brainman），
+        在 Go 中为所有 C 结构体提供了并行定义。
+* sort: 避免了枢轴计算中的溢出，
+        在 quickSort 中将栈深度减少到 lg(n)（感谢 Stefan Nilsson）。
+* strconv: 支持对 Inf 和 NaN 进行 Atof 转换。
+
+<h2 id="2010-11-23">2010-11-23</h2>
+
+<pre>
+此版本包含对 sort.Search 函数（于上一个版本引入）的一个不兼容修改。
+查看详情及代码修改示例：
+        http://code.google.com/p/go/source/detail?r=102866c369
+
+* build: 在 6c 中自动 #define _64BIT。
+* cgo: 在包装函数中参数名后打印所需空格。
+* crypto/cipher: 新包，用于替代 crypto/block（感谢 Adam Langley）。
+* crypto/elliptic: 新包，实现了素数域上的椭圆曲线（感谢 Adam Langley）。
+* crypto/x509: 支持策略 OID 并进行修复（感谢 Anschel Schaffer-Cohen）。
+* doc: 添加了 codewalks 链接，
+        修正了 recover() 文档（感谢 Anschel Schaffer-Cohen），
+        解释了如何为命令编写 Makefile。
+* exec: 在 Windows 上启用了更多测试（感谢 Alex Brainman）。
+* gc: 可调节的复合字面量类型检查中的哈希码
+        （感谢 vskrap、Andrey Mirtchovski 和 Eoghan Sherry）。
+* gc: 改进了通道发送中类型错误的提示信息（感谢 Anthony Martin）。
+* godoc: 修复了 relativePath 中的错误，
+        为 godoc 观察下的所有文件系统计算搜索索引，
+        使用正确的时间戳指示搜索结果的准确性。
+* index/suffixarray: 使用 sort.Search。
+* net: 添加了 Windows 版本的 ReadFrom 和 WriteTo（感谢 Wei Guangjing）。
+* reflect: 移除了 Get 方法中不必要的类型转换。
+* rpc: 添加了 RegisterName 以允许覆盖默认类型名。
+* runtime: 释放了由 windows CommandLineToArgv 分配的内存（感谢 Alex Brainman）。
+* sort: 简化了 Search（感谢 Roger Peppe）。
+* strings: 添加了 LastIndexAny（感谢 Benny Siegert）。
+</pre>
+
+<h2 id="2010-11-10">2010-11-10</h2>
+
+<pre>
+生日版本在 sort 包中引入了新的 Search 功能。它采用了一种独特但非常通用且易于使用的方法来搜索任意可索引的有序数据。详情请参阅文档：
+    http://golang.org/pkg/sort/#Search
+
+ARM 移植版现在使用了硬件浮点单元（VFP）。它仍然存在一些错误，主要涉及无符号整数与浮点数之间的转换，但正在趋于稳定。
+
+此外，还有许多较小的修复和更新：
+
+* 6l: 生成带有消歧后缀的 dwarf 变量名。
+* container/list: 使 Remove 返回被移除元素的 Value。
+    便于移除首尾项。
+* crypto: 添加了 cast5（默认 PGP 密码），
+    将分组密码方法改为“目标参数在前”。
+* crypto/tls: 使用证书池构建进行证书检查。
+* go/ast: 将嵌入的 token.Position 字段更改为命名字段
+    （为不同的位置表示做准备）。
+* net: 提供对文件描述符的公共访问（感谢 Keith Rarick）。
+* os: 添加了 Expand 函数以评估环境变量。
+* path: 添加了 Glob（感谢 Benny Siegert）。
+* runtime: memequal 优化（感谢 Graham Miller），
+    为所有外部符号添加 "runtime·" 前缀以避免
+    与外部 C 库链接时的冲突。
+</pre>
+
+<h2 id="2010-11-02">2010-11-02</h2>
+
+<pre>
+此版本包含一个语言变更：新的内建函数 append。
+Append 使得扩展切片变得更加简单。详情请参阅规范：
+        http://golang.org/doc/go_spec.html#Appending_and_copying_slices其他变更：
+* 8l：修复 PE 生成问题（感谢 Alex Brainman）。
+* 文档：《Effective Go》中添加了 append 相关说明以及关于 "..." 参数的描述。
+* 构建：调整 make 变量设置。
+* codereview：修复 Python 2.7 中的同步与下载问题（感谢 Fazlul Shahriar）。
+* debug/pe、cgo：添加 Windows 支持（感谢 Wei Guangjing）。
+* go/ast：新增 Inspect 函数，便于无需使用 visitor 即可进行 AST 检查。
+* go/printer：在控制语句中，当复合字面量以类型名开头时，不再移除其周围的括号。
+* go/scanner：修复错误、进行版本修订并增加测试。
+* gob：多项修复与文档更新。
+* godoc：修复错误（错误由修订版 3ee58453e961 引入）。
+* gotest：以 gofmt 不会修改的方式打印空基准测试列表。
+* HTTP 服务器：正确响应 304 NotModified 状态码（感谢 Michael Hoisie）。
+* kate：更新内置函数列表（感谢 Evan Shaw）。
+* libutf：更新至 Unicode 5.2.0 以与 pkg/unicode 保持一致（感谢 Anthony Martin）。
+* misc/bbedit：更新内置函数列表（感谢 Anthony Starks）。
+* misc/vim：更新内置函数列表。
+* mkrunetype：安装 Makefile 并进行微调以便构建。
+* netchan：修复锁相关错误。
+* pidigits：小幅改进（感谢 Evan Shaw）。
+* rpc：修复客户端死锁错误。
+* 源码：在适当位置使用 append（通常用于替代 vector）。
+* strings：新增 Contains 辅助函数（感谢 Brad Fitzpatrick）。
+* syscall：添加 Linux 的 SIO 常量（感谢 Albert Strasheim）；Windows 上的 Stat(path) 实现（感谢 Alex Brainman）。
+* test/ken/convert.go：新增转换严格测试。
+* testing：新增 Benchmark 功能（感谢 Roger Peppe）。
+
+<h2 id="2010-10-27">2010-10-27</h2>
+
+<pre>
+*** 此版本更改了 gob 包使用的编码格式。
+    如果您将 gob 数据存储在磁盘上，请参阅下文。 ***
+
+ARM 移植版本（5g）现已通过所有测试。优化器尚未启用，浮点运算完全通过软件实现。目前正在处理这两项缺陷。
+
+数组、切片和映射的复合字面量语法已得到简化。在数组、切片或映射类型的复合字面量中，如果元素本身也是复合字面量，且其类型与外层字面量的元素类型相同，则可以省略该类型。例如，以下表达式：
+	[][]int{[]int{1, 2, 3}, []int{4, 5}}
+	map[string]Point{"x": Point{1.5, -3.5}, "y": Point{0, 0}}
+可以简化为：
+	[][]int{{1, 2, 3}, {4, 5}}
+	map[string]Point{"x": {1.5, -3.5}, "y": {0, 0}}
+Gofmt 在使用新的 -s 标志调用时，可以自动完成这些简化。
+
+内置的 copy 函数现在可以从字符串值复制字节到 []byte。类似这样的代码（假设 []byte b 和 string s）：
+	for i := 0; i &lt; len(s); i++ {
+		b[i] = s[i]
+	}
+可以重写为：
+	copy(b, s)
+
+gob 包现在可以编码和解码包含使用新的 Register 函数提前注册的类型的接口值。这些变更导致了线路格式的向前不兼容更改。使用旧版本包编写的数据将无法用新版本读取，反之亦然。（此更改已采取措施确保此类情况不再发生。）
+我们不清楚是否有人使用 gob 创建永久数据，但如果您确实这样做并需要帮助转换，请告知我们，同时暂勿更新至此版本。我们将协助您转换数据。
+
+其他变更：
+* 5g、6g、8g：为字符串索引生成代码，而非调用函数。
+* 5l、6l、8l：引入子符号。
+* 6l/8l：全局和局部变量及类型信息。
+* Make.inc：删除不必要的 -fno-inline 标志以让 gcc 保持安静。
+* arm：精确的 float64 软件浮点运算，错误修复。
+* big：arm 汇编，更快的软件 mulWW、divWW。
+* 构建：仅在需要时才打印“You need to add foo to PATH”。
+* container/list：修复 Remove 错误并使用指向自身的指针作为标识符。
+* 文档：在浏览器标题栏显示页面标题；更新路线图。
+* encoding/binary：为 LittleEndian、BigEndian 指定具体类型。
+* go/parser：调用 ParseExpr() 时消费自动插入的分号。
+* gobuilder：将 GOHOSTOS 和 GOHOSTARCH 传递给构建过程；将构建和基准测试日志写入磁盘。
+* goinstall：遇到 cgo 包时显示提示信息；修复多包名测试（感谢 Fazlul Shahriar）。
+* gotest：生成正确 gofmt 格式的 _testmain.go。
+* image/png：调色板编码速度提升约 25%（感谢 Brad Fitzpatrick）。
+* 杂项：更新 python 脚本，将 python3 作为“python”处理，指定 python2。
+* net：修复 Dial 的注释，提及 unix/unixgram。
+* rpc：暴露 Server 类型以允许多个 RPC Server 实例。
+* 运行时：在 panic 时打印未知类型。
+* 规范：append 内置函数（尚未实现）。
+* 源码：对 src 和 misc 目录执行 gofmt -s -w。
+        更新代码以使用从字符串复制。
+* test/bench：更新测试数据。
+* websocket：修复短读取问题。
+</pre>
+
+<h2 id="2010-10-20">2010-10-20</h2>
+
+<pre>
+此版本移除了 log 包中的弃用函数。尚未更新至新接口的代码将无法运行。详情请参阅先前版本说明：
+	http://golang.org/doc/devel/release.html#2010-10-13
+
+此版本还包括链接器的重大改进。现在它更快、占用内存更少，且更易于并行化（但尚未实现并行）。
+
+nntp 包已从标准库中移除。其新地址位于 Google Code 的 nntp-go 项目：
+	http://code.google.com/p/nntp-go
+您可以通过 goinstall 安装它：
+	goinstall nntp-go.googlecode.com/hg/nntp
+并在代码中这样导入：
+	import "nntp-go.googlecode.com/hg/nntp"
+</pre>**其他改动：**
+* 6g：避免过大的立即数常量。
+* 8l, runtime：对 Plan 9 的初步支持（感谢 Yuval Pavel Zholkover）。
+* 6l, 8l：进一步改进调试信息（DWARF）的导出。
+* arm：代码生成修复。现在除了浮点代码外，大多数测试都能通过。
+* big：添加随机数生成功能（感谢 Florian Uekermann）。
+* gc：跟踪标识符的实际类型，报告移位操作必须是无符号整数，以及隐式转换的 select 接收操作。
+* goplay：修复使其能在 Windows 下运行（感谢 Yasuhiro Matsumoto）。
+* http：在发送 HTTP/1.0 请求后不关闭连接。
+* netchan：添加新方法 Hangup 以终止通道上的传输。
+* os：修改 TestForkExec 以便在 Windows 上运行（感谢 Yasuhiro Matsumoto）。
+* runtime：阻止 select 分割栈。
+* syscall/arm：修正 64 位系统调用参数。
+</pre>
+
+<h2 id="2010-10-13">2010-10-13</h2>
+
+<pre>
+此版本包括对 log 包的更改、exp/iterable 的移除、两个新工具（gotry 和 goplay）、一个小型语言变更以及许多其他改动和修复。如果你使用了 log 或 iterable 包，你需要修改你的代码。
+
+log 包已更改。Logger 现在只有一个输出，默认输出到标准错误。名称也已更改，不过旧名称仍受支持。但它们将在下一个版本中被删除，所以如果可能的话，最好现在就更新。对于大多数情况，你只需进行以下替换：
+        log.Stderr -&gt; log.Println 或 log.Print
+        log.Stderrf -&gt; log.Printf
+        log.Crash -&gt; log.Panicln 或 log.Panic
+        log.Crashf -&gt; log.Panicf
+        log.Exit -&gt; log.Exitln 或 log.Exit
+        log.Exitf -&gt; log.Exitf （无更改）
+对 log.New() 的调用必须省略第二个参数。
+此外，具有 exit 或 panic 属性的自定义 logger 需要重新设计。
+完整详情请参阅变更说明：
+        http://code.google.com/p/go/source/detail?r=d8a3c7563d
+
+语言变更：指向接口值的指针使用不再自动解引用该指针。指向接口值的指针更常见于初学者的错误代码，而非正确的代码。
+
+包 exp/iterable 已被移除。这是一个有趣的实验，但它鼓励编写低效的代码，并且其效用期已过。
+
+新增工具：
+* gotry：一个关于反射的练习和一个不寻常的工具。运行 'gotry' 查看详情。
+* goplay：Go Playground 的独立版本。见 misc/goplay。
+
+其他改动：
+* 6l：Mach-O 修复，以及使其能与 OS X 的 nm/otool 协同工作（感谢 Jim McGrath）。
+* [568]a：修正语句的行号。
+* arm：代码生成和运行时修复，为新的 reflect.call 调整 recover，在 net 修复后启用另外 6 个测试。
+* big：修复 panic 并在 Rat.FloatString 中正确舍入（感谢 Anthony Martin）。
+* build: Make.cmd: 移除 $(OFILES)（感谢 Eric Clark），Make.pkg: 安装新版本前移除 .so，添加 GOHOSTOS 和 GOHOSTARCH 环境变量。
+* crypto/tls: 对证书问题提供更好的错误信息，使 SetReadTimeout 生效。
+* doc: 添加悉尼大学视频，添加 The Expressiveness of Go 演讲。
+* exp/draw/x11: 支持除 "The X.Org Foundation" 以外的 X11 供应商。
+* expvar: 添加 (*Int).Set（感谢 Sam Thorogood）。
+* fmt: 添加 Errorf 辅助函数，允许在 []byte 上使用 %d。
+* gc: 当长度不同时，实现 O(1) 字符串比较，以及各种错误修复。
+* http: 如果请求头行过长，返回正确的错误。
+* image: 添加 image.Tiled 类型，相当于 Plan 9 的 repl 位。
+* ld: 对错误行号信息要求更宽松。
+* misc/cgo/life: 为新的切片规则进行修复（感谢 Graham Miller）。
+* net: 允许在 DNS 名称中使用下划线 _。
+* netchan: 测试时先导入再导出，以及清零请求以确保正确的 gob 解码（感谢 Roger Peppe）。
+* os: 使测试在 Windows 上工作（感谢 Alex Brainman）。
+* runtime: 错误修复：序列化 mcache 分配，修正大型 map 值的迭代，更快的 strequal、memequal（感谢 Graham Miller），修复回溯中的参数转储，修复 tiny 构建。
+* smtp: 新包（感谢 Evan Shaw）。
+* syscall: 为 linux/386, linux/amd64 添加 sockaddr_ll 支持（感谢 Mikio Hara），为 UNIX 套接字的 SCM_CREDENTIALS 添加 ucred 结构（感谢 Albert Strasheim）。
+* syscall: 为 Windows 实现 WaitStatus 和 Wait4()（感谢 Wei Guangjing）。
+* time: 添加 After。
+* websocket: 在 Windows 上启用测试（感谢 Alex Brainman）。
+</pre>
+
+<h2 id="2010-09-29">2010-09-29</h2>
+
+<pre>
+此版本包括一些小型语言变更和一些重要的包变更。如果你使用了 ...T 参数或 http 包，你可能需要修改你的代码。
+
+转发 ...T 参数的语义和语法已更改。
+        func message(f string, s ...interface{}) { fmt.Printf(f, s) }
+这里，s 的类型是 []interface{}，包含传递给 message 的参数。
+在此语言变更之前，编译器会识别函数调用何时将 ... 参数传递给相同类型的另一个 ... 参数，并像传递参数列表一样直接传递它。但这意味着你无法控制是否将切片作为单个参数传递，也无法将常规切片作为 ... 参数传递（这有时很方便）。此更改让你可以控制这一点，代价是在调用中多写几个字符。
+如果你想提升为 ...，请在参数后附加 ...：
+        func message(f string, s ...interface{}) { fmt.Printf(f, s...) }
+如果没有 ...，s 将作为单个 []interface{} 类型的参数传递给 Printf。坏消息是，你可能需要修改你的一些代码，但编译器会检测到这种情况并发出警告。此外，`http.Handler` 和 `http.HandlerFunc` 类型也发生了变化。原先 HTTP 处理函数接受 `*http.Conn` 参数，现在改为接受接口类型 `http.ResponseWriter`。`ResponseWriter` 实现了与 `*Conn` 相同的方法，因此在大多数情况下，只需更改处理函数首个参数的类型签名即可。详见：
+  http://golang.org/pkg/http/#Handler
+
+`utf8` 包新增了 `String` 类型，该类型支持通过 rune（字符）高效索引 UTF-8 字符串（此前需要进行开销较大的 `[]int` 转换）。详见：
+  http://golang.org/pkg/utf8/#String
+
+编译器现在会在文件末尾未发现分号时自动插入。这意味着 Go 源文件不再要求以换行符结尾。
+
+其他变更：
+* 6prof：优化使用说明信息。
+* archive/zip：新增用于读取 Zip 文件的包。
+* arm：修复代码生成问题，新增通过 10 个包测试。
+* asn1：保持与 json 接口一致。
+* bufio.UnreadRune：修复文件结束符(EOF)处的错误。
+* build：清除自定义变量（如 GREP_OPTIONS），消除 Ubuntu gcc 产生的警告，编译库时使用完整路径。
+* bytes, strings：将 lastindexfunc 改为使用 DecodeLastRune（感谢 Roger Peppe）。
+* doc：新增并整合非英语文档引用，将常见问题汇总至 go_faq.html 文件，更新新 HTTP 接口文档。
+* fmt/Printf：完善格式错误提示信息的文档与调整。
+* gc：允许 select case 中的表达式 = &lt;-c，消除方法表中的重复项，修复反射表方法接收器，改进 x \= 0 的错误提示。
+* go/scanner：在分号插入时，将文件结束符(EOF)视作换行符处理。
+* gofmt：稳定性改进。
+* gotest：保留 _testmain.go 文件供 "make clean" 清理。
+* http：修正 URL 各部分的转义处理，支持 HTTP/1.0 Keep-Alive。
+* json：禁止写入未导出字段。
+* libcgo：禁用 NaCl 构建，为 Windows 386 设置线程本地存储中的 g 和 m（感谢 Wei Guangjing）。
+* math：修复 Ilogb 和 Logb 的 off-by-one 错误（感谢 Charles L. Dorian）。
+* misc/dashboard/builder：基准测试后删除构建文件。
+* nacl：更新新 SDK 的说明文档。
+* net：在 IP 套接字上启用 IPv4-over-IPv6，修复 DialIP 崩溃问题。
+* os：在 Windows 的 Readdir 中检查参数有效性（感谢 Peter Mundy）。
+* runtime：添加空页 mmap 映射以防万一，修正 SysFree 中的统计信息，修复 unwindstack 崩溃问题。
+* syscall：新增 IPPROTO_IPV6 和 IPV6_V6ONLY 常量以修复 NaCl 和 Windows 构建问题，Linux 新增 inotify 支持（感谢 Balazs Lecz），修复 syscall_bsd 中的 socketpair，修正 Windows 的 IPV6_V6ONLY 值（感谢 Alex Brainman），实现 Windows 版 Utimes 函数（感谢 Alex Brainman），使 mkall.sh 适用于 NaCl。
+* test：添加导致 gccgo 产生错误提示的测试用例。
+* utf8：新增 DecodeLastRune 和 DecodeLastRuneInString 函数（感谢 Roger Peppe）。
+* xml：允许 CDATA 标签内使用实体（感谢 Dan Sinclair）。
+</pre>
+
+<h2 id="2010-09-22">2010-09-22</h2>
+
+<pre>
+本版本包含新增的包功能，以及大量错误修复和改进。
+同时提升了对 arm 和 nacl 平台的支持。
+
+* 5l：避免在列表中使用固定缓冲区。
+* 6l, 8l：清理 ELF 代码，修复 NaCl 问题。
+* 6l/8l：输出 DWARF 帧信息。
+* Make.inc：使 Windows 上的 GOOS 检测正常工作（感谢 Alex Brainman）。
+* build：修复原生 arn 构建问题，使 all.bash 可在 Ubuntu ARM 上运行。
+* cgo：错误修复，显示 GCC 前置代码错误（感谢 Eric Clark）。
+* crypto/x509, crypto/tls：改进根证书匹配并识别 CA 标志。
+* crypto：修复证书验证问题。
+* doc：采用可变宽度布局。
+* env.bash：修复路径包含空格时的构建问题（感谢 Alex Brainman）。
+* exp/4s, exp/nacl/av：同步至最新的 exp/draw 变更。
+* exp/draw/x11：鼠标位置改为有符号整数。
+* exp/nacl/av：将颜色最大值从 1&lt;&lt;32-1 调整为 1&lt;&lt;16-1。
+* fmt：支持 '*' 用于宽度或精度（感谢 Anthony Martin）。
+* gc：改进静态初始化，确保路径名称规范。
+* gob：增强解码非结构体数据时的鲁棒性。
+* gobuilder：新增 -cmd 参数用于指定自定义构建命令，新增 -rev= 标志用于构建特定版本后退出，修复导致旧版本被重复构建的错误。
+* godoc：将默认过滤器文件名改为 ""，避免使用二次算法过滤路径，为目录列表显示 "最后更新" 信息。
+* http：新增重定向测试，URLEscape 现在根据 RFC 转义所有保留字符。
+* nacl：修复零长度写入问题。
+* net/dict：正确解析响应（感谢 Fazlul Shahriar）。
+* netchan：新增跨连接测试，处理通道关闭，提供 Importer.Errors() 方法用于恢复协议错误。
+* os：使 Windows 上的 Open() O_APPEND 标志生效（感谢 Alex Brainman），使 Windows 上的 RemoveAll() 正常工作（感谢 Alex Brainman）。
+* pkg/Makefile：禁用 netchan 测试以修复 Windows 构建（感谢 Alex Brainman）。
+* regexp：删除 Iter 方法。
+* runtime：改进向空通道发送数据时的 panic 提示。
+* strings：修复 LastIndexFunc 的小错误（感谢 Roger Peppe）。
+* suffixarray：新增用于创建基于后缀数组索引的包。
+* syscall：在 Linux amd64 上使用 vsyscall 实现 syscall.Gettimeofday 和 .Time。
+* test：修复 NaCl 构建。
+* windows：通过使用 127.0.0.1 修复 netchan 测试。
+</pre>
+
+<h2 id="2010-09-15">2010-09-15</h2>
+
+<pre>
+本版本包含一项语言变更：子切片的下界现在可以省略，此时默认值为 0。
+例如，s[0:10] 现在可以写作 s[:10]，s[0:] 可以写作 s[:]。
+
+本版本还包含针对 ARM 架构的重要错误修复，以及以下修复和改进：* 5g：修复寄存器分配错误
+* 6c、8c：在 -S 输出中显示行号
+* 6g、6l、8g、8l：将只读数据移至 text 段
+* 6l、8l：使 etext 准确；引入 rodata、erodata
+* arm：修复构建错误
+  在 OS X 交叉编译期间构建 libcgo
+  移除对已删除文件 syntax/slice.go 的引用
+  使用正确的 stat 系统调用
+  绕过 5g 中的寄存器分配器错误
+* bufio：添加 UnreadRune
+* build：避免错误的环境交互
+  修复 tiny 的构建问题
+  在 Windows 上生成、清理 .exe 文件（感谢 Joe Poirier）
+  测试 _WIN32 而非 _MINGW32（感谢 Joe Poirier）
+  兼容 GNU Make 3.82（感谢 Jukka-Pekka Kekkonen）
+* cgo：在生成的头文件中为 uintptr 添加 typedef
+  消除对 C 调用返回 const 指针的警告
+* codereview：在检查 CONTRIBUTORS 前将电子邮件地址转换为小写
+* crypto/tls：Close() 不再返回错误
+* doc/tutorial：更新以适应切片变更
+* exec：为 unix/windows 分别实现 LookPath（感谢 Joe Poirier）
+* exp/draw/x11：允许用户关闭窗口时干净退出
+* exp/draw：将目标矩形裁剪到图像边界内
+  为重叠的 image.RGBA 绘制提供快速路径
+  修复 src 和 mask 点的 pt.Min 双重计数问题
+  重新引入 MouseEvent.Nsec 时间戳
+  将 Context 重命名为 Window，并添加 Close 方法
+* exp/debug：初步支持 'copy' 函数（感谢 Sebastien Binet）
+* fmt.Fscan：使用 UnreadRune 跨调用保留数据
+* gc：改进错误信息中命名常量和函数字面量的显示
+  多项错误修复
+  修复 //line 指令下的行号显示问题
+  修复 Windows 上的符号表生成（感谢 Alex Brainman）
+  实现规范变更 33abb649cb63 的比较规则
+  实现新的切片规范（感谢 Scott Lawrence）
+  使字符串连接 x + y + z + ... + w 更高效
+  为 ATEXT 提供更准确的行号
+  移除 &amp;[10]int -> []int 转换
+* go-mode.el：修复 'chan' 类型的语法高亮（感谢 Scott Lawrence）
+* godoc：更好地支持用户提供的路径目录树
+  使用正确的延迟时间（错误修复）
+* gofmt、go/printer：正确更新内部估计位置
+* goinstall：当包名以 http:// 开头时发出警告（感谢 Scott Lawrence）
+* http：根据主机名检查 https 证书
+  不缓存 CanonicalHeaderKey（感谢 Jukka-Pekka Kekkonen）
+* image：将 ColorImage 的最小点从 (0, 0) 更改为 (-1e9, -1e9)
+  引入 Intersect 和 Union 矩形方法
+* ld：处理包路径中的带引号空格（感谢 Dan Sinclair）
+* libcgo：修复 NaCl 构建
+* libmach：修复在 arm 主机上的构建
+  修复 Linux 中新线程的竞态条件
+* math：使可移植的 Tan(Pi/2) 返回 NaN
+* misc/dashboard/builder：gobuilder，持续构建客户端
+* net：禁用 Windows 上不可用的函数测试（感谢 Alex Brainman）
+* netchan：如宣传所述，将 -1 设为无限
+* os、exec：将 argv0 重命名为 name
+* path：添加 IsAbs（感谢 Ivan Krasin）
+* runtime：修复跟踪中的错误
+  修复 amd64 上的崩溃跟踪
+  修复 Windows 构建（感谢 Alex Brainman）
+  使用手动栈进行垃圾回收
+* spec：为省略索引表达式的切片添加示例
+  允许省略切片的低索引边界（感谢 Scott Lawrence）
+* syscall：修复 Windows Gettimeofday（感谢 Alex Brainman）
+* test(arm)：禁用 zerodivide.go 因为编译失败
+* test(windows)：禁用导致构建失败的测试（感谢 Joe Poirier）
+* test/garbage/parser：与最近的解析器变更同步
+* test：添加 //line 测试
+  让 gccgo 相信变量可以改变
+  识别 gccgo 错误信息
+  减少 chan/nonblock.go 中的竞态条件
+  在测试 malloc 数字前运行垃圾收集器
+* websocket：添加安全 WebSocket 支持（感谢 Jukka-Pekka Kekkonen）
+* windows：禁用未实现的测试（感谢 Joe Poirier）<pre>
+本次发布包含对/test目录下超过100个文件的语法现代化处理，以及以下新增、变更和修复内容：
+* 6l/8l：在Macho格式中输出DWARF调试信息
+* 8g：对浮点数取负操作使用FCHS指令而非FMUL指令
+* 8l：在ELF格式中输出DWARF调试信息，禁用Windows PE格式的DWARF输出（感谢Alex Brainman）
+* big：新增RatString方法，部分优化简化
+* build：按需创建bin和pkg目录；从版本控制中移除，删除Make.386 Make.amd64 Make.arm（已被Make.inc取代），修复-j2参数下的cgo构建，让pkg/Makefile协调Go命令构建，Make.pkg中不再使用quietgcc，移除更多对GOBIN和GOROOT的引用（感谢Christian Himpel）
+* codereview：修复Mercurial 1.6.3的上传问题（感谢Evan Shaw），统一缩进格式，删除冗余代码，修复标准hg命令挂起问题，任务耗时超过30秒时显示状态，不可用时彻底禁用代码审查，并行上传文件（大型变更集速度提升5倍）
+* crypto/hmac：使Sum方法具备幂等性（感谢Jukka-Pekka Kekkonen）
+* doc：增加德语文档链接，在io2010负载均衡示例中添加轮询标志，修复常量子章节示例的错误（感谢James Fysh），多项HTML验证相关修改（感谢Scott Lawrence）
+* fmt：删除关于Sprint*返回值的错误描述
+* gc：适配FreeBSD构建器的bison版本，修复误报的语法错误
+* go/doc：使用正确的URL转义器
+* go/printer：对齐ImportDecl中的ImportPath声明（感谢Scott Lawrence）
+* go/typechecker：实现通过完整类型信息增强AST的第二阶段
+* gofmt：允许在切片表达式中省略首个索引
+* goinstall：新增-a标志表示"所有远程包"（感谢Scott Lawrence），假设go二进制文件在PATH中（遵循新规范），Google Code检出使用HTTPS协议
+* gotest：允许通过make test测试cgo包（无需先执行make install）
+* http：服务端新增Date头，文件服务器增加Last-Modified和If-Modified-Since支持，新增PostForm函数用于提交URL编码的键值数据，URL.String返回值中对密码进行混淆（感谢Scott Lawrence）
+* image：引入Config类型和DecodeConfig函数
+* libcgo：更新Makefile以使用Make.inc
+* list：更新注释说明零值可直接使用
+* math：新增amd64架构的Sincos函数（感谢Charles L. Dorian）
+* misc/bash：为gofmt添加*.go文件补全支持（感谢Scott Lawrence）
+* misc/emacs：将下划线定义为单词符号（感谢Scott Lawrence）
+* misc：新增zsh补全脚本（使用compctl），为Fraise.app（OS X）添加语法高亮（感谢Vincent Ambo）
+* net/textproto：处理多行响应（感谢Evan Shaw）
+* net：新增LookupMX函数（感谢Corey Thomasson）
+* netchan：修复测试中的竞态条件，使用-1表示无限（参考strings.Split等），导出发送时添加确认机制，新增Sync和Drain方法用于优雅终止
+* regexp：解析所有Go转义字符\a \b \f \n \r \t \v
+* rpc：修复私有方法尝试注册的错误
+* runtime：修正commonType.kind值以匹配编译器，新增GOOS/GOARCH变量，修复FuncLine函数，对单字接口值的copy/equal操作进行特殊处理（感谢Kyle Consalus）
+* scanner：修复Next函数错误报告的缺陷（感谢Kyle Consalus）
+* spec：明确数组必须可寻址才可切片化
+* template：修复操作符周围的空白处理
+* test/solitaire：回溯算法与字符串转换练习
+* test：识别gccgo错误信息及其他修复
+* time：避免nil Time在String方法中崩溃
+* tutorial：重新生成HTML以同步progs/file.go的变更
+* websocket：修复服务端响应缺少Sec-WebSocket-Protocol头的问题（感谢Jukka-Pekka Kekkonen）
+</pre>
+
+<h2 id="2010-08-25">2010-08-25</h2>
+
+<pre>
+本次发布的构建系统变更可能需要您修改环境变量和Makefile配置。
+
+所有环境变量现在均为可选：
+ - $GOOS和$GOARCH现在为可选项，其值应由构建系统自动推断
+ - $GOROOT现在为可选项，但若您选择不设置，在使用传统Makefile开发Go程序时需使用'gomake'代替'make'或'gmake'
+ - $GOBIN仍为可选项，现在默认值为$GOROOT/bin；如需使用此新默认值，请确保该路径在$PATH中，并已从$HOME/bin移除现有二进制文件
+
+基于这些变更，Go的Makefile已更新。若您自行编写的Makefile继承自Go的Makefile，请将：
+    include ../../Make.$(GOARCH)
+修改为：
+    include ../../Make.inc
+
+本次发布同时移除了regexp包和once包中已废弃的函数，相关代码将无法运行。详情请参阅上次发布的说明：
+    http://golang.org/doc/devel/release.html#2010-08-11
+</pre>其他变更：
+* 6g：针对切片、字符串和接口值优化了寄存器分配
+* 6l：在DWARF格式中添加行号信息
+* 构建系统：$GOBIN默认为$GOROOT/bin，不再要求设置环境变量
+* cgo：新增C.GoStringN函数（感谢Eric Clark）
+* 代码审查：修复CL描述中前导制表符的问题，若CL未发送邮件则不发送“已放弃”通知
+* crypto/ocsp：添加缺失的Makefile文件
+* crypto/tls：支持客户端证书（感谢Mikkel Krautz）
+* 文档：更新gccgo的最新变更信息，修正《Effective Go》中的错误
+* fmt/print：使%p获得与%T同等的优先级，使Print和Println函数支持Formatter接口
+* gc：修复括号匹配检查
+* go/ast：新增AST节点打印功能，为添加完整类型信息奠定基础
+* go/printer：不再修改经过tabwriter.Escape处理的文本
+* gofmt：不再修改多行字符串字面量，可通过-ast标志打印AST节点
+* http：修正http.Request文档中的拼写错误（感谢Scott Lawrence），始终解析查询字符串（不仅限于GET请求）
+* image/png：支持16位色深
+* io：ReadAtLeast函数在min值大于缓冲区长度时返回错误
+* jsonrpc：成功响应使用`error: null`而非`error: ""`
+* libmach：为32位x86内核实现寄存器读取
+* net：使IPv6的String方法符合标准（感谢Mikio Hara）
+* os：FileInfo.Permission()现返回uint32类型（感谢Scott Lawrence），通过原生Windows API实现环境变量处理（感谢Alex Brainman）
+* reflect：允许PtrValue.PointTo(nil)操作
+* runtime：修正.goc文件的行号信息，修复另一个栈分割错误，修复freebsd/386的mmap问题
+* syscall：重新生成linux/386、linux/amd64、linux/arm的系统调用文件
+* tabwriter：新增StripEscape标志
+* template：修复动作语句周围的空格处理，使前置空白的变量能正确解析（感谢Roger Peppe）
+* test：添加导致gccgo崩溃的测试用例
+* time：时区解析不再强制要求分钟部分（感谢Jan H. Hosang）
+* yacc：修复错误恢复中的边界检查
+
+<h2 id="2010-08-11">2010年8月11日</h2>
+
+<pre>
+本次发布包含一些包结构变更。若您使用了once、regexp、image或exp/draw包，可能需要修改代码。
+
+sync包中新增了Once类型。新的sync.Once将取代once包的功能，我们计划在本次发布后移除once包。详见：
+    http://golang.org/pkg/sync/#Once
+标准库中所有once实例均已替换为sync.Once，这些变更可能有助于您修改现有代码。相关变更集：
+    http://code.google.com/p/go/source/detail?r=fa2c43595119
+
+正则表达式包regexp新增了一组方法，提供统一命名的方式来匹配文本中的表达式模式，详情请参阅包文档：
+    http://golang.org/pkg/regexp/
+这些新方法将在后续版本中取代旧的子字符串匹配方法。以下方法已弃用：
+    Execute（请使用FindSubmatchIndex）
+    ExecuteString（请使用FindStringSubmatchIndex）
+    MatchStrings（请使用FindStringSubmatch）
+    MatchSlices（请使用FindSubmatch）
+    AllMatches（请使用FindAll；注意n&lt;0表示“所有匹配”；原为n&lt;=0）
+    AllMatchesString（请使用FindAllString；注意n&lt;0表示“所有匹配”；原为n&lt;=0）
+（另外还新增了十个您可能未曾了解的方法）
+请在下个版本发布前更新代码使用新方法。
+
+image.Image类型现采用Bounds矩形范围（原为从(0,0)到(宽度,高度)）。原先的循环结构：
+    for y := 0; y &lt; img.Height(); y++ {
+        for x := 0; x &lt; img.Width(); x++ {
+            // 使用img.At(x, y)进行操作
+        }
+    }
+应改为：
+    b := img.Bounds()
+    for y := b.Min.Y; y &lt; b.Max.Y; y++ {
+        for x := b.Min.X; x &lt; b.Max.X; x++ {
+            // 使用img.At(x, y)进行操作
+        }
+    }
+Point和Rectangle类型也已从exp/draw包移至image包。
+
+其他变更：
+* arm：修复错误并完善系统调用（感谢Kai Backman）
+* asn1：修正有符号整数的错误编码（感谢Nicholas Waples）
+* big：修复位运算函数（感谢Evan Shaw）
+* bytes：新增IndexRune、FieldsFunc和To*Special方法（感谢Christian Himpel）
+* encoding/binary：新增复数支持（感谢Roger Peppe）
+* exp/iterable：新增UintArray类型（感谢Anschel Schaffer-Cohen）
+* godoc：当包或文件未找到时返回404状态码
+* gofmt：改进意外分号错误的报告信息
+* html：新增HTML词法分析器包
+* image：将图像表示从切片切片改为线性缓冲区，引入Decode和RegisterFormat函数，新增Transparent和Opaque常量，用Bounds替代Width和Height，添加Point和Rect类型
+* libbio：修复Bprint以解决6g处理大型数据结构时的问题
+* math：修正amd64架构的Hypot函数（感谢Charles L. Dorian）
+* net/textproto：新增包及示例net/dict
+* os：修复ForkExec()在envv==nil时的处理（感谢Alex Brainman）
+* png：支持灰度图像（感谢Mathieu Lonjaret）
+* regexp：文档说明反斜杠为转义字符
+* rpc：捕获ReadResponseBody的错误
+* runtime：修复内存释放问题（感谢Alex Brainman）
+* template：为template.Template添加ParseFile方法
+* test/peano：使用直接递归的类型定义
+</pre>
+
+<h2 id="2010-08-04">2010年8月4日</h2>
+
+<pre>
+本次发布修改了os.Open（及相关函数）的文件权限参数类型。参数已改为uint32类型，您的代码可能需要调整——通常只需进行简单的类型转换即可。其他变更：
+* amd64: 为线程本地存储使用段内存。
+* arm: 向Android启动器脚本添加GDB支持，
+       修复错误（栈破坏、索引问题），
+       禁用另一个不稳定测试，
+       从gotest中移除旧的QEMU依赖。
+* bufio: 引入Peek方法。
+* bytes: 为explode函数添加空白字符串测试用例（感谢Scott Lawrence）。
+* cgo: 修正多返回值函数的调用（感谢Christian Himpel）。
+* crypto/x509: 解包主题密钥标识符（感谢Adam Langley）。
+* gc: 索引边界测试及其他修复。
+* gofmt/go/parser: 加强语法检查。
+* goinstall: 检查来自exec.*Cmd.Wait()的错误（感谢Alex Brainman）。
+* image/png: 使用图像特定方法检查透明度。
+* image: 引入Gray和Gray16类型，
+        除Black和White外移除其他命名颜色。
+* json: 对象成员必须有值（感谢Anthony Martin）。
+* misc/vim: 仅在注释中高亮拼写错误的单词（感谢Christian Himpel）。
+* os: 空设备支持（感谢Peter Mundy）。
+* runtime: 在SIGBUS/SIGSEGV信号中不进行穿透处理。
+* strings: 修复Split("", "", -1)（感谢Scott Lawrence）。
+* syscall: 使Go错误不与Windows错误冲突（感谢Alex Brainman）。
+* test/run: 对比新旧版本差异。
+* websocket: 修正挑战响应（感谢Tarmigan Casebolt），
+            修复头部键中包含空格的错误（感谢Bill Neubauer）。
+
+<h2 id="2010-07-29">2010年7月29日</h2>
+
+<pre>
+* 5g: 扩展软浮点支持并修复多个错误。
+* asn1: 支持Enumerated、Flag和GeneralizedTime类型。
+* build: clean.bash脚本检查GOOS和GOARCH是否已设置。
+* bytes: 添加IndexFunc和LastIndexFunc函数（感谢Fazlul Shahriar），
+        添加Title函数。
+* cgo: 若环境变量设置了CC则使用该编译器而非默认的"gcc"，
+      使用新命令行语法：--分隔cgo标志与gcc标志。
+* codereview: 避免无配置时崩溃，
+             不对空文件列表运行gofmt，
+             使'hg submit'兼容Mercurial 1.6版本。
+* crypto/ocsp: 添加用于解析OCSP响应的包。
+* crypto/tls: 添加客户端SNI支持和PeerCertificates功能。
+* exp/bignum: 删除包——其功能已被big包吸纳。
+* fmt.Print: 修复因...T引入导致的空格放置错误。
+* fmt.Scanf: 处理尾随空格。
+* gc: 修复接口中小于指针大小的接收器问题，
+     浮点精度/规范化修复，
+     段错误时优雅退出，
+     import点号遮蔽错误，
+     包含对无效输入更好处理的多项修复，
+     打印导入失败的具体错误信息。
+* gccgo_install.html: 添加RTEMS移植说明（感谢Vinu Rajashekhar）。
+* gobs: 修复单例数组中的错误。
+* godoc: 为所有包含文档的包显示概要信息。
+* gofmt: 修复部分换行问题。
+* http: 添加HTTPS客户端支持（感谢Fazlul Shahriar），
+       当内容长度未知时写入body（感谢James Whitehead）。
+* io: MultiReader和MultiWriter支持（感谢Brad Fitzpatrick），
+     修复管道中的其他竞态条件。
+* ld: 包含对无效输入更好处理的多项修复。
+* libmach: 正确处理含D_REGREG地址的.5文件。
+* linux/386: 使用Xen友好的ELF TLS指令序列。
+* mime: 添加AddExtensionType函数（感谢Yuusei Kuwana）。
+* misc/vim: 语法文件识别1e9等常量（感谢Petar Maymounkov）。
+* net: TCPConn.SetNoDelay（广受欢迎的需求）。
+* net(windows): 修复传入空切片时读取/写入崩溃（感谢Alex Brainman），
+               实现LookupHost/Port/SRV（感谢Wei Guangjing），
+               正确处理(*netFD).Read()中的EOF（感谢Alex Brainman）。
+* runtime: 修复修订版4a01b8d28570引入的错误（感谢Alex Brainman），
+          将cgo2c、*.cgo重命名为goc2c、*.goc（感谢Peter Mundy）。
+* scanner: 改进注释说明。
+* strings: 添加Title函数。
+* syscall: 在Windows上添加ForkExec、Syscall12（感谢Daniel Theophanes），
+          改进Windows errno处理（感谢Alex Brainman）。
+* syscall(windows): 修复FormatMessage（感谢Peter Mundy），
+                   实现Pipe()（感谢Wei Guangjing）。
+* time: 修复时区中分钟的解析。
+* utf16(windows): 修复测试时的循环依赖（感谢Peter Mundy）。
+
+<h2 id="2010-07-14">2010年7月14日</h2>
+
+<pre>
+本版本包含包级变更。在container/vector中，Iter方法已从Vector、IntVector和StringVector类型中移除。此外，Data方法已重命名为Copy以更准确地表达其实际行为。
+现在Vector只是一个切片，因此任何遍历v.Iter()或v.Data()的for循环都可以改为直接遍历v。
+
+其他变更：
+* big: 改进Rat.SetString（感谢Evan Shaw），
+       添加sign、abs、Rat.IsInt方法。
+* cgo: 多项错误修复。
+* codereview: 修复Mercurial >= 1.6兼容性（感谢Evan Shaw）。
+* crypto/rand: 添加Windows实现（感谢Peter Mundy）。
+* crypto/tls: 简化HTTPS服务器创建，
+             添加客户端OCSP装订支持。
+* exp/eval: 从bignum迁移至big（感谢Evan Shaw）。
+* gc: 实现新的len规范，range错误修复，优化。
+* go/parser: 要求'...'参数后必须跟随类型。
+* http: 修复ParseURL以正确处理//relative_path。
+* io: 修复SectionReader的Seek方法支持向后搜索（感谢Peter Mundy）。
+* json: 添加HTMLEscape函数（感谢Micah Stetson）。
+* ld: 错误修复。
+* math: amd64架构的log函数（感谢Charles L. Dorian）。
+* mime/multipart: 新包用于解析MIME多部分消息及HTTP multipart/form-data支持。
+* os: 测试文件使用TempFile配合默认TempDir（感谢Peter Mundy）。
+* runtime/tiny: 为额外VM添加文档，修复构建（感谢Markus Duft）。
+* runtime: 对nil channel的发送/接收操作提供更佳错误信息。
+* spec: 澄清channel的close()，
+       锁定channel和select的部分细节，
+       限制len(x)为常量的条件，
+       为nil的slice、map和channel指定len/cap行为。
+* windows: 为二进制文件名追加.exe后缀（感谢Joe Poirier）。
+</pre>
+
+<h2 id="2010-07-01">2010年7月1日</h2>
+
+<pre>
+本版本包含一些包级变更，可能需要调整客户端代码。**bytes 和 strings 包中的 Split 函数已更改。**  
+用于限制返回数量的 `count` 参数，此前将 0 视为无限制，现在则将 0 当作 0，并返回一个空切片。如需无限制结果，请使用 -1（或其他负值）。  
+bytes 和 strings 包中新增的 `Replace` 函数也采用此行为。此更改可能需要调整现有代码。
+
+**gob 包现在允许在顶层传输非结构体值。**  
+因此，rpc 和 netchan 包对其可处理类型的限制更少。例如，netchan 现在可以共享 `chan int`。
+
+**本次发布还包含一个代码走读：“通过通信共享内存”。**  
+它描述了一个使用 goroutine 和 channel 的惯用 Go 程序：  
+	http://golang.org/doc/codewalk/sharemem/
+
+**Go 仪表板上新增了项目页面，列出了 Go 程序、工具和库：**  
+	http://godashboard.appspot.com/project
+
+**其他变更：**  
+* 6a, 6l: 错误修复。  
+* bytes, strings: 新增 `Replace`。  
+* cgo: 对 .so 引用使用无斜杠的相对路径。  
+* cmath: 修正 `IsNaN` 对参数 `cmplx(Inf, NaN)` 的处理（感谢 Charles L. Dorian）。  
+* codereview: 允许 CONTRIBUTORS 中包含多个电子邮件地址。  
+* doc/codewalk: 新增“通过通信共享内存”。  
+* exp/draw/x11: 实现从键码到键符号的映射。  
+* fmt: `Printf`: 修复处理 `%#v` 时的错误，允许为切片使用其他动词。  
+         `Scan`: 修复 EOF 处理。  
+* gc: 错误修复与优化。  
+* gob: 新增 `DecodeValue` 和 `EncodeValue`，新增对复数的支持。  
+* goinstall: 支持 Bazaar+Launchpad（感谢 Gustavo Niemeyer）。  
+* io/ioutil: 为 Windows 新增 `TempFile`（感谢 Peter Mundy）。  
+* ld: 新增 `-u` 标志用于检查安全位；移除旧的 `-u`, `-x` 标志。  
+* math: `Exp` 和 `Fabs` 的 amd64 版本（感谢 Charles L. Dorian）。  
+* misc/vim: 始终覆盖 .go 文件的文件类型检测。  
+* net: 新增对 DNS SRV 请求的支持（感谢 Kirklin McDonald），  
+       初步尝试实现 Windows 版本（感谢 Alex Brainman）。  
+* netchan: 允许使用基本类型的 channel（现在 gob 可以处理此类类型），  
+           消除了在 `Import` 和 `Export` 中需要指针值的要求。  
+* os/signal: 仅在导入 os/signal 包时才捕获所有信号。  
+* regexp: 错误修复：需要跟踪匹配是否以固定前缀开始。  
+* rpc: 允许非结构体的参数和回复（它们仍必须是指针）。  
+* runtime: 错误修复与重组。  
+* strconv: 修复浮点数和基数为 2 的转换错误。  
+* syscall: 新增 `syscall_bsd.go` 到 `zsycall_freebsd_386.go`（感谢 Peter Mundy），  
+           新增 `socketpair`（感谢 Ivan Krasin）。  
+* time: 为 Windows 实现时区（感谢 Alex Brainman）。  
+* x509: 支持非自签名证书。
+
+<h2 id="2010-06-21">2010-06-21</h2>
+
+<pre>
+本版本包含一个语言变更。“...”函数参数形式已移除；“...T” 保留。通常，“...interface{}” 可用于替代 “...”。
+
+`Printf` 的实现方式发生了变化，这微妙地影响了其对 `fmt.Stringer` 接口的处理。您可能需要修改代码。详情请参见：
+        https://groups.google.com/group/golang-nuts/msg/6fffba90a3e3dc06
+
+`reflect` 包已更改。如果您有使用 reflect 的代码，则需要更新。详情请参见：
+        https://groups.google.com/group/golang-nuts/msg/7a93d07c590e7beb
+
+**其他变更：**  
+* 8l: 修正 8l -K 代码中 sp == 栈顶的测试。  
+* asn1: 允许 PrintableString 中包含 '*'。  
+* bytes.Buffer.ReadFrom: 错误修复。  
+* codereview: 避免匹配中的异常（感谢 Paolo Giarrusso）。  
+* complex divide: 与 C99 实现保持一致。  
+* exp/draw: 小的 draw.drawGlyphOver 优化。  
+* fmt: `Print*`: 重新实现以首先切换类型。  
+        `Scanf`: 改进输入与格式不匹配时的错误消息。  
+* gc: 接口失败、转换、未定义符号的更好错误消息。  
+* go/scanner: 报告非法转义序列。  
+* gob: 用切片替代映射。  
+* goinstall: 处理包 main 的依赖关系（感谢 Roger Peppe）。  
+* gopack: 新增 S 标志以强制将包标记为安全，简化 go 元数据代码。  
+* html: 同步 testdata/webkit 以匹配 WebKit tip。  
+* http: 自动回复 Expect 100-continue 请求（感谢 Brad Fitzpatrick）。  
+* image: 新增 Alpha16 类型。  
+* ld: 将 Go 符号表填充至页面边界（修复 cgo 崩溃）。  
+* misc/vim: 重组插件以便于使用（感谢 James Whitehead）。  
+* path: 新增 `Base`，类似于 Unix basename。  
+* pkg/Makefile: 允许使用 DISABLE_NET_TESTS=1 禁用网络测试。  
+* reflect: 新增 `Kind`, `Type.Bits`，移除 `Int8Type`, `Int8Value` 等。  
+* runtime: 增加 Windows 支持（感谢 Alex Brainman），  
+          修正 Leopard 上 16 位除法的故障，  
+          修复 386 信号处理程序错误。  
+* strconv: 新增 `AtofN`, `FtoaN`。  
+* string: 新增 `IndexFunc` 和 `LastIndexFunc`（感谢 Roger Peppe）。  
+* syslog: 测试使用本地网络。
+
+<h2 id="2010-06-09">2010-06-09</h2>
+
+<pre>
+本版本包含许多修复和改进，包括对语言规范的若干澄清和整合。
+
+赋值和转换周围的类型检查规则更简单但更严格：赋值不再隐式地将 `*[10]int` 转换为 `[]int`（请使用 `x[0:]` 而不是 `&amp;x`），并且转换不再能改变复合类型内部类型的名称。
+
+`fmt` 包现在包含了用于所有基本类型的灵活的、类型驱动的 (`fmt.Scan`) 和格式驱动的 (`fmt.Scanf`) 扫描器。* big：修复了 Quo 别名问题。
+* bufio：调整 ReadSlice 以匹配其描述。
+* cgo：错误修复。
+* doc：添加了 Google I/O 演讲和程序，
+        codereview + Mercurial Queues 信息（感谢 Peter Williams）。
+* exp/draw：为 Over 运算符绘制快速路径，
+        添加了 Rectangle.Eq 和 Point.In，修复了 Rectangle.Clip（感谢 Roger Peppe）。
+* fmt：Scan 的修复和改进。
+* gc：反斜杠换行不再是字符串中的合法转义序列，
+        发现 ~ 运算符时提供更好的错误信息，
+        修复了复合类型的导出，
+        新的类型检查规则。
+* go/parser：修正了空语句 ';' 的位置。
+* gofmt：修复了测试脚本。
+* goinstall：使用 'git pull' 代替 'git checkout'（感谢 Michael Hoisie）。
+* http：添加了用于发出 HTTP HEAD 请求的 Head 函数，
+        正确处理 304 状态码。
+* image：为图像类型添加了 Opaque 方法。
+        使 Color.RGBA 返回 16 位颜色而非 32 位颜色。
+* io/ioutil：添加了 TempFile。
+* math：Pow 特殊情况及额外测试（感谢 Charles L. Dorian）。
+* netchan：改进了关闭和关机。
+* os：为 Windows 实现了 os.FileInfo.*time_ns（感谢 Alex Brainman）。
+* os/signal：修正了用于查找 Unix 信号名称的正则表达式（感谢 Vinu Rajashekhar）。
+* regexp：优化（感谢 Kyle Consalus）。
+* runtime：修复了打印 -Inf 的问题（感谢 Evan Shaw），
+        完成了 pchw -> tiny，为 tiny 添加了 gettime（感谢 Daniel Theophanes）。
+* spec：清理和整合。
+* syscall：额外的 Windows 兼容性修复（感谢 Alex Brainman）。
+* test/bench：添加了 regex-dna-parallel.go（感谢 Kyle Consalus）。
+* vector：特定于类型的 Do 函数现在接受 f(type)（感谢 Michael Hoisie）。
+
+<h2 id="2010-05-27">2010-05-27</h2>
+
+<pre>
+这是一个相当重要的版本，包括标准库的改进和一系列编译器错误修复。三周的间隔主要是由于团队在准备 Google I/O。
+
+* big：添加了 Rat 类型（感谢 Evan Shaw），
+        新特性，大量性能调优、清理以及更多测试。
+* bignum：通过移至 exp 目录将其弃用。
+* build：允许在构建脚本外部设置 MAKEFLAGS（感谢 Christopher Wedgwood）。
+* bytes：添加了 Trim、TrimLeft、TrimRight 和通用函数（感谢 Michael Hoisie）。
+* cgo：修复以允许从 init 代码进行 cgo 回调。
+* cmath：更新了 Phase 和 Polar 的范围，原因是带符号的零（感谢 Charles L. Dorian）。
+* codereview：更好地与 mq 配合工作（感谢 Peter Williams）。
+* compress：重命名
+	NewDeflater -> NewWriter
+	NewInflater -> NewReader
+	Deflater -> Compressor
+	Inflater -> Decompressor
+* exp/draw/x11：遵循 $XAUTHORITY，
+        以与 x-go-bindings 相同的方式处理 $DISPLAY。
+* exp/draw：为字形图像添加了快速路径，其他优化，
+        修复了 Rectangle.Canon（感谢 Roger Peppe）。
+* fmt：Scan，Scanln：在 fmt 包中启动了一个简单的扫描 API，
+        修复了当给定额外的 nil 参数时 Printf 崩溃的问题（感谢 Roger Peppe）。
+* gc：计算非整数余数时提供更好的错误信息（感谢 Evan Shaw），
+        禁止在 Go 程序中使用 middot，
+        在错误信息中区分数组和切片字面量，
+        修复了 go.y 导出语法中的 shift/reduce 冲突，
+        修复了 ideal 常量上的 unsafe.Sizeof，
+        处理在函数调用外部使用内置函数的情况，
+        许多其他错误修复。
+* gob：添加了对映射的支持，
+        添加了对间接映射、切片、数组的测试。
+* godoc：从所有包文件中收集包注释。
+* gofmt：不丢失必要的分号，
+        将具有非法语法的测试用例排除在测试之外，
+        修复了标签的打印。
+* http：防止在远程服务器不以 "HTTP/" 响应时崩溃。
+* json：在字符串扫描器中接受转义的斜杠（感谢 Michael Hoisie），
+        修复了数组 -> 非数组的解码。
+* libmach：在 OS X 上跳过 __nl_symbol_ptr 节。
+* math：Fdim、Fmax、Fmin 的 amd64 版本，
+        带符号零 Sqrt 特殊情况（感谢 Charles L. Dorian）。
+* misc/kate：convert 不是内置函数（感谢 Evan Shaw）。
+* net：实现了 BindToDevice，
+        实现了原始套接字（感谢 Christopher Wedgwood）。
+* netFD：修复了 Close 和 Read/Write 之间的竞争条件（感谢 Michael Hoisie）。
+* os：添加了 Chtimes 函数（感谢 Brad Fitzpatrick）。
+* pkg/Makefile：将 netchan 添加到标准包列表中。
+* runtime：GOMAXPROCS 返回之前的值，
+        允许大的映射值，
+        为固定字符串避免分配，
+        为新生的 goroutine（即使是闭包）修正了回溯，
+        在调整大小期间释放旧的 hashmap 部分。
+* spec：为分号规则添加了虚数字面量（之前遗漏），
+        修复并阐明了转换的语法，
+        简化了关于通道类型的章节，
+        其他小调整。
+* strconv：Btoui64 优化（感谢 Kyle Consalus）。
+* strings：在 Map 中使用 copy 代替 for 循环（感谢 Kyle Consalus）。
+* syscall：实现了 BindToDevice（感谢 Christopher Wedgwood），
+        在 Darwin/FreeBSD 上添加了 Utimes，到处添加了 Futimes，
+        为某些平台重新生成了系统调用。
+* template：规范化了接口、指针和方法的名称查找。
+</pre>
+
+<h2 id="2010-05-04">2010-05-04</h2>
+
+<pre>
+在此版本中，我们将 Windows 操作系统目标从 'mingw' 重命名为 'windows'。
+如果您当前正在为 'mingw' 构建，则应改为设置 GOOS=windows。</pre>以下为翻译内容：
+
+* 5l, 6l, 8l, 运行时：使 -s 二进制文件正常工作。
+* 5l, 6l, 8l：更改 ELF 头信息以使 strip 命令不会损坏二进制文件。
+* 8l：修复 Windows 上绝对路径检测问题。
+* big：新增函数、优化和代码清理，为 Int 添加位操作方法（感谢 Evan Shaw）。
+* bytes：将 IndexAny 改为查找 UTF-8 编码字符。
+* darwin：bsdthread_create 可能失败；输出明确错误信息。
+* fmt：%T 格式化 nil 时缺少 `<nil>` 输出（感谢 Christopher Wedgwood）。
+* gc：多项修复。
+* misc/cgo/gmp：修复 SetString 中的错误。
+* net：修复 resolv.conf 文件无换行符结尾时的 EOF 问题（感谢 Christopher Wedgwood）。
+* spec：一些小的澄清说明（无语言变更）。
+* syscall：在 sycall_nacl.go 中添加 EWOULDBLOCK，强制 Linux open 系统调用中使用 O_LARGEFILE，处理管道上的 EOF——Windows 特殊情况（感谢 Alex Brainman），mingw Sleep 实现（感谢 Joe Poirier）。
+* test/bench：导入新的 fasta C 参考实现，更新 Go 代码，进行优化。
+* test：静态初始化测试（失败）。
+* vector：在 make 调用中使用正确的容量。
+* xml：允许文本段在 EOF 处结束。
+
+<h2 id="2010-04-27">2010-04-27</h2>
+
+<pre>
+此版本包含一个新的代码实验室，用于演示构建一个简单的 wiki 网络应用程序：
+	http://golang.org/doc/codeLab/wiki/
+
+它还包含一个用于文档化代码的代码漫游框架。详情请见：
+	http://golang.org/doc/codewalk/
+
+其他变更：
+* 6g：修复数组索引表达式周围需要括号的问题。
+* 6l, 8l：在文本段的 PT_LOAD 映射中包含 ELF 头信息。
+* arm：添加 android 运行脚本，支持浮点数打印。
+* big：实现了 Karatsuba 乘法，多项修复和改进（感谢 Evan Shaw）。
+* bytes：为 Buffer 添加 Next 方法，简化 Read，优化实现，使 WriteByte 速度提升 50%。
+* crypto/tls：更简单的记录层实现。
+* exp/eval：修复（感谢 Evan Shaw）。
+* flag：消除不必要的结构体。
+* gc：更好的 Windows 支持，cmplx 类型检查 bug 修复，顶层语句更具体的错误信息。
+* go/parser：不再要求不必要的括号。
+* godoc：排除重复条目（感谢 Andrei Vieru），时间戳使用 int64（感谢 Christopher Wedgwood）。
+* gofmt：微调括号剥离规则。
+* json：Marshal, Unmarshal 使用新的扫描器，默认保留字段名大小写，添加扫描器、Compact、Indent 及测试，支持流式处理。
+* libmach：正确反汇编 MOVLQZX。
+* math：针对有符号零值的更多特殊情况（感谢 Charles L. Dorian）。
+* net：添加 Pipe，修复 packStructValue 中的错误（感谢 Michael Hoisie），引入 net.Error 接口。
+* os：FileInfo：规范化某些字段类型，创建 sys_bsd.go（感谢 Giles Lean），mingw bug 修复（感谢 Alex Brainman）。
+* reflect：添加 FieldByNameFunc（感谢 Raif S. Naffah），为 PtrValue 和 MapValue 实现 Set(nil), SetValue(nil)。
+* regexp：允许转义任何标点符号。
+* rpc/jsonrpc：支持 jsonrpc 线路编码。
+* rpc：抽象客户端和服务器编码，为 rpc.Client 添加 Close() 方法。
+* 运行时：闭包、原生客户端的 defer bug 修复，将 cgo2c, *.cgo 重命名为 goc2c, *.goc 以避免与真正的 cgo 混淆，其他多项修复。
+* scanner：实现 Peek() 用于查看下一个字符而不推进读取。
+* strings：为 Reader 添加 ReadRune，添加 FieldsFunc（感谢 Kyle Consalus）。
+* syscall：将 linux Setsid 函数签名与 darwin 匹配，mingw bug 修复（感谢 Alex Brainman）。
+* template：修复接口内指针的处理。
+* test/bench：添加 fannkuch-parallel.go（感谢 Kyle Consalus），通过使用加法代替移位使 pidigits 性能提升约 10%。
+* time：移除错误的 time.ISO8601 并添加 time.RFC3339（感谢 Micah Stetson）。
+* utf16：添加 DecodeRune, EncodeRune。
+* xml：支持 XML 序列化嵌入结构体（感谢 Raif S. Naffah），新增 "innerxml" 标签用于收集内部 XML。
+</pre>
+
+<h2 id="2010-04-13">2010-04-13</h2>
+
+<pre>
+此版本包含许多变更：
+
+* 8l：为 PE 二进制文件添加 DOS 存根（感谢 Evan Shaw）。
+* cgo：添加 //export。
+* cmath：新的复数数学库（感谢 Charles L. Dorian）。
+* docs：更新以符合当前编码风格（感谢 Christopher Wedgwood）。
+* exp/eval：修复示例并向 Makefile 添加目标（感谢 Evan Shaw）。
+* fmt：将格式化动词 %b 在负数时的行为改为与 %x 一致（感谢 Andrei Vieru）。
+* gc：将 s == "" 编译为 len(s) == 0，区分致命编译器错误与错误+退出，修复非 amd64 架构上的对齐问题，对 defer func() {} 缺少最终括号给出明确的语法错误，实现 panic 和 recover，函数有 defer 时在入口处将未命名返回值置零。
+* goyacc：改为可重入（感谢 Roger Peppe）。
+* io/ioutil：修复当 Open 成功但 Stat 失败时 ReadFile 中的错误。
+* kate：更新以适配最近的语言变更（感谢 Evan Shaw）。
+* libcgo：初步的 mingw 移植工作——可构建但未测试（感谢 Joe Poirier）。
+* math：新增函数和特殊情况（感谢 Charles L. Dorian）。
+* net：使用 chan bool 代替 chan *netFD 以避免循环依赖。
+* netchan：允许客户端发送和接收。
+* nntp：新包，NNTP 客户端（感谢 Conrad Meyer）。
+* os：将 os.Dir 重命名为 os.FileInfo。
+* rpc：不记录正常的 EOF，修复 ServeConn 按文档说明阻塞。
+* 运行时：多项 bug 修复，更好的 ARM 支持。
+* strings：添加 IndexRune, Trim, TrimLeft, TrimRight 等（感谢 Michael Hoisie）。
+* syscall：实现 os 所需的一些 mingw 系统调用（感谢 Alex Brainman）。
+* test/bench：添加 k-nucleotide-parallel（感谢 Kyle Consalus）。
+* Unicode：支持土耳其语大小写映射。
+* xgb：从主仓库移至 http://code.google.com/p/x-go-binding/。
+</pre>
+
+<h2 id="2010-03-30">2010-03-30</h2>
+
+<pre>
+此版本包含三项语言变更：
+
+1. 访问 map 中不存在的键不再是运行时错误。
+它现在会求值为该类型的零值。例如：
+        x := myMap[i]   现在等价于：   x, _ := myMap[i]
+
+2. 现在可以合法地获取函数返回值的地址。
+返回值仅在延迟函数运行后才复制回调用方。3. 用于报告和从失败中恢复的函数 `panic` 和 `recover` 已添加到规范中：
+    http://golang.org/doc/go_spec.html#Handling_panics
+在相关变更中，`panicln` 已被移除，`panic` 现在是一个单参数函数。`panic` 和 `recover` 已被 gc 编译器识别，但新行为尚未实现。
+
+此版本中 ARM 构建已损坏；ARM 用户应停留在 release.2010-03-22 版本。
+
+其他变更：
+*   bytes, strings: 添加 `IndexAny`。
+*   cc/ld: 添加对 `#pragma dynexport` 的支持，
+        将 `dynld` 全部重命名为 `dynimport`。Cgo 用户将需要重新运行 cgo。
+*   expvar: 为 `cmdline`、`memstats` 添加默认发布。
+*   flag: 添加用户自定义的标志类型。
+*   gc: 常规错误修复。
+*   go/ast: 通用化 ast 过滤。
+*   go/printer: 在打印中避免使用 reflect。
+*   godefs: 修复对负数常量的处理。
+*   godoc: 导出 pprof 调试信息、导出的变量，
+        支持在 `-src` 模式下过滤命令行输出，
+        使用 http GET 进行远程搜索而非 rpc。
+*   gofmt: 不将多行函数转换为单行，
+        在多行选择器表达式中保留换行符（感谢 Risto Jaakko Saarelma）。
+*   goinstall: 在错误报告中包含命令名（感谢 Andrey Mirtchovski）。
+*   http: 添加 `HandleFunc` 作为 `Handle(path, HandlerFunc(func))` 的快捷方式。
+*   make: 使用实际依赖项进行安装。
+*   math: 添加 `J1`、`Y1`、`Jn`、`Yn`、`J0`、`Y0`（贝塞尔函数）（感谢 Charles L. Dorian）。
+*   prof: 从 google-perftools 添加 pprof。
+*   regexp: 如果存在错误，则不返回非 nil 的 `*Regexp`。
+*   runtime: 添加 `Callers`，
+        添加 malloc 采样、pprof 接口，
+        添加内存分析，为 `runtime.MemStats` 添加更多统计信息，
+        实现缺失的 `destroylock()`（感谢 Alex Brainman），
+        更多的 malloc 统计信息，
+        在单个 goroutine 中运行所有 finalizer，
+        `Goexit` 运行延迟调用。
+*   strconv: 添加 `Atob` 和 `Btoa`，
+        `Unquote` 可能在错误时错误地返回 nil 错误（感谢 Roger Peppe）。
+*   syscall: 添加 IPV6 常量，
+        为 Darwin 和其他 *BSD 系统添加 `syscall_bsd.go`（感谢 Giles Lean），
+        实现 `SetsockoptString`（感谢 Christopher Wedgwood）。
+*   websocket: 实现新协议（感谢 Fumitoshi Ukai）。
+*   xgb: 修复请求长度和请求大小（感谢 Firmansyah Adiputra）。
+*   xml: 添加 `CopyToken`（感谢 Kyle Consalus），
+        为语法错误添加行号（感谢 Kyle Consalus），
+        使用 `io.ReadByter` 替代本地的 `readByter`（感谢 Raif S. Naffah）。
+
+<h2 id="2010-03-22">2010-03-22</h2>
+
+<pre>
+在此版本中，我们宣布 Go 博客正式上线：
+    http://blog.golang.org/
+第一篇文章是关于自发布以来所发生事件的简要更新。
+
+此版本包含一些新的包和功能，以及许多修复：
+*   6g/8g: 修复复杂数据类型的问题，其他错误修复。
+*   Makefiles: 重构以简化外部 Makefile 的编写。
+*   crypto/rand: 新包。
+*   godoc: 通过 RPC 实现命令行搜索，
+        改进注释格式：识别 URL。
+*   gofmt: 更一致的 const/var 声明格式化。
+*   http: 添加 `Error` 辅助函数，
+        添加 `ParseQuery`（感谢 Petar Maymounkov），
+        将 `RawPath` 更改为表示原始路径，而不是 scheme 之后的所有内容。
+*   image/jpeg: 修复拼写错误。
+*   json: 添加 `MarshalIndent`（接受用户指定的缩进字符串）。
+*   math: 添加 Gamma 函数（感谢 Charles L. Dorian）。
+*   misc/bbedit: 支持 `cmplx`、`real`、`imag`（感谢 Anthony Starks）。
+*   misc/vim: 添加新的复数类型、函数和字面量。
+*   net: 修复 `IPMask.String` 在全 0xff 掩码时不会崩溃的问题。
+*   os: 正常 `Close` 后丢弃文件 finalizer。
+*   runtime: 添加 `GOROOT` 和 `Version`，
+        锁定 finalizer 表访问。
+*   sha512: 添加 sha384（截断版本）（感谢 Conrad Meyer）。
+*   syscall: 添加常量 `ARCH`，类似于 `OS`。
+*   syscall: 进一步添加 mingw 移植（感谢 Alex Brainman）。
+*   template: 修复 html 格式化程序的 `[]byte` 输入错误。
+*   utf16: 新包。
+*   version.bash: 处理旧版 Mercurial。
+*   websocket: 使用 `URL.RawPath` 构造 `WebSocket-Location:` 头。
+</pre>
+
+<h2 id="2010-03-15">2010-03-15</h2>
+
+<pre>
+此版本包含一项语言变更：支持复数。
+    http://golang.org/doc/go_spec.html#Imaginary_literals
+    http://golang.org/doc/go_spec.html#Complex_numbers
+目前尚无库支持。
+
+此版本还包括 goinstall 命令行工具。
+    http://golang.org/cmd/goinstall/
+    http://groups.google.com/group/golang-nuts/t/f091704771128e32
+
+*   5g/6g/8g: 修复切片中的双重函数调用。
+*   arm: 清理构建警告。（感谢 Dean Prichard）
+*   big: 修复 `probablyPrime` 的错误。
+*   bufio: 添加 `WriteRune`。
+*   bytes: 为 `bytes.Buffer` 添加 `ReadRune` 和 `WriteRune`。
+*   cc: 栈分裂错误修复。
+*   crypto: 为 sha256 添加 SHA-224，添加 sha512 包。（感谢 Conrad Meyer）
+*   crypto/ripemd160: 新包。（感谢 Raif S. Naffah）
+*   crypto/rsa: 不使用安全素数。
+*   gc: 避免固定长度缓冲区 `cleanbuf`。（感谢 Dean Prichard）
+        改进浮点数 `+=` 的编译。
+        修复对复杂参数使用 `make slice` 时的崩溃。
+        移除重复错误，为 `I.(T)` 提供更好的错误信息。
+*   godoc: 支持一个目录中的多个包，其他修复。
+*   gofmt: 错误修复。
+*   hash: 添加 `Sum64` 接口。
+*   hash/crc32: 添加 `Update` 函数。
+*   hash/crc64: 实现 64 位 CRC 的新包。
+*   math: 添加 `ilogb`、`logb`、`remainder`。（感谢 Charles L. Dorian）
+*   regexp: 添加 `ReplaceAllFunc`、`ReplaceAllStringFunc`。
+*   runtime: 基于分配的字节数而非使用的页数来触发垃圾回收。
+*   strings: 使 `Split(s, "", n)` 更快。（感谢 Spring Mc）
+*   syscall: syscall 的最小 mingw 版本。（感谢 Alex Brainman）
+*   template: 添加 `ParseFile`、`MustParseFile`。
+</pre>
+
+<h2 id="2010-03-04">2010-03-04</h2><pre>
+有一项语言变更：支持将字符串转换为 []byte 或 []int。这使得 strings.Bytes 和 strings.Runes 函数被弃用。你可以使用以下 gofmt 命令来转换现有源代码：
+	gofmt -r 'strings.Bytes(x) -> []byte(x)' -w 文件或目录列表
+	gofmt -r 'strings.Runes(x) -> []int(x)' -w 文件或目录列表
+运行这些命令后，你可能需要删除未使用的 "strings" 包导入。
+
+其他变更与修复：
+* 6l/8l/5l：添加 -r 选项
+* 8g：使 a[byte(x)] 对 x 进行截断
+* codereview.py：修复与 hg >=1.4.3 的兼容性问题
+* crypto/blowfish：新增包（感谢 Raif S. Naffah）
+* dashboard：进一步性能调优
+* fmt：在 %q 中使用 String 方法来获取要引用的值
+* gofmt：若干外观性修改
+* http：修复 Connection: close 的处理，修复 http.Post 中的 bug
+* net：修正 DNS 配置，修复网络超时边界条件，在 Dial 时为 IPv6 地址添加 [ ]
+* path：添加 Match 函数，修复 Match 中非贪婪星号的 bug（感谢 Kevin Ballard）
+* strings：删除 Bytes、Runes 函数（见上文）
+* tests：一个埃拉托斯特尼风格的并发素数筛（感谢 Anh Hai Trinh）
+</pre>
+
+<h2 id="2010-02-23">2010-02-23</h2>
+
+<pre>
+此版本主要是 bug 修复和少量新代码。
+没有语言变更。
+
+6g/5g/8g：bug 修复
+8a/8l：新增 FCMOVcc 指令（感谢 Evan Shaw 和 Charles Dorian）
+crypto/x509：支持证书创建
+dashboard：通过缓存避免数据存储查询
+exec：为 Run 添加 dir 参数
+godoc：bug 修复和代码清理
+http：持续实现和 bug 修复（感谢 Petar Maymounkov）
+json：修复 Marshal 中的引号字符串处理（感谢 Sergei Skorobogatov）
+math：更多函数、测试用例和基准测试（感谢 Charles L. Dorian）
+misc/bbedit：将预声明标识符视为 "关键字"（感谢 Anthony Starks）
+net：禁用 UDP 服务器测试（在多种架构上不稳定）
+runtime：规避 Linux 内核在 futex 中的 bug，pchw 现已精简
+sync：修复在 armv5 上的工作（感谢 Dean Prichard）
+websocket：修复二进制帧大小解码（感谢 Timo Savola）
+xml：在非严格模式下允许不加引号的属性值（感谢 Amrut Joshi），在 Unmarshal 中将 bool 视为值（感谢 Michael Hoisie）
+</pre>
+
+<h2 id="2010-02-17">2010-02-17</h2>
+
+<pre>
+有两项小型语言变更：
+* 源文件中可能不允许包含 NUL 字节，并且工具确实会拒绝它们。
+* 从 string 到 []int 和 []byte 的转换已定义但尚未实现。
+
+其他变更与修复：
+* 5a/6a/8a/5c/6c/8c：移除 -I 和 -D 选项的固定大小数组（感谢 Dean Prichard）
+* 5c/6c/8c/5l/6l/8l：添加 -V 标志以显示版本号
+* 5c/6c/8c：外部预处理器使用 "cpp" 而非 "/bin/cpp"（感谢 Giles Lean）
+* 8a/8l：新增 CMOVcc 指令（感谢 Evan Shaw）
+* 8l：PE 可执行文件构建代码已更改，以包含 kernel32.dll 函数的导入表（感谢 Alex Brainman）
+* 5g/6g/8g：bug 修复
+* asn1：bug 修复和新增内容（包括序列化）
+* build：修复针对 Native Client、Linux/ARM 的构建
+* dashboard：显示基准测试，添加垃圾回收器基准测试
+* encoding/pem：添加序列化支持
+* exp/draw：对 nil 掩码进行快速路径处理
+* godoc：支持 $GOROOT 之外的目录
+* http：在将 Response 或 Request 写入网络时对头部键进行排序（感谢 Petar Maymounkov）
+* math：特殊情况和新函数（感谢 Charles Dorian）
+* mime：新包，用于 http（感谢 Michael Hoisie）
+* net：修复 DNS bug - 使用随机请求 ID
+* os：完成 File 的终结器，以关闭 fd。
+* path：使 Join 成为可变参数函数（感谢 Stephen Weinberg）
+* regexp：优化 bug 修复
+* runtime：杂项修复和优化
+* syscall：使 Umask 在 OS X、FreeBSD 上的签名与 Linux 匹配。（感谢 Giles Lean）
+</pre>
+
+<h2 id="2010-02-04">2010-02-04</h2>
+
+<pre>
+有一项语言变更：支持 ...T 参数：
+	http://golang.org/doc/go_spec.html#Function_types
+
+你现在可以在 Go Dashboard 上检查各种平台的构建状态：
+	http://godashboard.appspot.com
+
+* 5l/6l/8l：若干小型修复
+* 5a/6a/8a/5l/6l/8l：避免 symb 缓冲区溢出（感谢 Dean Prichard）
+* compress/gzip：gzip 压缩器（即写入器）
+* debug/proc：添加 mingw 特定的构建存根（感谢 Joe Poirier）
+* exp/draw：在 Draw 中分离源点和掩码点
+* fmt：在 Printf 中安全地处理 nil 值
+* gccgo：错误消息现在与 gc 一致
+* godoc：若干修复
+* http：bug 修复，Request/Response 修订（感谢 Petar Maymounkov）
+* image：新增 image.A 类型以表示抗锯齿字形，添加命名颜色（例如 image.Blue），适用于 exp/draw
+* io：修复 Pipe 中的 bug
+* malloc：合并到 runtime 包中
+* math：修复 FreeBSD 上的测试（感谢 Devon H. O'Dell），添加函数；更新测试和特殊情况（感谢 Charles L. Dorian）
+* os/signal：将 SIGCHLD 发送到 Incoming（感谢 Chris Wedgwood）
+* reflect：向 reflect 添加 StringHeader
+* runtime：添加 SetFinalizer
+* time：在中断期间休眠（感谢 Chris Wedgwood），添加 RFC822 格式，使用两个 goroutine 为所有定时器提供 Ticker 的实验性实现
+* xml：允许 XML 元素名称中包含下划线（感谢 Michael Hoisie），在 xml.Unmarshal 中允许任何标量类型
+</pre>
+
+<h2 id="2010-01-27">2010-01-27</h2>
+
+<pre>
+有两项小型语言变更：`chan <- chan int` 的含义现已定义，并且返回函数的函数不再需要对结果类型加括号。
+
+有一项重要的实现变更：编译器现在可以处理单个二进制文件中使用相同名称的多个包。在 gc 编译器中，这要求你必须始终使用一致的导入路径来导入特定包。在 gccgo 编译器中，代价是你必须使用 -fgo-prefix 标志来传递唯一的前缀（如最终的导入路径）。5a/6a/8a：避免使用固定大小的缓冲区（感谢 Dean Prichard）  
+5g, 6g, 8g：多项小型错误修复  
+bufio：为 Writer.WriteString 提供与 bytes.Buffer.WriteString 相同的签名  
+container/list：新增 PushFrontList、PushBackList 方法（感谢 Jan Hosang）  
+godoc：修剪搜索查询中的空格（感谢 Christopher Wedgwood）  
+hash：文档说明 Sum 不会改变状态，修复加密哈希问题  
+http：错误修复，修订 Request/Response 结构（感谢 Petar Maymounkov）  
+math：增加对 IEEE 754 特殊情况的处理（感谢 Charles Dorian）  
+misc/dashboard：新增构建看板  
+net：允许 UDP 广播；使用 /etc/hosts 解析名称（感谢 Yves Junqueira、Michael Hoisie）  
+netchan：新增跨网络连接 channel 的初始包  
+os：在 Hostname 测试中允许使用完全限定域名（感谢 Icarus Sparry）  
+reflect：修复 Call 中的垃圾回收错误  
+runtime：新增 runtime/pchw 中原始（模拟）硬件的 Go 演示；在 OS X 上进行性能修复  
+spec：明确 `chan <- chan int` 的含义；允许使用 `func() func() int`；定义 `... T`（尚未实现）  
+template：支持使用 interface 值  
+time：修复 +0000 时区问题；使 tick.Stop 更健壮  
+xgb：支持认证连接（感谢 Firmansyah Adiputra）  
+xml：新增 Escape 函数（感谢 Stephen Weinberg）  
+
+<h2 id="2010-01-13">2010-01-13</h2>
+
+<pre>
+此版本主要以错误修复为主，包含少量新代码。
+无语言变更。
+
+build：$GOBIN 不再需要包含在 $PATH 中（感谢 Devon H. O'Dell）；新增 "make bench" 包目标以运行基准测试
+8g：更快的 float -> uint64 转换（感谢 Evan Shaw）
+5g, 6g, 8g：
+	清理 opnames.h 以避免陈旧错误（感谢 Yongjian Xu）；
+	多项小型编译器修复
+5g, 6g, 8g, 5l, 6l, 8l：忽略 $GOARCH（其隐含在工具名称中）
+6prof：支持为 google-perftools 的 pprof 写入输入文件
+asn1：修复多个结构处理错误
+cgo：多项错误修复（感谢 Devon H. O'Dell）
+codereview：重复执行 "hg mail" 时发送 "请再次审阅"
+gob：为未来扩展保留 ID
+godoc：区分 HTML 生成与纯文本 HTML 转义（感谢 Roger Peppe）
+gofmt：小型错误修复，移除 -oldprinter 标志
+http：新增 CanonicalPath（感谢 Ivan Krasin）；避免 Response.Write 中的头部重复；正确转义/反转义 URL 部分
+io：新增 ReadByter 接口
+json：改进错误提示，修复 Marshal 中的指针处理（感谢 Ivan Krasin）
+libmach：反汇编 FUCOMI 等指令（感谢 Evan Shaw）
+math：多数函数的特殊情况处理及 386 硬件 Sqrt（感谢 Charles Dorian）
+misc/dashboard：在 godashboard.appspot.com 新增构建看板
+misc/emacs：处理新的分号规则（感谢 Austin Clements）；修复空缓冲区错误（感谢 Kevin Ballard）
+misc/kate：改进语法高亮（感谢 Evan Shaw）
+os/signal：新增信号名称：signal.SIGHUP 等（感谢 David Symonds）
+runtime：初步支持 Windows（感谢 Hector Chu）；通过抢占式轮询减少垃圾回收器暂停
+scanner：新增轻量级扫描器包
+template：修复带定界块前空格的错误
+test/bench：更新计时数据
+time：新增 Format、Parse 函数
+</pre>
+
+<h2 id="2010-01-05">2010-01-05</h2>
+
+<pre>
+此版本主要以错误修复为主。无语言变更。
+
+6prof：现在可在 386 架构上运行
+8a, 8l：新增 FCOMI、FCOMIP、FUCOMI 和 FUCOMIP 指令（感谢 Evan Shaw）
+big：修复小数的 ProbablyPrime 问题
+container/vector：更快的基于 [] 的实现（感谢 Jan Mercl）
+crypto/tls：扩展及下一协议协商
+gob：一处编码错误修复，一处解码错误修复
+image/jpeg：支持 RST 标记
+image/png：支持透明调色板图像
+misc/xcode：改进支持（感谢 Ken Friedenbach）
+net：Dial 出错时返回 nil Conn（感谢 Roger Peppe）
+regexp：新增 Regexp.NumSubexp（感谢 Peter Froehlich）
+syscall：在 FreeBSD 上新增 Nanosleep（感谢 Devon H. O'Dell）
+template：现在可在 .repeated 部分使用 map
+
+现已公开路线图，仓库及在线地址：https://golang.org/doc/devel/roadmap.html（已失效）。
+</pre>
+
+<h2 id="2009-12-22">2009-12-22</h2>
+
+<pre>
+自上一版本以来，语言经历了一项重大语法变更（已在本邮件列表中充分讨论）：现在在语句结尾标记和换行符之间会隐式添加分号。详见 http://groups.google.com/group/golang-nuts/t/5ee32b588d10f2e9。
+
+默认情况下，gofmt 现在解析并打印新的轻量级语法。要转换旧语法编写的程序，可使用：
+
+	gofmt -oldparser -w *.go
+
+由于整体格式已调整，我们借此机会改进了 gofmt 的对齐方式。现在 gofmt 在行首使用制表符进行基本代码对齐，但使用空格对齐内部列。因此，在等宽字体的编辑器中，可通过调整制表符大小改变缩进，无论选择何种制表符大小，列都能正确对齐。
+
+除语法和格式变更外，还包含多项小型修复和更新：
+</pre>6g, 8g, 5g: 众多错误修复，更优的寄存器分配，涉及 mkbuiltin 的构建过程修复（感谢 Yongjian Xu），具体类型的方法表达式
+8l: 支持 Windows PE 文件（感谢 Hector Chu）
+bytes: 更高效的 Buffer 处理
+bytes, strings: 新增 Fields 函数（感谢 Andrey Mirtchovski）
+cgo: 枚举处理（感谢 Moriyoshi Koizumi），包含位字段的结构体处理，多文件支持（感谢 Devon H. O'Dell），.so 文件安装到非标准位置
+crypto/sha256: 用于 SHA 256 的新包（感谢 Andy Davis）
+encoding/binary: 支持固定大小值的切片（感谢 Maxim Ushakov）
+exp/vector: 实验性的替代向量表示法（感谢 Jan Mercl）
+fmt: 为 chan、map、slice 类型提供 %p 格式
+gob: 又修复了一些错误
+http: 支持基本认证（感谢 Ivan Krasin）
+image/jpeg: 基础 JPEG 解码器
+math: Pow 函数中对 Inf 和 NaN 的正确处理（感谢 Charles Dorian）
+misc/bash: bash 补全文件（感谢 Alex Ray）
+os/signal: 支持处理 Unix 信号（感谢 David Symonds）
+rand: Zipf 分布的随机值（感谢 William Josephson）
+syscall: 32 位机器上错误返回的缺陷修正（感谢 Christopher Wedgwood）
+syslog: 用于写入 Unix syslog 守护进程的新包（感谢 Yves Junqueira）
+template: 现在将自动调用无参方法
+time: 新的 ISO8601 格式生成器（感谢 Ben Olive）
+xgb: 生成器已转换为新语法（感谢 Tor Andersson）
+xml: 标签名到 Go 标识符的更佳映射（感谢 Kei Son），对意外 EOF 的更佳处理（感谢 Arvindh Rajesh Tamilmani）
+
+<h2 id="2009-12-09">2009-12-09</h2>
+
+<pre>
+自上次发布以来，语言有两处变更：
+
+* 新的内置函数 copy(dst, src) 将 n = min(len(dst), len(src)) 个元素从 src 复制到 dst，并返回 n。即使 dst 和 src 重叠，它也能正确工作。bytes.Copy 已被移除。
+  请使用以下命令转换您的程序：
+      gofmt -w -r 'bytes.Copy(d, s) -> copy(d, s)' *.go
+
+* 新的语法 x[lo:] 是 x[lo:len(x)] 的简写。
+  请使用以下命令转换您的程序：
+      gofmt -w -r 'a[b:len(a)] -> a[b:]' *.go
+
+此外，还有许多小型修复和更新：
+
+* 6g/8g/5g: 众多错误修复
+* 8g: 修复 386 浮点栈错误（感谢 Charles Dorian）
+* all.bash: 现在即使 $GOROOT 包含空格也能工作（感谢 Sergio Luis O. B. Correia），开始支持使用 mingw 构建（感谢 Hector Chu），FreeBSD 支持（感谢 Devon O'Dell）
+* big: 在 386 上速度大幅提升。
+* bytes: 新增 IndexByte 函数，以汇编实现；新增 Runes 函数（感谢 Peter Froehlich）；bytes.Buffer 的性能调优。
+* codereview: 修复了多个错误
+* container/vector: New 已移除；直接声明一个 Vector 即可。调用 Resize 来设置 len 和 cap。
+* cgo: 许多错误修复（感谢 Eden Li）
+* crypto: 添加了 MD4（感谢 Chris Lennert），添加了 XTEA（感谢 Adrian O'Grady）。
+* crypto/tls: 基础客户端
+* exp/iterable: 新增函数（感谢 Michael Elkins）
+* exp/nacl: native client 目录树再次成功构建
+* fmt: 初步性能调优
+* go/ast: 更强大的 Visitor（感谢 Roger Peppe）
+* gob: 修复了一些错误
+* gofmt: 对标准输入和错误报告的处理更好（感谢 Fazlul Shahriar）；新增 -r 标志用于重写程序。
+* gotest: 支持 Benchmark 函数（感谢 Trevor Strohman）
+* io: ReadFile、WriteFile、ReadDir 现在位于独立的 io/ioutil 包中。
+* json: 新增 Marshal 函数（感谢 Michael Hoisie）；更好的空白处理（感谢 Andrew Skiba）；解码到原生数据结构（感谢 Sergey Gromov）；处理 nil 接口值（感谢 Ross Light）。
+* math: 正确处理大角度的 sin/cos。
+* net: Close 处理更好（感谢 Devon O'Dell 和 Christopher Wedgwood）；支持 UDP 广播（感谢 Jonathan Wills）；支持空数据包。
+* rand: 顶层函数现在从多个协程调用是安全的（感谢 Roger Peppe）。
+* regexp: 一些简单的优化。
+* rpc: 更好的错误处理，修复了一些错误。
+* runtime: OS X 上更好的信号处理，malloc 修复，全局 channel 锁已移除。
+* sync: RWMutex 现在允许并发读取（感谢 Péter Szabó）。
+* template: 可以使用 map 作为数据（感谢 James Meneghello）。
+* unicode: 更新至 Unicode 5.2。
+* websocket: 新增包（感谢 Fumitoshi Ukai）。
+* xgb: 初步的 X Go 绑定（感谢 Tor Andersson）。
+* xml: 修复了崩溃问题（感谢 Vish Subramanian）。
+* misc: bbedit 配置（感谢 Anthony Starks），kate 配置（感谢 Evan Shaw）。
+</pre>

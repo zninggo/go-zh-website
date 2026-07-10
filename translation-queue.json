@@ -187,7 +187,8 @@
       "source": "doc/devel/weekly.html",
       "target": "doc/devel/weekly.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T08:40:41.827Z"
     },
     {
       "source": "doc/diagnostics.html",
