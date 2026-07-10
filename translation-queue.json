@@ -523,7 +523,8 @@
       "source": "doc/install-source.md",
       "target": "doc/install-source.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:49:12.947Z"
     },
     {
       "source": "doc/install.html",
