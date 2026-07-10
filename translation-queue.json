@@ -677,7 +677,8 @@
       "source": "doc/security/policy.md",
       "target": "doc/security/policy.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:18:18.125Z"
     },
     {
       "source": "doc/security/threat-model.md",
