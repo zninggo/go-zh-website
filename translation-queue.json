@@ -621,7 +621,8 @@
       "source": "doc/pgo.md",
       "target": "doc/pgo.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:12:39.443Z"
     },
     {
       "source": "doc/root.md",
