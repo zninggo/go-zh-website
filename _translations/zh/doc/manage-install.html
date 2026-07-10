@@ -1,0 +1,211 @@
+<!--{
+    "Title": "管理 Go 语言安装"
+}-->
+
+<p>
+本文主题描述如何在同一台机器上安装多个版本的 Go，以及如何卸载 Go。
+</p>
+
+<p>关于安装的其他内容，您可能还感兴趣：</p>
+<ul>
+<li><a href="/doc/install">下载与安装</a> -- 获取安装并运行的最简方式。</li>
+<li><a href="/doc/install/source">从源码安装 Go</a> -- 如何检出源码、在您的机器上构建并运行它们。</li>
+</ul>
+
+<h2 id="installing-multiple">安装多个 Go 版本</h2>
+
+<p>
+您可以在同一台机器上安装多个 Go 版本。例如，您可能想在多个 Go 版本上测试您的代码。有关可以通过此方式安装的版本列表，请参见<a href="/dl/">下载页面</a>。
+</p>
+
+<p>
+<strong>注意：</strong> 要使用此处描述的方法进行安装，您需要先安装 <a href="https://git-scm.com/">git</a>。
+</p>
+
+<p>
+要安装额外的 Go 版本，请运行 <a href="/cmd/go/#hdr-Compile_and_install_packages_and_dependencies"><code>go install</code> 命令</a>，并指定要安装版本的下载位置。以下示例使用版本 1.10.7 进行说明：
+</p>
+
+<pre>
+$ go install golang.org/dl/go1.10.7@latest
+$ go1.10.7 download
+</pre>
+
+<p>
+要使用新下载的版本运行 <code>go</code> 命令，请将版本号附加到 <code>go</code> 命令后面，如下所示：
+</p>
+
+<pre>
+$ go1.10.7 version
+go version go1.10.7 linux/amd64
+</pre>
+
+<p>
+当您安装了多个版本时，您可以查看每个版本的 <code>GOROOT</code> 值来发现它们的安装位置。例如，运行如下命令：
+</p>
+
+<pre>
+$ go1.10.7 env GOROOT
+</pre>
+
+<p>
+要卸载已下载的版本，只需删除其 <code>GOROOT</code> 环境变量指定的目录以及对应的 goX.Y.Z 二进制文件即可。
+</p>
+
+<h2 id="uninstalling">卸载 Go</h2>
+
+<p>
+您可以使用本文描述的步骤从系统中移除 Go。
+</p>
+
+<h3 id="remove-config">移除用户配置和数据</h3>
+
+<p>
+Go 将用户配置存储在用户配置目录下的 <code>go</code> 目录中，
+该目录由 <a href="/pkg/os#UserConfigDir"><code>os.UserConfigDir</code></a> 返回。
+您也可以通过运行 <code>go env GOENV</code> 来找到包含此配置文件的目录。
+</p>
+
+<p>
+Go 将中间构建产物存储在 <code>go env GOCACHE</code> 返回的目录中。
+可以使用 <code>go clean -cache</code> 命令将其移除。
+</p>
+
+<p>
+Go 将下载的依赖项存储在 <code>go env GOMODCACHE</code> 返回的目录中。
+可以使用 <code>go clean -modcache</code> 命令将其移除。
+</p>
+
+<p>
+Go 将通过 <code>go install</code> 安装的二进制文件存储在 Go bin 目录中，
+该目录由 <code>go env GOBIN</code> 返回（默认为 <code>$HOME/go/bin</code>）。
+可以通过删除该目录来移除这些文件。如果您曾将此目录添加到
+<code>PATH</code> 环境变量中，也应将其移除。
+</p>
+
+<div id="os-install-tabs" class="TabSection js-tabSection">
+  <div id="os-install-tablist" class="TabSection-tabList" role="tablist">
+    <button
+      role="tab"
+      aria-selected="true"
+      aria-controls="linux-tab"
+      id="linux"
+      tabindex="0"
+      class="TabSection-tab active"
+    >
+      Linux
+      <img class="TabSection-underline" src="/images/icons/underline.svg" width="51" height="4" aria-hidden="true" />
+    </button>
+    <button
+      role="tab"
+      aria-selected="false"
+      aria-controls="mac-tab"
+      id="mac"
+      tabindex="-1"
+      class="TabSection-tab"
+    >
+      Mac
+      <img class="TabSection-underline" src="/images/icons/underline.svg" width="51" height="4" aria-hidden="true" />
+    </button>
+    <button
+      role="tab"
+      aria-selected="false"
+      aria-controls="windows-tab"
+      id="windows"
+      tabindex="-1"
+      class="TabSection-tab"
+    >
+      Windows
+      <img class="TabSection-underline" src="/images/icons/underline.svg" width="51" height="4" aria-hidden="true" />
+    </button>
+  </div>
+
+  <div
+    role="tabpanel"
+    id="linux-tab"
+    class="TabSection-tabPanel"
+    aria-labelledby="linux"
+  >
+    <ol>
+      <li>移除 <code>/usr/local/go</code>。
+        <p>这是默认的安装目录。</p>
+      </li>
+      <li>从您的 <code>PATH</code> 环境变量中移除 <code>/usr/local/go</code>。
+        <p>在 Linux 和 FreeBSD 下，请编辑 <code>/etc/profile</code> 或 <code>$HOME/.profile</code> 文件。</p>
+      </li>
+      <li>
+        如果您手动将 Go bin 目录（通常是 <code>$HOME/go/bin</code>）添加到了 shell 配置文件中（例如通过添加 <code>export PATH="$PATH:$(go env GOPATH)/bin"</code>），请移除该条目。
+        <p><!-- 保持间距一致 --></p>
+      </li>
+      <li>
+        重启任何已打开的终端会话以使更改生效。
+        <p><!-- 保持间距一致 --></p>
+      </li>
+    </ol>
+  </div>
+
+  <div
+    role="tabpanel"
+    id="mac-tab"
+    class="TabSection-tabPanel"
+    aria-labelledby="mac"
+    hidden
+  >
+    <ol>
+      <li>移除 <code>/usr/local/go</code>。
+        <p>这是默认的安装目录。</p>
+      </li>
+      <li>从您的 <code>PATH</code> 环境变量中移除 <code>/usr/local/go</code>。
+        <p>如果您使用 macOS 安装包安装了 Go，请通过移除 <code>/etc/paths.d/go</code> 文件来完成此操作。</p>
+      </li>
+      <li>
+        如果您手动将 Go bin 目录（通常是 <code>$HOME/go/bin</code>）添加到了 shell 配置文件中（例如通过添加 <code>export PATH="$PATH:$(go env GOPATH)/bin"</code>），请移除该条目。
+        <p><!-- 保持间距一致 --></p>
+      </li>
+      <li>
+        重启任何已打开的终端会话以使更改生效。
+        <p><!-- 保持间距一致 --></p>
+      </li>
+    </ol>
+  </div><div
+  role="tabpanel"
+  id="windows-tab"
+  class="TabSection-tabPanel"
+  aria-labelledby="windows"
+  hidden
+>
+  <p>您可以通过以下任一方法从 Windows 中移除 Go：</p>
+
+  <div class="windows-uninstall-method">
+    <h4>方法 1：控制面板（最简单）</h4>
+    <ol>
+      <li>打开控制面板，双击 <strong>添加/删除程序</strong>。</li>
+      <li>选择 <strong>Go 编程语言</strong>，点击卸载，然后按照提示操作。</li>
+    </ol>
+  </div>
+
+  <div class="windows-uninstall-method">
+    <h4>方法 2：命令行</h4>
+    <p>通过运行以下命令使用命令行进行卸载：</p>
+    <pre>msiexec /x go{{version}}.windows-{{cpu-arch}}.msi /q</pre>
+    <p>
+      <strong>注意：</strong>使用此过程会自动移除由原始安装创建的 Windows 环境变量。
+    </p>
+  </div>
+</div>
+</div>
+
+<style>
+  #windows-tab {
+    padding: 1rem 1.5rem;
+  }
+  .windows-uninstall-method {
+    margin-bottom: 1.5rem;
+  }
+  .windows-uninstall-method h4 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+</style>
+
+<script src="/doc/manage-install.js"></script>

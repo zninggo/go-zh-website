@@ -537,7 +537,8 @@
       "source": "doc/manage-install.html",
       "target": "doc/manage-install.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:50:55.090Z"
     },
     {
       "source": "doc/modules/developing.md",
