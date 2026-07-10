@@ -1,3 +1,3 @@
 ---
-redirect: 重定向到 /copyright
+redirect: /版权信息
 ---
