@@ -285,46 +285,17 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Playground proxy - forward requests to go.dev (CORS-safe)
-	playProxyHandler := func(path string) http.HandlerFunc {
-		return func(w http.ResponseWriter, r *http.Request) {
-			bodyBytes, _ := io.ReadAll(r.Body)
-			r.Body.Close()
-
-			target := "https://go.dev" + path
-			if r.URL.RawQuery != "" {
-				target += "?" + r.URL.RawQuery
-			}
-
-			log.Printf("playground proxy: %s %s (body=%d bytes)", r.Method, target, len(bodyBytes))
-
-			proxyReq, _ := http.NewRequestWithContext(r.Context(), r.Method, target, bytes.NewReader(bodyBytes))
-			proxyReq.Header.Set("Content-Type", r.Header.Get("Content-Type"))
-			proxyReq.Header.Set("User-Agent", r.Header.Get("User-Agent"))
-			proxyReq.ContentLength = int64(len(bodyBytes))
-
-			client := &http.Client{Timeout: 30 * time.Second}
-			resp, err := client.Do(proxyReq)
-			if err != nil {
-				log.Printf("playground proxy error: %v", err)
-				w.Header().Set("Content-Type", "application/json")
-				w.Write([]byte(`{"Errors":"proxy error","Events":null}`))
-				return
-			}
-			defer resp.Body.Close()
-
-			for k, vv := range resp.Header {
-				for _, v := range vv {
-					w.Header().Add(k, v)
-				}
-			}
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.WriteHeader(resp.StatusCode)
-			io.Copy(w, resp.Body)
-		}
-	}
-	mux.HandleFunc("/_/compile", playProxyHandler("/_/compile"))
-	mux.HandleFunc("/_/fmt", playProxyHandler("/_/fmt"))
+	// Playground endpoints - return empty JSON (playground not available on mirror)
+	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Write([]byte(`{"Errors":"","Events":null}`))
+	})
+	mux.HandleFunc("/_/fmt", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Write([]byte(`{"Body":"","Error":""}`))
+	})
 	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
 		w.Write([]byte("playground-disabled"))
@@ -355,18 +326,6 @@ func NewHandler(contentDir, goroot string) http.Handler {
 	h = hostEnforcerHandler(h)
 	h = hostPathHandler(h)
 	h = pathPrefixHandler(h)
-
-	// Debug: log request body size for playground endpoints
-	h = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasPrefix(r.URL.Path, "/_/") {
-			// Peek at body without consuming it
-			bodyBytes, _ := io.ReadAll(r.Body)
-			r.Body.Close()
-			r.Body = io.NopCloser(bytes.NewReader(bodyBytes))
-			log.Printf("DEBUG %s %s body=%d bytes ct=%s", r.Method, r.URL.Path, len(bodyBytes), r.Header.Get("Content-Type"))
-		}
-		h.ServeHTTP(w, r)
-	})
 
 	// If translations are enabled, redirect non-translated pages to go.dev
 	if *lang != "" {
