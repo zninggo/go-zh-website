@@ -47,7 +47,8 @@
       "source": "doc/build-cover.md",
       "target": "doc/build-cover.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T07:50:48.351Z"
     },
     {
       "source": "doc/cmd.html",
