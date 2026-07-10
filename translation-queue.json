@@ -257,7 +257,8 @@
       "source": "doc/gdb.html",
       "target": "doc/gdb.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T14:02:32.781Z"
     },
     {
       "source": "doc/go-get-install-deprecation.md",
