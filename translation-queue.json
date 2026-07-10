@@ -236,7 +236,8 @@
       "source": "doc/gc-guide.html",
       "target": "doc/gc-guide.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T09:11:06.843Z"
     },
     {
       "source": "doc/gccgo_contribute.html",
