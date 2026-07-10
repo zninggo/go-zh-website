@@ -3,6 +3,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
+const { execSync } = require('child_process');
 
 const CONTENT_DIR = path.join(__dirname, '..', '_content');
 const TRANSLATIONS_DIR = path.join(__dirname, '..', '_translations', 'zh');
@@ -377,6 +378,17 @@ async function main() {
         file.status = 'completed';
         file.translatedAt = new Date().toISOString();
         successCount++;
+
+        // 每翻译完一个文件就 commit，防止超时丢进度
+        try {
+          await saveJSON(QUEUE_FILE, queue);
+          execSync('git add _translations/ translation-queue.json .file-hashes.json 2>/dev/null || true');
+          execSync(`git diff --staged --quiet || git commit -m "chore: translate ${file.source} [skip ci]"`);
+          execSync('git push || true');
+          console.log(`    ✓ 已提交`);
+        } catch (e) {
+          console.log(`    ⚠ 提交失败: ${e.message}`);
+        }
       } catch (error) {
         console.error(`  失败: ${file.source} - ${error.message}`);
         file.status = 'failed';
@@ -384,8 +396,6 @@ async function main() {
         failCount++;
       }
     }
-
-    await saveJSON(QUEUE_FILE, queue);
 
     console.log('\n=== 翻译完成 ===');
     console.log(`成功: ${successCount} 个`);
