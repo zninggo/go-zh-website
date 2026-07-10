@@ -270,7 +270,9 @@ ${glossaryPrompt}`;
       return data.choices[0].message.content;
     } catch (error) {
       if (attempt === max_retries) throw error;
-      await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+      const delay = error.message.includes('503') ? 5000 * attempt : 1000 * attempt;
+      console.log(`    重试 ${attempt}/${max_retries} (${delay}ms): ${error.message}`);
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
 }
