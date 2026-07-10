@@ -684,7 +684,8 @@
       "source": "doc/security/threat-model.md",
       "target": "doc/security/threat-model.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:18:36.152Z"
     },
     {
       "source": "doc/security/vuln/cna.md",
