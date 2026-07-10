@@ -1,0 +1,422 @@
+<!--{
+	"Title": "数据竞争检测器"
+}-->
+
+<h2 id="Introduction">介绍</h2>
+
+<p>
+数据竞争是并发系统中最常见且最难调试的 bug 类型之一。
+当两个协程同时访问同一变量，并且至少其中一个访问是写操作时，就会发生数据竞争。
+详情请参阅 <a href="/ref/mem/">Go 内存模型</a>。
+</p>
+
+<p>
+以下是一个可能导致程序崩溃和内存损坏的数据竞争示例：
+</p>
+
+<pre>
+func main() {
+	c := make(chan bool)
+	m := make(map[string]string)
+	go func() {
+		m["1"] = "a" // 第一次冲突访问
+		c &lt;- true
+	}()
+	m["2"] = "b" // 第二次冲突访问
+	&lt;-c
+	for k, v := range m {
+		fmt.Println(k, v)
+	}
+}
+</pre>
+
+<h2 id="Usage">使用</h2>
+
+<p>
+为了帮助诊断此类 bug，Go 内置了一个数据竞争检测器。
+要使用它，只需在 go 命令中添加 <code>-race</code> 标志：
+</p>
+
+<pre>
+$ go test -race mypkg    // 测试包
+$ go run -race mysrc.go  // 运行源文件
+$ go build -race mycmd   // 构建命令
+$ go install -race mypkg // 安装包
+</pre>
+
+<h2 id="Report_Format">报告格式</h2>
+
+<p>
+当竞争检测器在程序中发现数据竞争时，它会打印一份报告。
+该报告包含冲突访问的堆栈跟踪，以及相关协程创建时的堆栈信息。
+示例如下：
+</p>
+
+<pre>
+WARNING: DATA RACE
+Read by goroutine 185:
+  net.(*pollServer).AddFD()
+      src/net/fd_unix.go:89 +0x398
+  net.(*pollServer).WaitWrite()
+      src/net/fd_unix.go:247 +0x45
+  net.(*netFD).Write()
+      src/net/fd_unix.go:540 +0x4d4
+  net.(*conn).Write()
+      src/net/net.go:129 +0x101
+  net.func·060()
+      src/net/timeout_test.go:603 +0xaf
+
+Previous write by goroutine 184:
+  net.setWriteDeadline()
+      src/net/sockopt_posix.go:135 +0xdf
+  net.setDeadline()
+      src/net/sockopt_posix.go:144 +0x9c
+  net.(*conn).SetDeadline()
+      src/net/net.go:161 +0xe3
+  net.func·061()
+      src/net/timeout_test.go:616 +0x3ed
+
+Goroutine 185 (running) created at:
+  net.func·061()
+      src/net/timeout_test.go:609 +0x288
+
+Goroutine 184 (running) created at:
+  net.TestProlongTimeout()
+      src/net/timeout_test.go:618 +0x298
+  testing.tRunner()
+      src/testing/testing.go:301 +0xe8
+</pre>
+
+<h2 id="Options">选项</h2>
+
+<p>
+<code>GORACE</code> 环境变量用于设置竞争检测器的选项。
+格式为：
+</p>
+
+<pre>
+GORACE="option1=val1 option2=val2"
+</pre>
+
+<p>
+可用选项包括：
+</p>
+
+<ul>
+<li>
+<code>log_path</code> (默认值 <code>stderr</code>)：竞争检测器将其报告写入名为 <code>log_path.<em>pid</em></code> 的文件。
+特殊名称 <code>stdout</code> 和 <code>stderr</code> 分别表示将报告写入标准输出和标准错误。
+</li>
+
+<li>
+<code>exitcode</code> (默认值 <code>66</code>)：检测到竞争后退出程序时使用的退出状态码。
+</li>
+
+<li>
+<code>strip_path_prefix</code> (默认值 <code>""</code>)：从所有报告的文件路径中剥离此前缀，使报告更简洁。
+</li>
+
+<li>
+<code>history_size</code> (默认值 <code>1</code>)：每个协程的内存访问历史大小为 <code>32K * 2**history_size 个元素</code>。
+增加此值可以避免报告中出现 "failed to restore the stack" 错误，但会增加内存使用量。
+</li>
+
+<li>
+<code>halt_on_error</code> (默认值 <code>0</code>)：控制程序在报告第一个数据竞争后是否退出。
+</li>
+
+<li>
+<code>atexit_sleep_ms</code> (默认值 <code>1000</code>)：退出前主协程休眠的毫秒数。
+</li>
+</ul>
+
+<p>
+示例：
+</p>
+
+<pre>
+$ GORACE="log_path=/tmp/race/report strip_path_prefix=/my/go/sources/" go test -race
+</pre>
+
+<h2 id="Excluding_Tests">排除测试</h2>
+
+<p>
+当你使用 <code>-race</code> 标志构建时，<code>go</code> 命令会定义额外的<a href="/pkg/go/build/#hdr-Build_Constraints">构建标签</a> <code>race</code>。
+你可以使用该标签在运行竞争检测器时排除某些代码和测试。
+示例如下：
+</p>
+
+<pre>
+// +build !race
+
+package foo
+
+// 此测试包含数据竞争。参见 issue 123。
+func TestFoo(t *testing.T) {
+	// ...
+}
+
+// 此测试在竞争检测器下因超时而失败。
+func TestBar(t *testing.T) {
+	// ...
+}
+
+// 此测试在竞争检测器下运行时间过长。
+func TestBaz(t *testing.T) {
+	// ...
+}
+</pre>
+
+<h2 id="How_To_Use">如何使用</h2>
+
+<p>
+首先，使用竞争检测器运行你的测试（<code>go test -race</code>）。
+竞争检测器仅能发现运行时发生的竞争，因此无法找到未执行代码路径中的竞争。
+如果你的测试覆盖率不完整，可以在真实工作负载下运行使用 <code>-race</code> 构建的二进制文件，以发现更多竞争。
+</p>
+
+<h2 id="Typical_Data_Races">典型数据竞争</h2>
+
+<p>
+以下是一些典型的数据竞争场景。所有这些都可以通过竞争检测器检测出来。
+</p>
+
+<h3 id="Race_on_loop_counter">循环计数器上的竞争</h3>
+
+<pre>
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(5)
+	var i int
+	for i = 0; i &lt; 5; i++ {
+		go func() {
+			fmt.Println(i) // 这不是你想要的那个 'i'。
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+}
+</pre>
+
+<p>
+函数字面量中的变量 <code>i</code> 与循环使用的变量是同一个，因此协程中的读取操作与循环的递增操作存在竞争。
+（此程序通常会输出 55555，而不是 01234。）
+可以通过复制变量来修复此程序：
+</p>
+
+<pre>
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(5)
+	var i int
+	for i = 0; i &lt; 5; i++ {
+		go func(j int) {
+			fmt.Println(j) // 正确。读取循环计数器的本地副本。
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+}
+</pre>
+
+<h3 id="Accidentally_shared_variable">意外的共享变量</h3><pre>
+// ParallelWrite 将数据写入 file1 和 file2，返回错误。
+func ParallelWrite(data []byte) chan error {
+	res := make(chan error, 2)
+	f1, err := os.Create("file1")
+	if err != nil {
+		res &lt;- err
+	} else {
+		go func() {
+			// 这个 err 与主协程共享，
+			// 因此这里的写入与下面的写入存在竞争。
+			_, err = f1.Write(data)
+			res &lt;- err
+			f1.Close()
+		}()
+	}
+	f2, err := os.Create("file2") // 第二个对 err 的冲突写入。
+	if err != nil {
+		res &lt;- err
+	} else {
+		go func() {
+			_, err = f2.Write(data)
+			res &lt;- err
+			f2.Close()
+		}()
+	}
+	return res
+}
+</pre>
+
+<p>
+修复方法是在协程中引入新的变量（注意 <code>:=</code> 的使用）：
+</p>
+
+<pre>
+			...
+			_, err := f1.Write(data)
+			...
+			_, err := f2.Write(data)
+			...
+</pre>
+
+<h3 id="Unprotected_global_variable">未受保护的全局变量</h3>
+
+<p>
+如果以下代码被多个协程调用，会导致 <code>service</code> 映射上的竞争。
+对同一映射的并发读写是不安全的：
+</p>
+
+<pre>
+var service map[string]net.Addr
+
+func RegisterService(name string, addr net.Addr) {
+	service[name] = addr
+}
+
+func LookupService(name string) net.Addr {
+	return service[name]
+}
+</pre>
+
+<p>
+要使代码安全，使用互斥锁保护访问：
+</p>
+
+<pre>
+var (
+	service   map[string]net.Addr
+	serviceMu sync.Mutex
+)
+
+func RegisterService(name string, addr net.Addr) {
+	serviceMu.Lock()
+	defer serviceMu.Unlock()
+	service[name] = addr
+}
+
+func LookupService(name string) net.Addr {
+	serviceMu.Lock()
+	defer serviceMu.Unlock()
+	return service[name]
+}
+</pre>
+
+<h3 id="Primitive_unprotected_variable">原始类型的未受保护变量</h3>
+
+<p>
+数据竞争也可能发生在原始类型的变量上（例如 <code>bool</code>、<code>int</code>、<code>int64</code> 等），如下面的例子所示：
+</p>
+
+<pre>
+type Watchdog struct{ last int64 }
+
+func (w *Watchdog) KeepAlive() {
+	w.last = time.Now().UnixNano() // 第一个冲突访问。
+}
+
+func (w *Watchdog) Start() {
+	go func() {
+		for {
+			time.Sleep(time.Second)
+			// 第二个冲突访问。
+			if w.last &lt; time.Now().Add(-10*time.Second).UnixNano() {
+				fmt.Println("No keepalives for 10 seconds. Dying.")
+				os.Exit(1)
+			}
+		}
+	}()
+}
+</pre>
+
+<p>
+即使是这种“看似无害”的数据竞争，也可能由于内存访问的非原子性、
+对编译器优化的干扰、或访问处理器内存时的重排序问题，导致难以调试的错误。
+</p>
+
+<p>
+对此类竞争的典型修复方法是使用通道或互斥锁。
+为了保持无锁行为，也可以使用 <a href="/pkg/sync/atomic/"><code>sync/atomic</code></a> 包。
+</p>
+
+<pre>
+type Watchdog struct{ last int64 }
+
+func (w *Watchdog) KeepAlive() {
+	atomic.StoreInt64(&amp;w.last, time.Now().UnixNano())
+}
+
+func (w *Watchdog) Start() {
+	go func() {
+		for {
+			time.Sleep(time.Second)
+			if atomic.LoadInt64(&amp;w.last) &lt; time.Now().Add(-10*time.Second).UnixNano() {
+				fmt.Println("No keepalives for 10 seconds. Dying.")
+				os.Exit(1)
+			}
+		}
+	}()
+}
+</pre>
+
+<h3 id="Unsynchronized_send_and_close_operations">未同步的发送和关闭操作</h3>
+
+<p>
+如本例所示，对同一通道的未同步发送和关闭操作也可能构成竞争条件：
+</p>
+
+<pre>
+c := make(chan struct{}) // 或有缓冲通道
+
+// 竞争检测器无法推断出以下发送和关闭操作的 happens before 关系。
+// 这两个操作未同步且并发发生。
+go func() { c &lt;- struct{}{} }()
+close(c)
+</pre>
+
+<p>
+根据 Go 内存模型，对通道的发送操作在该通道的相应接收操作完成之前发生。
+要同步发送和关闭操作，请使用一个接收操作来保证在关闭之前发送已完成：
+</p>
+
+<pre>
+c := make(chan struct{}) // 或有缓冲通道
+
+go func() { c &lt;- struct{}{} }()
+&lt;-c
+close(c)
+</pre>
+
+<h2 id="Requirements">要求</h2>
+
+<p>
+  竞争检测器需要启用 cgo，并且在非 Darwin 系统上需要安装 C 编译器。
+  竞争检测器支持 <code>linux/amd64</code>、<code>linux/ppc64le</code>、
+  <code>linux/arm64</code>、<code>linux/s390x</code>、
+  <code>linux/loong64</code>、<code>freebsd/amd64</code>、
+  <code>netbsd/amd64</code>、<code>darwin/amd64</code>、
+  <code>darwin/arm64</code> 和 <code>windows/amd64</code>。
+</p>
+
+<p>
+  在 Windows 上，竞争检测器的运行时环境对安装的 C 编译器版本敏感；
+  从 Go 1.21 起，使用 <code>-race</code> 构建程序需要一个包含了 8 版或更新版本的
+  <code>mingw-w64</code> 运行时库的 C 编译器。你可以通过使用参数
+  <code>--print-file-name libsynchronization.a</code> 调用你的 C 编译器来测试。
+  一个更新的、符合标准的 C 编译器将打印出此库的完整路径，而较旧的 C 编译器则只会回显参数。
+</p>
+
+<h2 id="Runtime_Overheads">运行时开销</h2>
+
+<p>
+竞争检测的成本因程序而异，但对于一个典型的程序，内存使用量可能会增加 5-10 倍，执行时间可能会增加 2-20 倍。
+</p>
+
+<p>
+竞争检测器目前为每个 <code>defer</code> 和 <code>recover</code> 语句额外分配 8 字节。
+这些额外分配的内存 <a href="/issue/26813">直到协程退出才会被回收</a>。
+这意味着，如果你有一个长时间运行的协程，周期性地发出 <code>defer</code> 和 <code>recover</code> 调用，
+程序的内存使用量可能会无限增长。这些内存分配不会出现在 <code>runtime.ReadMemStats</code> 或
+<code>runtime/pprof</code> 的输出中。
+</p>
