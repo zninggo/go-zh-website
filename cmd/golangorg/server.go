@@ -296,13 +296,17 @@ func NewHandler(contentDir, goroot string) http.Handler {
 				target += "?" + r.URL.RawQuery
 			}
 
+			log.Printf("playground proxy: %s %s (body=%d bytes)", r.Method, target, len(bodyBytes))
+
 			proxyReq, _ := http.NewRequestWithContext(r.Context(), r.Method, target, bytes.NewReader(bodyBytes))
 			proxyReq.Header.Set("Content-Type", r.Header.Get("Content-Type"))
 			proxyReq.Header.Set("User-Agent", r.Header.Get("User-Agent"))
+			proxyReq.ContentLength = int64(len(bodyBytes))
 
 			client := &http.Client{Timeout: 30 * time.Second}
 			resp, err := client.Do(proxyReq)
 			if err != nil {
+				log.Printf("playground proxy error: %v", err)
 				w.Header().Set("Content-Type", "application/json")
 				w.Write([]byte(`{"Errors":"proxy error","Events":null}`))
 				return
