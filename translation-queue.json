@@ -551,7 +551,8 @@
       "source": "doc/modules/gomod-ref.md",
       "target": "doc/modules/gomod-ref.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:56:52.644Z"
     },
     {
       "source": "doc/modules/layout.md",
