@@ -285,11 +285,30 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Playground endpoints - return empty responses to avoid JS alerts
+	// Playground endpoints - proxy to go.dev
 	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
+		body, _ := io.ReadAll(r.Body)
+		proxyReq, err := http.NewRequestWithContext(r.Context(), "POST", "https://go.dev/_/compile?"+r.URL.RawQuery, bytes.NewReader(body))
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte(`{"Errors":"","Events":null}`))
+			return
+		}
+		proxyReq.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+
+		client := &http.Client{Timeout: 30 * time.Second}
+		resp, err := client.Do(proxyReq)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte(`{"Errors":"","Events":null}`))
+			return
+		}
+		defer resp.Body.Close()
+
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Write([]byte(`{"Errors":"","Events":null}`))
+		w.WriteHeader(resp.StatusCode)
+		io.Copy(w, resp.Body)
 	})
 	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
