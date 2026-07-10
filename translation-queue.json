@@ -782,7 +782,8 @@
       "source": "doc/tutorial/call-module-code.html",
       "target": "doc/tutorial/call-module-code.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:28:33.126Z"
     },
     {
       "source": "doc/tutorial/compile-install.html",
