@@ -1,0 +1,164 @@
+<!--{
+    "Title": "编译并安装应用程序",
+    "Breadcrumb": true
+}-->
+
+<p>
+  在最后一个主题中，您将学习几个新的 <code>go</code> 命令。虽然
+  <code>go run</code> 命令在频繁修改程序时是一个方便的编译运行快捷方式，但它不会生成二进制可执行文件。
+</p>
+
+<p>
+  本主题介绍两个用于构建代码的附加命令：
+</p>
+
+<ul>
+  <li>
+    <a href="/cmd/go/#hdr-Compile_packages_and_dependencies"><code>go
+    build</code> 命令</a> 会编译包及其依赖项，但不会安装结果。
+  </li>
+  <li>
+    <a href="/ref/mod#go-install"><code>go
+    install</code> 命令</a> 会编译并安装包。
+  </li>
+</ul>
+
+<aside class="Note">
+  <strong>注意：</strong>本主题是一个多部分教程的一部分，该教程从
+  <a href="create-module.html">创建 Go 模块</a> 开始。
+</aside>
+
+<ol>
+  <li>
+    在 hello 目录的命令行中，运行 <code>go build</code> 命令将代码编译为可执行文件。
+
+    <pre>$ go build</pre>
+  </li>
+
+  <li>
+    在 hello 目录的命令行中，运行新生成的 <code>hello</code> 可执行文件以确认代码是否正常工作。
+
+    <p>
+      请注意，如果在测试后修改了 greetings.go 代码，您的结果可能会有所不同。
+    </p>
+
+    <ul>
+      <li>
+        在 Linux 或 Mac 上：
+
+        <pre>
+$ ./hello
+map[Darrin:Great to see you, Darrin! Gladys:Hail, Gladys! Well met! Samantha:Hail, Samantha! Well met!]
+</pre>
+      </li>
+
+      <li>
+        在 Windows 上：
+
+        <pre>
+$ hello.exe
+map[Darrin:Great to see you, Darrin! Gladys:Hail, Gladys! Well met! Samantha:Hail, Samantha! Well met!]
+</pre>
+      </li>
+    </ul>
+    <p>
+      您已将应用程序编译为可执行文件，因此可以运行它。但要当前运行它，您的命令行提示符需要位于可执行文件所在的目录中，或者需要指定可执行文件的路径。
+    </p>
+    <p>
+      接下来，您将安装该可执行文件，以便无需指定其路径即可运行它。
+    </p>
+  </li>
+
+  <li>
+    查找 Go 安装路径，<code>go</code> 命令将在此处安装当前包。
+
+    <p>
+      您可以通过运行
+      <a href="/cmd/go/#hdr-List_packages_or_modules">
+        <code>go list</code> 命令</a> 来查找安装路径，如以下示例所示：
+    </p>
+
+    <pre>
+$ go list -f '{{.Target}}'
+</pre>
+
+    <p>
+      例如，命令的输出可能显示 <code>/home/gopher/bin/hello</code>，这意味着二进制文件将安装到 /home/gopher/bin。您将在下一步中需要此安装目录。
+    </p>
+  </li>
+
+  <li>
+    将 Go 安装目录添加到系统的 shell 路径。
+
+    <p>
+      这样，您将能够在不指定可执行文件位置的情况下运行程序的可执行文件。
+    </p>
+
+    <ul>
+      <li>
+        在 Linux 或 Mac 上，运行以下命令：
+
+        <pre>
+$ export PATH=$PATH:/path/to/your/install/directory
+</pre
+        >
+      </li>
+
+      <li>
+        在 Windows 上，运行以下命令：
+
+        <pre>
+$ set PATH=%PATH%;C:\path\to\your\install\directory
+</pre
+        >
+      </li>
+    </ul>
+
+    <p>
+      或者，如果您已经有一个像
+      <code>$HOME/bin</code> 这样的目录在您的 shell 路径中，并且您希望将 Go 程序安装到那里，您可以通过使用
+      <a href="/cmd/go/#hdr-Print_Go_environment_information">
+        <code>go env</code> 命令</a> 设置
+      <code>GOBIN</code> 变量来更改安装目标：
+    </p>
+
+    <pre>
+$ go env -w GOBIN=/path/to/your/bin
+</pre>
+
+    <p>
+      或者
+    </p>
+
+    <pre>
+$ go env -w GOBIN=C:\path\to\your\bin
+</pre
+    >
+  </li>
+
+  <li>
+    更新 shell 路径后，运行 <code>go install</code> 命令以编译并安装包。
+
+    <pre>$ go install</pre>
+  </li>
+
+  <li>
+    简单地输入其名称即可运行您的应用程序。为了让这更有趣，请打开一个新的命令提示符，在其他某个目录中运行 <code>hello</code> 可执行文件名。
+
+    <pre>
+$ hello
+map[Darrin:Hail, Darrin! Well met! Gladys:Great to see you, Gladys! Samantha:Hail, Samantha! Well met!]
+</pre
+    >
+  </li>
+</ol>
+
+<p>
+  这就是本 Go 教程的全部内容！
+</p>
+
+<p class="Navigation">
+  <a class="Navigation-prev" href="add-a-test.html">&lt; 添加测试</a>
+  <a class="Navigation-next" href="module-conclusion.html">总结与更多参考链接
+    &gt;</a>
+</p>

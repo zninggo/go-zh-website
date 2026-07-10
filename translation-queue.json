@@ -789,7 +789,8 @@
       "source": "doc/tutorial/compile-install.html",
       "target": "doc/tutorial/compile-install.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:28:58.252Z"
     },
     {
       "source": "doc/tutorial/create-module.html",
