@@ -264,7 +264,8 @@ ${glossaryPrompt}`;
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`API 请求失败: ${response.status}`);
+        const errorBody = await response.text();
+        throw new Error(`API 请求失败: ${response.status} - ${errorBody}`);
       }
 
       const data = await response.json();
@@ -412,3 +413,5 @@ async function main() {
 }
 
 main();
+
+
