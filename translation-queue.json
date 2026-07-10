@@ -145,7 +145,8 @@
       "source": "doc/database/prepared-statements.md",
       "target": "doc/database/prepared-statements.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T12:46:30.052Z"
     },
     {
       "source": "doc/database/querying.md",
