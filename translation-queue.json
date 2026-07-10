@@ -82,7 +82,8 @@
       "source": "doc/contrib.md",
       "target": "doc/contrib.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T07:55:44.875Z"
     },
     {
       "source": "doc/contribute.html",

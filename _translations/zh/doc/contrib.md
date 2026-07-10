@@ -1,0 +1,5 @@
+```json
+<!--{
+	"Redirect": "/project/"
+}-->
+```
