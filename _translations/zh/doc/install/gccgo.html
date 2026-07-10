@@ -1,0 +1,375 @@
+<!--{
+	"Title": "设置与使用 gccgo",
+	"Breadcrumb": true
+}-->
+
+<p>
+本文档介绍如何使用 gccgo —— 一种 Go 语言编译器。gccgo 编译器是广泛使用的 GNU 编译器 GCC 的一个新前端。尽管该前端本身采用 BSD 风格许可证，但 gccgo 通常作为 GCC 的一部分使用，因此受到 <a href="https://www.gnu.org/licenses/gpl.html">GNU 通用公共许可证</a> 的约束（该许可证覆盖作为 GCC 一部分的 gccgo 本身；不涵盖由 gccgo 生成的代码）。
+</p>
+
+<p>
+请注意，gccgo 并非 <code>gc</code> 编译器；有关该编译器的信息，请参阅 <a href="/doc/install">安装 Go</a> 指南。
+</p>
+
+<h2 id="Releases">版本发布</h2>
+
+<p>
+安装 gccgo 最简单的方法是安装一个内置了 Go 语言支持的 GCC 二进制发行版。GCC 二进制发行版可从 <a href="https://gcc.gnu.org/install/binaries.html">多个网站</a> 获取，并且通常作为 GNU/Linux 发行版的一部分包含在内。我们预计大多数构建这些二进制文件的人都会包含 Go 语言支持。
+</p>
+
+<p>
+GCC 4.7.1 版本及所有后续的 4.7 版本包含了完整的 <a href="/doc/go1.html">Go 1</a> 编译器和库。
+</p>
+
+<p>
+由于时间安排，GCC 4.8.0 和 4.8.1 版本接近但不完全等同于 Go 1.1。GCC 4.8.2 版本包含了完整的 Go 1.1.2 实现。
+</p>
+
+<p>
+GCC 4.9 版本包含了完整的 Go 1.2 实现。
+</p>
+
+<p>
+GCC 5 版本包含了完整的 Go 1.4 用户库实现。Go 1.4 运行时并未完全合并，但这对 Go 程序而言应不可见。
+</p>
+
+<p>
+GCC 6 版本包含了完整的 Go 1.6.1 用户库实现。Go 1.6 运行时并未完全合并，但这对 Go 程序而言应不可见。
+</p>
+
+<p>
+GCC 7 版本包含了完整的 Go 1.8.1 用户库实现。与之前的版本类似，Go 1.8 运行时并未完全合并，但这对 Go 程序而言应不可见。
+</p>
+
+<p>
+GCC 8 版本包含了完整的 Go 1.10.1 版本实现。Go 1.10 运行时现已完全合并到 GCC 开发源代码中，并且完全支持并发垃圾回收。
+</p>
+
+<p>
+GCC 9 版本包含了完整的 Go 1.12.2 版本实现。
+</p>
+
+<p>
+GCC 10 版本包含了完整的 Go 1.14.6 版本实现。
+</p>
+
+<p>
+GCC 11 版本包含了完整的 Go 1.16.3 版本实现。
+</p>
+
+<p>
+GCC 12 和 13 版本包含了完整的 Go 1.18 标准库实现。然而，GCC 尚未包含对泛型的支持。
+</p>
+
+<h2 id="Source_code">源代码</h2>
+
+<p>
+如果您无法使用发行版，或者希望自己构建 gccgo，可以通过 Git 访问其源代码。GCC 网站提供了 <a href="https://gcc.gnu.org/git.html">获取 GCC 源代码的说明</a>。gccgo 的源代码包含在内。为了方便起见，Go 语言支持的稳定版本可在主 GCC 代码仓库的 <code>devel/gccgo</code> 分支中找到：<code>git://gcc.gnu.org/git/gcc.git</code>。此分支会定期更新稳定的 Go 编译器源代码。
+</p>
+
+<p>
+请注意，尽管 <code>gcc.gnu.org</code> 是获取 Go 前端源代码最方便的方式，但它并非主源代码的存放地。如果您想为 Go 前端编译器贡献更改，请参阅 <a href="/doc/gccgo_contribute.html">为 gccgo 贡献</a>。
+</p>
+
+<h2 id="Building">构建</h2>
+
+<p>
+构建 gccgo 与构建 GCC 类似，只需添加一两个额外选项。请参阅 <a href="https://gcc.gnu.org/install/">gcc 网站上的说明</a>。当您运行 <code>configure</code> 时，请添加选项 <code>--enable-languages=c,c++,go</code>（以及您可能想要构建的其他语言）。如果您面向的是 32 位 x86 架构，那么您会希望默认构建的 gccgo 支持锁定比较与交换指令；为此，请同时使用 <code>configure</code> 选项 <code>--with-arch=i586</code>（或更新的架构，具体取决于您的程序需要在哪里运行）。如果您面向的是 64 位 x86 架构，但有时希望使用 <code>-m32</code> 选项，则请使用 <code>configure</code> 选项 <code>--with-arch-32=i586</code>。
+</p>
+
+<h3 id="Gold">Gold 链接器</h3>
+
+<p>
+<b>注意：</b> 自 GNU Binutils 2.44（2025年2月）起，gold 链接器已被弃用，并可能在未来版本中移除。请考虑使用 <a href="https://lld.llvm.org/">lld</a>（LLVM 的链接器）作为替代方案，它在 x86_64 上也支持分割栈。
+</p>
+
+<p>
+在 x86 GNU/Linux 系统上，gccgo 编译器能够为 goroutine 使用小型的非连续栈。这使得程序可以运行更多的 goroutine，因为每个 goroutine 可以使用相对较小的栈。实现此功能需要使用支持分割栈的链接器。gold 链接器 2.22 或更高版本支持此特性，lld 也同样支持。
+</p>
+
+<p>
+如果您仍需使用 gold，可以安装 GNU binutils 2.22 或更高版本（注意：自 binutils 2.44 起，gold 存放在单独的 binutils-with-gold 压缩包中），或者您也可以自行构建 gold。
+</p>
+
+<p>
+要自行构建 gold，请构建 GNU binutils，在运行 <code>configure</code> 脚本时使用 <code>--enable-gold=default</code> 选项。构建前，您必须安装 flex 和 bison 软件包。典型的步骤如下所示（您可以将 <code>/opt/gold</code> 替换为您拥有写入权限的任何目录）：
+</p>
+
+<pre>
+git clone git://sourceware.org/git/binutils-gdb.git
+mkdir binutils-objdir
+cd binutils-objdir
+../binutils-gdb/configure --enable-gold=default --prefix=/opt/gold
+make
+make install
+</pre>
+
+<p>
+无论您如何安装 gold，在配置 gccgo 时，请使用选项 <code>--with-ld=<var>GOLD_BINARY</var></code>。类似地，对于 lld，请使用 <code>--with-ld=/path/to/ld.lld</code>。
+</p>
+
+<h3 id="Prerequisites">先决条件</h3><p>
+构建 GCC 需要满足一些先决条件，详见<a href="https://gcc.gnu.org/install/prerequisites.html">GCC 官方网站</a>上的说明。在运行 gcc 的 <code>configure</code> 脚本之前，务必安装所有先决条件。
+您可以使用 GCC 源代码中的脚本 <code>contrib/download_prerequisites</code> 方便地下载所需的依赖库。
+
+<h3 id="Build_commands">构建命令</h3>
+
+<p>
+安装完所有先决条件后，典型的构建和安装步骤如下（仅当您使用上文所述的 gold 链接器时，才需要添加 <code>--with-ld</code> 选项）：
+</p>
+
+<pre>
+git clone --branch devel/gccgo git://gcc.gnu.org/git/gcc.git gccgo
+mkdir objdir
+cd objdir
+../gccgo/configure --prefix=/opt/gccgo --enable-languages=c,c++,go --with-ld=/opt/gold/bin/ld
+make
+make install
+</pre>
+
+<h2 id="Using_gccgo">使用 gccgo</h2>
+
+<p>
+gccgo 编译器的工作方式与其他 GCC 前端类似。自 GCC 5 起，gccgo 的安装还包含了一个 <code>go</code> 命令版本，可用于构建 Go 程序，具体说明见<a href="/cmd/go">https://go.dev/cmd/go</a>。
+</p>
+
+<p>
+不使用 <code>go</code> 命令编译单个文件：
+</p>
+
+<pre>
+gccgo -c file.go
+</pre>
+
+<p>
+这会生成 <code>file.o</code> 文件。将多个文件链接成一个可执行文件：
+</p>
+
+<pre>
+gccgo -o file file.o
+</pre>
+
+<p>
+要运行生成的可执行文件，您需要告知程序在哪里找到已编译的 Go 包。有几种方法可以实现：
+</p>
+
+<ul>
+<li>
+<p>
+设置 <code>LD_LIBRARY_PATH</code> 环境变量：
+</p>
+
+<pre>
+LD_LIBRARY_PATH=${prefix}/lib/gcc/MACHINE/VERSION
+[或者]
+LD_LIBRARY_PATH=${prefix}/lib64/gcc/MACHINE/VERSION
+export LD_LIBRARY_PATH
+</pre>
+
+<p>
+此处 <code>${prefix}</code> 是构建 gccgo 时使用的 <code>--prefix</code> 选项值。对于二进制安装，通常为 <code>/usr</code>。使用 <code>lib</code> 还是 <code>lib64</code> 取决于目标系统。
+通常，<code>lib64</code> 适用于 x86_64 系统，而 <code>lib</code> 适用于其他系统。其目的是指定包含 <code>libgo.so</code> 的目录。
+</p>
+
+</li>
+
+<li>
+<p>
+在链接时传递 <code>-Wl,-R</code> 选项（如果您的系统适用，请将 lib 替换为 lib64）：
+</p>
+
+<pre>
+go build -gccgoflags -Wl,-R,${prefix}/lib/gcc/MACHINE/VERSION
+[或者]
+gccgo -o file file.o -Wl,-R,${prefix}/lib/gcc/MACHINE/VERSION
+</pre>
+</li>
+
+<li>
+<p>
+使用 <code>-static-libgo</code> 选项以静态方式链接已编译的包。
+</p>
+</li>
+
+<li>
+<p>
+使用 <code>-static</code> 选项进行完全静态链接（这是 <code>gc</code> 编译器的默认行为）。
+</p>
+</li>
+</ul>
+
+<h2 id="Options">选项</h2>
+
+<p>
+gccgo 编译器支持所有与语言无关的 GCC 选项，尤其是 <code>-O</code> 和 <code>-g</code> 选项。
+</p>
+
+<p>
+<code>-fgo-pkgpath=PKGPATH</code> 选项可用于为正在编译的包设置一个唯一的前缀。
+此选项通常由 go 命令自动使用，但当您直接调用 gccgo 时可能需要手动指定。
+该选项旨在用于包含许多包的大型程序，以允许多个包使用相同的标识符作为包名。
+<code>PKGPATH</code> 可以是任意字符串；一个好的选择是使用导入该包时所用的路径。
+</p>
+
+<p>
+<code>-I</code> 和 <code>-L</code> 选项（对于编译器而言是同义的）可用于设置查找导入包的搜索路径。
+如果使用 go 命令进行构建，则不需要这些选项。
+</p>
+
+<h2 id="Imports">导入</h2>
+
+<p>
+当您编译一个导出了某些内容的文件时，导出信息将直接存储在目标文件中。
+如果您直接使用 gccgo 而不是 go 命令进行构建，那么当您导入一个包时，必须告知 gccgo 如何找到该文件。
+</p>
+
+<p>
+当您用 gccgo 导入包 <var>FILE</var> 时，它会在以下文件中查找导入数据，并使用它找到的第一个文件。
+
+<ul>
+<li><code><var>FILE</var>.gox</code>
+<li><code>lib<var>FILE</var>.so</code>
+<li><code>lib<var>FILE</var>.a</code>
+<li><code><var>FILE</var>.o</code>
+</ul>
+
+<p>
+<code><var>FILE</var>.gox</code>（如果使用）通常仅包含导出数据。这可以通过以下命令从 <code><var>FILE</var>.o</code> 生成：
+</p>
+
+<pre>
+objcopy -j .go_export FILE.o FILE.gox
+</pre>
+
+<p>
+gccgo 编译器会在当前目录中查找导入文件。在更复杂的情况下，您可以向 gccgo 传递 <code>-I</code> 或 <code>-L</code> 选项。这两个选项都接受要搜索的目录。<code>-L</code> 选项也会传递给链接器。
+</p>
+
+<p>
+gccgo 编译器目前（截至 2015-06-15）不会在目标文件中记录导入包的文件名。您必须安排将导入的数据链接到程序中。同样，使用 go 命令构建时则无需此步骤。
+</p>
+
+<pre>
+gccgo -c mypackage.go              # 导出 mypackage
+gccgo -c main.go                   # 导入 mypackage
+gccgo -o main main.o mypackage.o   # 显式链接 mypackage.o
+</pre>
+
+<h2 id="Debugging">调试</h2>
+
+<p>
+如果在编译时使用了 <code>-g</code> 选项，则可以对生成的可执行文件运行 <code>gdb</code> 进行调试。调试器对 Go 的了解有限。您可以设置断点、单步执行等。可以打印变量，但它们会以类似 C/C++ 类型的形式显示。对于数值类型，这没有影响。Go 的字符串和接口会显示为包含两个元素的结构体。Go 的映射（map）和通道（channel）始终表示为指向运行时结构的 C 指针。
+</p>
+
+<h2 id="C_Interoperability">与 C 的互操作性</h2>
+
+<p>
+使用 gccgo 时，与 C 或使用 <code>extern "C"</code> 编译的 C++ 代码的互操作性有限。
+</p>
+
+<h3 id="Types">类型</h3><p>
+基本类型直接对应：Go 中的 <code>int32</code> 对应 C 中的 <code>int32_t</code>，<code>int64</code> 对应 <code>int64_t</code>，等等。
+Go 类型 <code>int</code> 是一个与指针大小相同的整数，因此对应于 C 类型 <code>intptr_t</code>。
+Go 的 <code>byte</code> 等价于 C 的 <code>unsigned char</code>。
+Go 中的指针就是 C 中的指针。
+Go 的 <code>struct</code> 与具有相同字段和类型的 C <code>struct</code> 完全相同。
+</p>
+
+<p>
+Go 的 <code>string</code> 类型目前定义为一个双元素结构体（<b style="color: red;">这可能会更改</b>）：
+</p>
+
+<pre>
+struct __go_string {
+  const unsigned char *__data;
+  intptr_t __length;
+};
+</pre>
+
+<p>
+不能在 C 和 Go 之间传递数组。但是，Go 中指向数组的指针等价于 C 中指向对应元素类型的指针。
+例如，Go 的 <code>*[10]int</code> 等价于 C 的 <code>int*</code>，前提是该 C 指针确实指向 10 个元素。
+</p>
+
+<p>
+Go 中的 slice（切片）是一个结构体。当前定义如下（<b style="color: red;">这可能会更改</b>）：
+</p>
+
+<pre>
+struct __go_slice {
+  void *__values;
+  intptr_t __count;
+  intptr_t __capacity;
+};
+</pre>
+
+<p>
+Go 函数的类型是指向一个结构体的指针（<b style="color: red;">这可能会更改</b>）。该结构体中的第一个字段指向函数的代码，它将等价于一个 C 函数的指针，该 C 函数的参数类型是等价的，并且带有一个额外的末尾参数。这个末尾参数是闭包（closure），要传递的实参是指向该 Go 函数结构体的指针。
+
+当一个 Go 函数返回多个值时，C 函数返回一个结构体。例如，以下两个函数大致等价：
+</p>
+
+<pre>
+func GoFunction(int) (int, float64)
+struct { int i; float64 f; } CFunction(int, void*)
+</pre>
+
+<p>
+Go 的 <code>interface</code>（接口）、<code>channel</code>（通道）和 <code>map</code>（映射）类型没有对应的 C 类型（<code>interface</code> 是一个双元素结构体，而 <code>channel</code> 和 <code>map</code> 在 C 中是指向结构体的指针，但这些结构体被故意不公开记录）。C 的 <code>enum</code> 类型对应某种整数类型，但具体是哪种通常难以预测；可以使用类型转换。C 的 <code>union</code> 类型没有对应的 Go 类型。包含位域（bitfields）的 C <code>struct</code> 类型没有对应的 Go 类型。C++ 的 <code>class</code> 类型没有对应的 Go 类型。
+</p>
+
+<p>
+C 和 Go 之间的内存分配完全不同，因为 Go 使用垃圾回收（garbage collection）。该领域的确切准则尚未确定，但很可能允许将指向已分配内存的指针从 C 传递给 Go。最终释放该指针的责任仍由 C 端承担，当然，如果 C 端在 Go 端仍持有副本时释放了指针，程序将会失败。当从 Go 向 C 传递指针时，Go 函数必须在某个 Go 变量中保留它的一个可见副本。否则，Go 的垃圾回收器（GC）可能会在 C 函数仍在使用该指针时将其删除。
+</p>
+
+<h3 id="Function_names">函数名称</h3>
+
+<p>
+Go 代码可以直接调用 C 函数，这使用了 gccgo 中实现的一个 Go 扩展：函数声明前可以加上 <code>//extern NAME</code>。例如，下面是 C 函数 <code>open</code> 在 Go 中如何声明的方式：
+</p>
+
+<pre>
+//extern open
+func c_open(name *byte, mode int, perm int) int
+</pre>
+
+<p>
+C 函数自然期望一个以 NUL 结尾的字符串，在 Go 中这等价于一个指向 <code>byte</code> 数组（不是 slice！）且以零字节结尾的指针。因此，从 Go 进行调用的一个示例如下（在导入 <code>syscall</code> 包之后）：
+</p>
+
+<pre>
+var name = [4]byte{'f', 'o', 'o', 0};
+i := c_open(&amp;name[0], syscall.O_RDONLY, 0);
+</pre>
+
+<p>
+（这仅作为示例，要在 Go 中打开文件，请改用 Go 的 <code>os.Open</code> 函数）。
+</p>
+
+<p>
+请注意，如果 C 函数可能阻塞，例如调用 <code>read</code> 时，调用该 C 函数可能会阻塞整个 Go 程序。除非您清楚地了解自己在做什么，否则 C 和 Go 之间的所有调用都应通过 cgo 或 SWIG 实现，就像为 <code>gc</code> 编译器所做的那样。
+</p>
+
+<p>
+从 C 访问的 Go 函数的名称可能会更改。目前，没有接收者（receiver）的 Go 函数的名称是 <code>prefix.package.Functionname</code>。前缀由编译包时使用的 <code>-fgo-prefix</code> 选项设置；如果未使用该选项，则默认为 <code>go</code>。
+要从 C 调用该函数，您必须使用 GCC 扩展来设置名称。
+</p>
+
+<pre>
+extern int go_function(int) __asm__ ("myprefix.mypackage.Function");
+</pre>
+
+<h3 id="Automatic_generation_of_Go_declarations_from_C_source_code">
+从 C 源代码自动生成 Go 声明</h3>
+
+<p>
+GCC 的 Go 版本支持从 C 代码自动生成 Go 声明。这个功能相当笨拙，大多数用户应该改用带有 <code>-gccgo</code> 选项的 <a href="/cmd/cgo">cgo</a> 程序。
+</p>
+
+<p>
+像往常一样编译您的 C 代码，并添加选项 <code>-fdump-go-spec=<var>FILENAME</var></code>。这将在编译过程中创建文件 <code><var>FILENAME</var></code> 作为副作用。该文件将包含 C 代码中声明的类型、变量和函数的 Go 声明。无法在 Go 中表示的 C 类型将作为注释记录在 Go 代码中。生成的文件将没有 <code>package</code> 声明，但除此之外可以直接由 gccgo 编译。
+</p>
+
+<p>
+这个过程充满了未明确说明的警告和限制，我们无法保证它将来不会改变。它更适合作为真正 Go 代码的起点，而非常规流程。
+</p>
