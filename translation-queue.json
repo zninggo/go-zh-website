@@ -663,7 +663,8 @@
       "source": "doc/security/fuzz/technical.md",
       "target": "doc/security/fuzz/technical.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:17:08.076Z"
     },
     {
       "source": "doc/security/index.md",
