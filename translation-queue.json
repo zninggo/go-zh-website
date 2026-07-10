@@ -208,7 +208,8 @@
       "source": "doc/editors.html",
       "target": "doc/editors.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T13:27:22.555Z"
     },
     {
       "source": "doc/effective_go.html",
