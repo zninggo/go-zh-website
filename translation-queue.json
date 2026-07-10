@@ -817,7 +817,8 @@
       "source": "doc/tutorial/generics.md",
       "target": "doc/tutorial/generics.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:45:00.689Z"
     },
     {
       "source": "doc/tutorial/getting-started.html",
