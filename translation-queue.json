@@ -558,7 +558,8 @@
       "source": "doc/modules/layout.md",
       "target": "doc/modules/layout.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:59:46.551Z"
     },
     {
       "source": "doc/modules/major-version.md",
