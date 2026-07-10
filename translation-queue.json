@@ -859,7 +859,8 @@
       "source": "doc/tutorial/index.html",
       "target": "doc/tutorial/index.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:50:50.891Z"
     },
     {
       "source": "doc/tutorial/module-conclusion.html",
