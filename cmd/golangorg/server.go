@@ -285,17 +285,38 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Playground endpoints - return empty JSON (playground not available on mirror)
-	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Write([]byte(`{"Errors":"","Events":null}`))
-	})
-	mux.HandleFunc("/_/fmt", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Write([]byte(`{"Body":"","Error":""}`))
-	})
+	// Playground proxy - forward to go.dev (CDN must bypass /_/* paths)
+	playProxy := func(path string) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			body, _ := io.ReadAll(r.Body)
+			r.Body.Close()
+
+			target := "https://go.dev" + path
+			if r.URL.RawQuery != "" {
+				target += "?" + r.URL.RawQuery
+			}
+
+			req, _ := http.NewRequestWithContext(r.Context(), r.Method, target, bytes.NewReader(body))
+			req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+			req.ContentLength = int64(len(body))
+
+			client := &http.Client{Timeout: 30 * time.Second}
+			resp, err := client.Do(req)
+			if err != nil {
+				w.Header().Set("Content-Type", "application/json")
+				w.Write([]byte(`{"Errors":"playground unavailable","Events":null}`))
+				return
+			}
+			defer resp.Body.Close()
+
+			w.Header().Set("Content-Type", "application/json")
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.WriteHeader(resp.StatusCode)
+			io.Copy(w, resp.Body)
+		}
+	}
+	mux.HandleFunc("/_/compile", playProxy("/_/compile"))
+	mux.HandleFunc("/_/fmt", playProxy("/_/fmt"))
 	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
 		w.Write([]byte("playground-disabled"))
