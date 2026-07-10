@@ -1,0 +1,257 @@
+<!--{
+    "Title": "教程：Go 入门",
+    "Breadcrumb": true
+}-->
+
+<p>
+  在本教程中，您将简要了解 Go 语言编程。通过这个过程，您将：
+</p>
+
+<ul>
+  <li>安装 Go（如果尚未安装）。</li>
+  <li>编写一些简单的 "Hello, world" 代码。</li>
+  <li>使用 <code>go</code> 命令运行您的代码。</li>
+  <li>
+    使用 Go 包发现工具查找可以在自己代码中使用的包。
+  </li>
+  <li>调用外部模块的函数。</li>
+</ul>
+
+<aside class="Note">
+  <strong>注意：</strong>有关其他教程，请参见
+  <a href="/doc/tutorial/index.html">教程</a>。
+</aside>
+
+<h2 id="prerequisites">前提条件</h2>
+
+<ul>
+  <li>
+    <strong>一定的编程经验。</strong> 这里的代码相当简单，但了解一些函数知识会有所帮助。
+  </li>
+  <li>
+    <strong>用于编辑代码的工具。</strong> 您拥有的任何文本编辑器都可以正常工作。大多数文本编辑器对 Go 有很好的支持。最流行的是 VSCode（免费）、GoLand（付费）和 Vim（免费）。
+  </li>
+  <li>
+    <strong>命令行终端。</strong> Go 在 Linux 和 Mac 上的任何终端以及 Windows 上的 PowerShell 或 cmd 中都能良好运行。
+  </li>
+</ul>
+
+<h2 id="install">安装 Go</h2>
+
+<p>只需按照<a href="/doc/install">下载并安装</a>的步骤操作。</p>
+
+<h2 id="code">编写一些代码</h2>
+
+<p>
+  从 Hello, World 开始。
+</p>
+
+<ol>
+  <li>
+    打开命令提示符，并 cd 到您的主目录。
+
+    <p>
+      在 Linux 或 Mac 上：
+    </p>
+
+    <pre>
+cd
+</pre
+    >
+
+    <p>
+      在 Windows 上：
+    </p>
+
+    <pre>
+cd %HOMEPATH%
+</pre
+    >
+  </li>
+
+  <li>
+    为您的第一个 Go 源代码创建一个 hello 目录。
+
+    <p>
+      例如，使用以下命令：
+    </p>
+
+    <pre>
+mkdir hello
+cd hello
+</pre
+    >
+  </li>
+
+  <li>
+    为您的代码启用依赖跟踪。
+
+    <p>
+      当您的代码导入其他模块中包含的包时，您将通过代码自身的模块来管理这些依赖项。该模块由一个 go.mod 文件定义，该文件跟踪提供这些包的模块。该 go.mod 文件与您的代码一起保存，包括在您的源代码存储库中。
+    </p>
+
+    <p>
+      要通过创建 go.mod 文件为您的代码启用依赖跟踪，请运行
+      <a href="/ref/mod#go-mod-init"><code>go mod init</code></a> 命令，并为其提供您的代码所在的模块名称。该名称是模块的模块路径。</p>
+    <p>在实际开发中，模块路径通常是保存您源代码的存储库位置。例如，模块路径可能是 <code>github.com/mymodule</code>。如果您计划发布您的模块供他人使用，模块路径<em>必须</em>是一个 Go 工具可以从中下载您模块的位置。有关使用模块路径命名模块的更多信息，请参见
+        <a href="/doc/modules/managing-dependencies#naming_module">管理依赖项</a>。
+    </p>
+
+      <p>就本教程而言，只需使用
+          <code>example/hello</code>。
+    </p>
+
+    <pre>
+$ go mod init example/hello
+go: creating new go.mod: module example/hello
+</pre
+    >
+  </li>
+
+  <li>
+    <p>在您的文本编辑器中，创建一个文件 hello.go 用于编写代码。</p>
+  </li>
+
+  <li>
+    <p>将以下代码粘贴到您的 hello.go 文件中并保存。</p>
+
+    <pre>
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}
+</pre
+    >
+
+    <p>
+      这就是您的 Go 代码。在这段代码中，您：
+    </p>
+
+    <ul>
+      <li>
+        声明了一个 <code>main</code> package（包是将函数分组的一种方式，它由同一目录中的所有文件组成）。
+      </li>
+      <li>
+        导入了常用的
+        <a href="https://pkg.go.dev/fmt/"><code>fmt</code> 包</a>，它包含用于格式化文本的函数，包括打印到控制台。这个包是您安装 Go 时获得的<a href="https://pkg.go.dev/std">标准库</a>包之一。
+      </li>
+      <li>
+        实现了一个 <code>main</code> function（函数），用于向控制台打印一条消息。当您运行 <code>main</code> package（包）时，<code>main</code> function（函数）会默认执行。
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    <p>运行您的代码以查看问候语。</p>
+
+    <pre>
+$ go run .
+Hello, World!
+</pre
+    >
+
+    <p>
+      <a href="/cmd/go/#hdr-Compile_and_run_Go_program"
+        ><code>go run</code></a> 命令是您将用来完成 Go 任务的众多 <code>go</code> 命令之一。使用以下命令获取其他命令列表：
+    </p>
+
+    <pre>
+$ go help
+</pre
+    >
+  </li>
+</ol>
+
+<h2 id="call">调用外部包中的代码</h2>
+
+<p>
+  当您需要让代码执行可能已由他人实现的功能时，可以查找一个具有可以在您代码中使用的函数的包。
+</p>
+
+<ol>
+  <li>
+    使用来自外部模块的函数使您打印的消息更有趣一些。
+
+    <ol>
+      <li>
+        访问 pkg.go.dev 并
+        <a href="https://pkg.go.dev/search?q=quote"
+          >搜索 "quote" 包</a
+        >。
+      </li>
+      <li>
+        在搜索结果中，找到并点击 <code>rsc.io/quote</code> 包的 v1 版本（它应该与 <code>rsc.io/quote/v4</code> 的 "Other major versions" 列在一起）。
+      </li>
+      <li>
+        在<strong>文档</strong>部分，<strong>索引</strong>下，注意可以从代码中调用的函数列表。您将使用
+        <code>Go</code> 函数。
+      </li>
+      <li>
+        在此页面顶部，注意 <code>quote</code> 包包含在 <code>rsc.io/quote</code> 模块中。
+      </li>
+    </ol><p>
+您可以通过 pkg.go.dev 网站查找已发布的模块，这些模块中的包包含您可以在自己代码中使用的函数。包以模块形式发布——例如 <code>rsc.io/quote</code>——供他人使用。模块会随时间推移通过新版本进行改进，您可以升级代码以使用改进后的版本。
+</p>
+</li>
+
+<li>
+在您的 Go 代码中，导入 <code>rsc.io/quote</code> 包并调用其 <code>Go</code> 函数。
+
+<p>
+添加高亮显示的行后，您的代码应包含以下内容：
+</p>
+
+<pre>
+package main
+
+import "fmt"
+
+<ins>import "rsc.io/quote"</ins>
+
+func main() {
+    <ins>fmt.Println(quote.Go())</ins>
+}
+</pre>
+</li>
+
+<li>
+添加新的模块依赖和校验和。
+
+<p>
+Go 会将 <code>quote</code> 模块添加为依赖项，并生成一个 go.sum 文件用于模块身份验证。更多信息请参阅 Go 模块参考文档中的 <a href="/ref/mod#authenticating">模块身份验证</a> 部分。
+</p>
+<pre>
+$ go mod tidy
+go: finding module for package rsc.io/quote
+go: found rsc.io/quote in rsc.io/quote v1.5.2
+</pre
+>
+</li>
+
+<li>
+运行代码以查看所调用函数生成的消息。
+
+<pre>
+$ go run .
+Don't communicate by sharing memory, share memory by communicating.
+</pre
+>
+
+<p>
+请注意，您的代码调用了 <code>Go</code> 函数，打印了一条关于通信的机智消息。
+</p>
+
+<p>
+当您运行 <code>go mod tidy</code> 时，它定位并下载了包含您导入的包的 <code>rsc.io/quote</code> 模块。默认情况下，它下载了最新版本——v1.5.2。
+</p>
+</li>
+</ol>
+
+<h2 id="write-more">编写更多代码</h2>
+
+<p>
+通过这个快速入门，您已完成 Go 安装并学习了一些基础知识。若要使用另一个教程编写更多代码，请查看 <a href="/doc/tutorial/create-module.html">创建 Go 模块</a>。
+</p>
