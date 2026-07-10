@@ -502,7 +502,8 @@
       "source": "doc/index.html",
       "target": "doc/index.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:45:01.584Z"
     },
     {
       "source": "doc/install/gccgo.html",
