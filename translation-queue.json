@@ -873,7 +873,8 @@
       "source": "doc/tutorial/random-greeting.html",
       "target": "doc/tutorial/random-greeting.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:51:30.639Z"
     },
     {
       "source": "doc/tutorial/web-service-gin.md",
