@@ -600,7 +600,8 @@
       "source": "doc/modules/release-workflow.md",
       "target": "doc/modules/release-workflow.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:09:27.170Z"
     },
     {
       "source": "doc/modules/version-numbers.md",
