@@ -1,0 +1,81 @@
+<!--{
+	"Title": "命令文档",
+	"Breadcrumb": true
+}-->
+
+<p>
+有一系列程序用于构建和处理Go源代码。这些程序通常不是直接运行，而是通过<a href="/cmd/go/">go</a>程序来调用。
+</p>
+
+<p>
+运行这些程序最常见的方式是将其作为go程序的子命令，例如<code>go fmt</code>。以这种方式运行时，命令会处理完整的Go源代码包，go程序会使用适合包级别处理的参数来调用底层二进制程序。
+</p>
+
+<p>
+这些程序也可以作为独立的二进制文件运行，使用未经修改的参数，通过go的<code>tool</code>子命令调用，例如<code>go tool cgo</code>。对于大多数命令来说，这主要用于调试。有些命令，如<code>pprof</code>，只能通过go的<code>tool</code>子命令访问。
+</p>
+
+<p>
+Go安装过程还会安装一个名为<code>gofmt</code>的可执行文件，它等同于<code>go fmt</code>，因为它经常被引用。
+</p>
+
+<p>
+点击链接可以查看更多文档、调用方式和使用详情。
+</p>
+
+<table class="dir">
+<tr>
+<th>名称</th>
+<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th>概述</th>
+</tr>
+
+<tr>
+<td><a href="/cmd/go/">go</a></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<code>go</code>程序管理Go源代码并运行此处列出的其他命令。有关使用详情，请参阅命令文档。
+</td>
+</tr>
+
+<tr>
+<td><a href="/cmd/cgo/">cgo</a></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Cgo支持创建调用C代码的Go包。</td>
+</tr>
+
+<tr>
+<td><a href="/cmd/cover/">cover</a></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Cover是一个用于创建和分析<code>"go test -coverprofile"</code>生成的覆盖率配置文件的程序。</td>
+</tr>
+
+<tr>
+<td><a href="/cmd/fix/">fix</a></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Fix查找使用旧版语言和库特性的Go程序，并将其重写为使用新特性。</td>
+</tr>
+
+<tr>
+<td><a href="/cmd/gofmt/">fmt</a></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Fmt格式化Go包，它也可以作为独立的<a href="/cmd/gofmt/">gofmt</a>命令使用，具有更通用的选项。</td>
+</tr>
+
+<tr>
+<td><a href="/cmd/doc">doc</a></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Doc提取并生成Go包的文档。</td>
+</tr>
+
+<tr>
+<td><a href="/cmd/vet/">vet</a></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>Vet检查Go源代码并报告可疑的构造，例如参数与格式字符串不匹配的Printf调用。</td>
+</tr>
+
+</table>
+
+<p>
+这是一个精简列表。有关编译器及更多内容的文档，请参阅<a href="/cmd/">完整命令参考</a>。
+</p>
