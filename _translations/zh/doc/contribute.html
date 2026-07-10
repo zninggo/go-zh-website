@@ -5,19 +5,23 @@
 }-->
 
 <p>
-Go项目欢迎所有贡献者。
+Go 项目欢迎所有贡献者。
 </p>
 
 <p>
-本文档是一份指南，旨在帮助您了解为Go项目贡献代码的流程，该流程与其他开源项目略有不同。我们假设您已具备Git和Go的基本知识。
+本文档旨在帮助您了解为 Go 项目贡献代码的流程，该流程与其他开源项目略有不同。
+我们假设您对 Git 和 Go 有基本的了解。
 </p>
 
 <p>
-除了本文提供的信息外，Go社区还维护了一个<a href="/wiki/CodeReview">代码审查</a>维基页面。您可以在学习审查流程的过程中，随时向该维基贡献内容。
+除了此处的信息外，Go 社区还维护了一个
+<a href="/wiki/CodeReview">代码评审</a> 维基页面。
+在您学习评审流程的过程中，欢迎随时为该维基做出贡献。
 </p>
 
 <p>
-请注意，<code>gccgo</code>的前端部分位于其他地方；详情请参阅<a href="gccgo_contribute.html">为gccgo贡献代码</a>。
+请注意，<code>gccgo</code> 前端位于其他地方；
+请参阅 <a href="gccgo_contribute.html">为 gccgo 做贡献</a>。
 </p>
 
 <h2 id="contributor">成为贡献者</h2>
@@ -25,29 +29,39 @@ Go项目欢迎所有贡献者。
 <h3 id="contrib_overview">概览</h3>
 
 <p>
-第一步是注册成为Go贡献者并配置您的开发环境。以下是必须完成的操作清单：
+第一步是注册为 Go 贡献者并配置您的开发环境。
+以下是需要遵循的步骤清单：
 </p>
 
 <ul>
 <li>
-<b>步骤 0</b>：确定一个您将用于为Go做贡献的Google账号。后续所有步骤请使用此账号，并确保<code>git</code>配置为使用该账号的电子邮件地址创建提交。
+<b>第 0 步</b>：确定您将用于为 Go 做贡献的单一 Google 帐户。
+在后续所有步骤中使用该帐户，并确保 <code>git</code>
+配置为使用该帐户的电子邮件地址创建提交。
 </li>
 <li>
-<b>步骤 1</b>：<a href="https://cla.developers.google.com/clas">签署并提交</a>一份CLA（贡献者许可协议）。
+<b>第 1 步</b>：<a href="https://cla.developers.google.com/clas">签署并提交</a>一份
+CLA（贡献者许可协议）。
 </li>
 <li>
-<b>步骤 2</b>：为Go的Git仓库配置认证凭据。访问<a href="https://go.googlesource.com">go.googlesource.com</a>，点击页面右上角菜单栏的"Generate Password"，并按照说明操作。
+<b>第 2 步</b>：为 Go Git 仓库配置认证凭据。
+访问 <a href="https://go.googlesource.com">go.googlesource.com</a>，
+点击页面右上角菜单栏中的 "Generate Password"，并按照说明操作。
 </li>
 <li>
-<b>步骤 3</b>：通过<a href="https://go-review.googlesource.com/login/">访问此页面</a>注册Gerrit，这是Go团队使用的代码审查工具。CLA签署和Gerrit注册只需为您的账号完成一次。
+<b>第 3 步</b>：通过<a href="https://go-review.googlesource.com/login/">访问此页面</a>，
+注册 Gerrit——Go 团队使用的代码评审工具。
+CLA 和注册只需为您的帐户完成一次。
 </li>
 <li>
-<b>步骤 4</b>：通过运行<code>go install golang.org/x/review/git-codereview@latest</code>来安装<code>git-codereview</code>。
+<b>第 4 步</b>：通过运行以下命令安装 <code>git-codereview</code>：
+<code>go install golang.org/x/review/git-codereview@latest</code>
 </li>
 </ul>
 
 <p>
-如果您愿意，也可以使用一个自动化工具来引导您完成这些步骤。只需运行：
+如果您愿意，也有一个自动化工具可以引导您完成这些步骤。
+只需运行：
 </p>
 
 <pre>
@@ -57,30 +71,40 @@ $ go-contrib-init
 </pre>
 
 <p>
-本章后续部分将详细说明这些步骤。如果您已完成上述步骤（手动或通过工具），请跳转至<a href="#before_contributing">贡献代码前的准备</a>。
+本章后续内容将详细说明这些说明。
+如果您已完成上述步骤（无论是手动还是通过工具），请跳转至
+<a href="#before_contributing">贡献代码之前</a>。
 </p>
 
-<h3 id="google_account">步骤 0：选择Google账号</h3>
+<h3 id="google_account">第 0 步：选择一个 Google 帐户</h3>
 
 <p>
-为Go贡献代码需要通过一个特定电子邮件地址关联的Google账号进行。请确保在整个流程以及后续的所有贡献中使用同一个账号。您可能需要决定使用个人地址还是公司地址，这取决于您将要编写并提交的代码的版权所有者是谁。您可能需要在做出决定前与雇主讨论此问题。
+对 Go 的贡献是通过具有特定电子邮件地址的 Google 帐户进行的。
+请确保在整个过程中以及后续所有贡献中都使用同一帐户。
+您可能需要决定是使用个人地址还是公司地址。
+该选择将取决于您将编写和提交的代码的版权所有者是谁。
+您可能希望在决定使用哪个帐户之前与您的雇主讨论此话题。
 </p>
 
 <p>
-Google账号可以是Gmail电子邮件账号、G Suite（谷歌企业套件）组织账号，或关联了外部电子邮件地址的账号。例如，如果您需要使用一个不通过G Suite管理的现有公司电子邮件，您可以创建一个<a href="https://accounts.google.com/SignUpWithoutGmail">关联您现有电子邮件地址</a>的账号。
+Google 帐户可以是 Gmail 电子邮件帐户、G Suite 组织帐户或与外部电子邮件地址关联的帐户。
+例如，如果您需要使用一个不由 G Suite 管理的现有公司电子邮件，您可以创建一个
+<a href="https://accounts.google.com/SignUpWithoutGmail">与您现有电子邮件地址关联</a>的帐户。
 </p>
 
 <p>
-您还需要确保您的Git工具配置为使用您选择的电子邮件地址创建提交。您可以全局配置Git（作为所有项目的默认设置），也可以仅对某个特定项目进行局部配置。您可以使用以下命令检查当前配置：
+您还需要确保您的 Git 工具配置为使用您选择的电子邮件地址创建提交。
+您可以全局配置 Git（作为所有项目的默认设置），也可以局部配置（针对单个特定项目）。
+您可以使用以下命令检查当前配置：
 </p>
 
 <pre>
-$ git config --global user.email  # 检查全局配置
-$ git config user.email           # 检查局部配置
+$ git config --global user.email  # 检查当前全局配置
+$ git config user.email           # 检查当前局部配置
 </pre>
 
 <p>
-要更改配置的地址：
+要更改已配置的地址：
 </p>
 
 <pre>
@@ -88,67 +112,77 @@ $ git config --global user.email name@example.com   # 更改全局配置
 $ git config user.email name@example.com            # 更改局部配置
 </pre>
 
-<h3 id="cla">步骤 1：贡献者许可协议</h3>
+<h3 id="cla">第 1 步：贡献者许可协议</h3>
 
 <p>
-在向Go项目发送您的第一个变更之前，您必须完成以下两项CLA中的一项。应签署哪项CLA取决于您的工作的版权所有者是谁。
+在向 Go 项目发送您的第一个变更之前，您必须完成以下两个 CLA 之一。
+您应该签署哪个 CLA 取决于您的作品版权归谁所有。
 </p>
 
 <ul>
 <li>
-如果您是版权所有者，您需要同意<a href="https://developers.google.com/open-source/cla/individual">个人贡献者许可协议</a>，该协议可在线完成。
+如果您是版权所有者，您需要同意
+<a href="https://developers.google.com/open-source/cla/individual">个人贡献者许可协议</a>，
+该协议可以在线完成。
 </li>
 <li>
-如果您的组织是版权所有者，该组织需要同意<a href="https://developers.google.com/open-source/cla/corporate">企业贡献者许可协议</a>。<br>
+如果您的组织是版权所有者，则该组织需要同意
+<a href="https://developers.google.com/open-source/cla/corporate">公司贡献者许可协议</a>。<br>
 </li>
 </ul>
 
 <p>
-您可以在<a href="https://cla.developers.google.com/clas?pli=1&amp;authuser=1">Google开发者贡献者许可协议</a>网站查看您当前已签署的协议并签署新协议。如果您的贡献的版权所有者已就另一个Google开源项目完成过协议，则无需再次完成。
+您可以在 <a href="https://cla.developers.google.com/clas?pli=1&amp;authuser=1">Google 开发者贡献者许可协议</a>
+网站上查看您当前已签署的协议并签署新协议。
+如果您的贡献的版权所有者已经就另一个 Google 开源项目完成了该协议，
+则无需再次完成。
 </p>
 
 <p>
-如果您提交的代码的版权所有者发生变化&mdash;例如，您开始代表一家新公司贡献代码&mdash;请发送邮件至<a href="mailto:golang-dev@googlegroups.com"><code>golang-dev</code>邮件列表</a>。这将让我们了解情况，以便确保完成适当的协议。
+如果您提交代码的版权所有者发生变化——例如，如果您开始代表一家新公司贡献代码——请发送邮件至
+<a href="mailto:golang-dev@googlegroups.com"><code>golang-dev</code> 邮件列表</a>。
+这将让我们了解情况，以便确保完成相应的协议。
 </p>
 
-<h3 id="config_git_auth">步骤 2：配置Git认证</h3>
+<h3 id="config_git_auth">第 2 步：配置 git 认证</h3>
 
 <p>
-Go的主仓库位于<a href="https://go.googlesource.com">go.googlesource.com</a>，这是一个由Google托管的Git服务器。网页服务器的认证通过您的Google账号进行，但您还需要配置您计算机上的<code>git</code>以访问它。请按照以下步骤操作：
+Go 的主代码仓库位于
+<a href="https://go.googlesource.com">go.googlesource.com</a>，
+这是一个由 Google 托管的 Git 服务器。
+网络服务器上的认证通过您的 Google 帐户进行，但您还需要在计算机上配置 <code>git</code> 以便访问它。
+请按照以下步骤操作：
 </p><ol>
 <li>
-访问 <a href="https://go.googlesource.com">go.googlesource.com</a>
-并在页面右上角的菜单栏中点击“生成密码”。
-系统会将您重定向到 accounts.google.com 进行登录。
+访问 <a href="https://go.googlesource.com">go.googlesource.com</a> 并点击页面右上方菜单栏中的“生成密码”。
+您将被重定向到 accounts.google.com 进行登录。
 </li>
 <li>
-登录后，您将进入标题为“配置 Git”的页面。
-该页面包含一个个性化脚本，在本地运行此脚本将配置 Git 以存储您的唯一认证密钥。
-该密钥与服务器上生成并存储的密钥配对使用，类似于 SSH 密钥的工作原理。
+登录后，您将进入一个标题为“配置 Git”的页面。
+该页面包含一个个性化脚本，在本地运行该脚本后，它将配置 Git 以保存您的唯一认证密钥。
+此密钥与服务器上生成并存储的密钥配对，类似于 SSH 密钥的工作原理。
 </li>
 <li>
-在本地终端中复制并运行此脚本，将您的秘密认证令牌存储在 <code>.gitcookies</code> 文件中。
-如果您使用的是 Windows 电脑并运行 <code>cmd</code>，
-则应按照黄色方框中的说明运行命令；否则，运行常规脚本。
+在您的本地终端中复制并运行此脚本，将您的秘密认证令牌存储在 <code>.gitcookies</code> 文件中。
+如果您使用的是 Windows 电脑并且运行的是 <code>cmd</code>，则应改为按照黄色方框中的说明运行命令；否则运行常规脚本。
 </li>
 </ol>
 
-<h3 id="auth">步骤 3：创建 Gerrit 账户 </h3>
+<h3 id="auth">第 3 步：创建 Gerrit 账户</h3>
 
 <p>
-Gerrit 是 Go 维护者用来讨论和审查代码提交的开源工具。
+Gerrit 是 Go 维护人员用于讨论和审查代码提交的开源工具。
 </p>
 
 <p>
-要注册您的账户，请访问 <a href="https://go-review.googlesource.com/login/">
-go-review.googlesource.com/login/</a> 并使用您之前使用的同一个 Google 账户登录一次。
+要注册您的账户，请访问 <a href="https://go-review.googlesource.com/login/">go-review.googlesource.com/login/</a>，并使用您在上面使用的同一个 Google 账户登录一次。
 </p>
 
-<h3 id="git-codereview_install">步骤 4：安装 git-codereview 命令</h3>
+<h3 id="git-codereview_install">第 4 步：安装 git-codereview 命令</h3>
 
 <p>
-对 Go 的更改在被接受之前必须经过审查，无论更改是由谁提交的。
-一个名为 <code>git-codereview</code> 的自定义 <code>git</code> 命令简化了将更改发送到 Gerrit 的过程。
+对 Go 的更改在接受之前都必须经过审查，无论更改者是谁。
+一个名为 <code>git-codereview</code> 的自定义 <code>git</code> 命令简化了向 Gerrit 发送更改的过程。
 </p>
 
 <p>
@@ -169,44 +203,42 @@ $ git codereview help
 </pre>
 
 <p>
-是否输出帮助文本，而不是错误。如果输出错误，请确保 <code>$GOPATH/bin</code> 在您的 <code>$PATH</code> 中。
+是打印帮助文本，而不是错误信息。如果打印错误，请确保 <code>$GOPATH/bin</code> 在您的 <code>$PATH</code> 中。
 </p>
 
 <p>
-在 Windows 上使用 git-bash 时，您必须确保 <code>git-codereview.exe</code> 在您的 <code>git</code> exec-path 中。
-运行 <code>git --exec-path</code> 来查找正确的位置，然后创建一个符号链接或直接将可执行文件从 <code>$GOPATH/bin</code> 复制到该目录。
+在 Windows 上使用 git-bash 时，您必须确保 <code>git-codereview.exe</code> 在您的 <code>git</code> 执行路径中。
+运行 <code>git --exec-path</code> 来发现正确的位置，然后创建一个符号链接，或者只是将可执行文件从 <code>$GOPATH/bin</code> 复制到此目录。
 </p>
 
 <h2 id="before_contributing">贡献代码之前</h2>
 
 <p>
-该项目欢迎代码补丁，但为了确保良好的协调性，您应该在开始工作之前讨论任何重大更改。
-建议您在问题跟踪器中表明您的贡献意向，可以是<a href="/issue/new">提交一个新问题</a>或<a href="/issues">认领一个现有问题</a>。
+该项目欢迎代码补丁，但为确保事项协调良好，您应在开始工作前讨论任何重大更改。
+建议您在问题跟踪器中标记您的贡献意向，可以通过 <a href="/issue/new">提交新问题</a> 或认领 <a href="/issues">现有问题</a> 来实现。
 </p>
 
 <h3 id="where">在哪里贡献</h3>
 
 <p>
-Go 项目由主 <a href="https://go.googlesource.com/go">go</a> 仓库（包含 Go 语言的源代码）以及众多 golang.org/x/... 仓库组成。
-后者包含支持 Go 的各种工具和基础设施。例如，<a href="https://go.googlesource.com/pkgsite">golang.org/x/pkgsite</a> 用于 <a href="https://pkg.go.dev">pkg.go.dev</a>，
-<a href="https://go.googlesource.com/playground">golang.org/x/playground</a> 用于 Go Playground，
-而 <a href="https://go.googlesource.com/tools">golang.org/x/tools</a> 包含各种 Go 工具，包括 Go 语言服务器 <a href="/s/gopls">gopls</a>。
-您可以在 <a href="https://go.googlesource.com">go.googlesource.com</a> 上查看所有 golang.org/x/... 仓库的列表。
+Go 项目由主要的 <a href="https://go.googlesource.com/go">go</a> 代码仓库组成，其中包含 Go 语言的源代码，以及许多 golang.org/x/... 代码仓库。
+这些代码仓库包含支持 Go 的各种工具和基础设施。例如，<a href="https://go.googlesource.com/pkgsite">golang.org/x/pkgsite</a> 用于 <a href="https://pkg.go.dev">pkg.go.dev</a>，
+<a href="https://go.googlesource.com/playground">golang.org/x/playground</a> 用于 Go 演示场，而 <a href="https://go.googlesource.com/tools">golang.org/x/tools</a> 包含各种 Go 工具，包括 Go 语言服务器 <a href="/s/gopls">gopls</a>。您可以在 <a href="https://go.googlesource.com">go.googlesource.com</a> 上查看所有 golang.org/x/... 代码仓库的列表。
 </p>
 
 <h3 id="check_tracker">检查问题跟踪器</h3>
 
 <p>
-无论您是已经知道要贡献什么，还是正在寻找想法，<a href="https://github.com/golang/go/issues">问题跟踪器</a> 始终是首先要查看的地方。
-问题会被分类以进行分类和管理工作流。
+无论您已经知道要贡献什么，还是正在寻找想法，<a href="https://github.com/golang/go/issues">问题跟踪器</a> 始终是首先要去的地方。
+问题会被分类以进行分类和管理工作流程。
 </p>
 
 <p>
-大多数 golang.org/x/... 仓库也使用主 Go 问题跟踪器。但是，其中一些仓库单独管理其问题，因此请务必检查您想要贡献的仓库所对应的正确跟踪器。
+大多数 golang.org/x/... 仓库也使用主要的 Go 问题跟踪器。但是，其中一些仓库会单独管理其问题，因此请务必为您想要贡献的仓库检查正确的问题跟踪器。
 </p>
 
 <p>
-大多数问题都会标记以下工作流标签之一：
+大多数问题将标记有以下工作流标签之一：
 </p>
 
 <ul>
@@ -214,9 +246,7 @@ Go 项目由主 <a href="https://go.googlesource.com/go">go</a> 仓库（包含 
 	<b>NeedsInvestigation</b>：问题尚未完全理解，需要进行分析以了解根本原因。
 	</li>
 	<li>
-	<b>NeedsDecision</b>：问题相对清晰，但 Go 团队尚未决定最佳的处理方式。
-	最好在编写代码之前等待决定。
-	如果您有兴趣处理处于此状态的问题，请随时在问题评论中“@”维护者，如果已经有一段时间没有决定的话。
+	<b>NeedsDecision</b>：问题相对理解良好，但 Go 团队尚未决定处理它的最佳方式。最好在编写代码之前等待决定。如果您对处理此状态的问题感兴趣，如果一段时间后仍未做出决定，请随时在问题评论中“ping”维护人员。
 	</li>
 	<li>
 	<b>NeedsFix</b>：问题已完全理解，可以编写代码来修复它。
@@ -224,7 +254,7 @@ Go 项目由主 <a href="https://go.googlesource.com/go">go</a> 仓库（包含 
 </ul>
 
 <p>
-您可以使用 GitHub 的搜索功能来查找需要帮助的问题。示例：
+您可以使用 GitHub 的搜索功能来寻找可以帮助解决的问题。示例：
 </p>
 
 <ul>
@@ -238,58 +268,54 @@ Go 项目由主 <a href="https://go.googlesource.com/go">go</a> 仓库（包含 
 	需要修复且有建议更改的问题：<a href="https://github.com/golang/go/issues?q=is%3Aissue+is%3Aopen+label%3ANeedsFix+%28%22golang.org%2Fcl%22+OR+%22go.dev%2Fcl%22%29"><code>is:issue is:open label:NeedsFix ("golang.org/cl" OR "go.dev/cl")</code></a>
 	</li>
 	<li>
-	需要修复但没有建议更改的问题：<a href="https://github.com/golang/go/issues?q=is%3Aissue+is%3Aopen+label%3ANeedsFix+NOT+%22golang.org%2Fcl%22+NOT+%22go.dev%2Fcl%22"><code>is:issue is:open label:NeedsFix NOT "golang.org/cl" NOT "go.dev/cl"</code></a>
+	需要修复但无建议更改的问题：<a href="https://github.com/golang/go/issues?q=is%3Aissue+is%3Aopen+label%3ANeedsFix+NOT+%22golang.org%2Fcl%22+NOT+%22go.dev%2Fcl%22"><code>is:issue is:open label:NeedsFix NOT "golang.org/cl" NOT "go.dev/cl"</code></a>
 	</li>
 </ul>
 
-<h3 id="design">为任何新问题开启一个 issue</h3><p>
-除极细微的更改外，所有贡献都应与现有问题关联。
-您可以自由开启问题并讨论您的计划。
-这一流程让每个人都有机会验证设计方案，
-有助于避免重复劳动，
-并确保想法符合语言和工具的发展目标。
-它还能在编写代码前检验设计方案的合理性；
-代码审查工具不适合进行高层级讨论。
+<h3 id="design">为任何新问题创建议题</h3><p>
+除极其微小的改动外，所有贡献都应关联到现有问题。
+欢迎随时创建问题并讨论您的计划。
+这个流程让每个人都有机会验证设计方案，
+有助于避免工作重复，
+并确保想法符合该语言和工具的目标。
+它还能在编写代码前检查设计是否合理；
+代码审查工具不适用于高层讨论。
 </p>
 
 <p>
-规划工作时请注意，Go 项目的主要仓库遵循
-<a href="/wiki/Go-Release-Cycle">六个月开发周期</a>。
-每个周期的后三个月是功能冻结期，期间仅接受缺陷修复和文档更新。
-您可以在功能冻结期提交新贡献，但直到冻结期结束才会被合并。
-此冻结适用于整个主仓库以及构建发行版二进制文件所需的 golang.org/x/... 仓库代码。
-请参阅以下列表：
-纳入<a href="https://github.com/golang/go/blob/master/src/vendor/modules.txt">标准库</a>的依赖包，
-以及纳入 <a href="https://github.com/golang/go/blob/master/src/cmd/vendor/modules.txt"><code>go</code> 命令</a>的依赖包。
+规划工作时，请注意Go项目对主Go仓库遵循<a
+href="/wiki/Go-Release-Cycle">六个月开发周期</a>。每个周期的后半段是为期三个月的功能冻结期，期间仅接受错误修复和文档更新。在功能冻结期间可提交新贡献，但它们不会在冻结期结束前被合并。冻结适用于整个主仓库以及构建发布版本所需的golang.org/x/...仓库中的代码。请参见已纳入
+<a href="https://github.com/golang/go/blob/master/src/vendor/modules.txt">标准库</a>的包列表
+和<a href="https://github.com/golang/go/blob/master/src/cmd/vendor/modules.txt"><code>go</code>命令</a>的包列表。
 </p>
 
 <p>
 对语言、库或工具的重大更改
-（包括主仓库和所有 golang.org/x 仓库的 API 变更，
-以及 <code>go</code> 命令的命令行改动）
+（包括主仓库及所有golang.org/x仓库的API变更，
+以及对<code>go</code>命令的命令行修改）
 必须通过
 <a href="/s/proposal-process">变更提案流程</a>
-审核后方可被接受。
+才能被接受。
 </p>
 
 <p>
-敏感的安全相关问题（仅限此类问题）应通过 <a href="mailto:security@golang.org">security@golang.org</a> 报告。
+仅限敏感的安全相关问题应报告至<a href="mailto:security@golang.org">security@golang.org</a>。
 </p>
 
-<h2 id="sending_a_change_gerrit">通过 Gerrit 提交更改</h2>
+<h2 id="sending_a_change_gerrit">通过Gerrit提交变更</h2>
 
 <p>
-我们推荐使用 Gerrit 提交更改进行审查。虽然仅使用过 GitHub 工作流的用户可能需要适应一段时间，但这是 Go 项目贡献者使用的主要工作流，它更流畅且功能更全面。
+我们鼓励使用Gerrit提交变更以供审查。虽然对于仅使用过GitHub工作流的用户来说存在一定的学习曲线，但它是Go项目贡献者使用的主要工作流，是一个更顺畅且功能更完善的工作流。
 </p>
 
 <p>
-以下章节简要介绍通过 Gerrit 提交更改的流程。
-更多与 Gerrit 交互的详情，请参考
-<a href="https://gerrit-review.googlesource.com/Documentation/index.html">Gerrit 官方文档</a>。
-我们特别建议阅读
+以下各节简要介绍了通过Gerrit提交变更的流程。
+有关与Gerrit交互的更多详情，请参阅
+<a href="https://gerrit-review.googlesource.com/Documentation/index.html">Gerrit文档</a>。
+特别是，我们建议阅读
 <a href="https://gerrit-review.googlesource.com/Documentation/user-review-ui.html">审查界面概览</a>
-和 <a href="https://gerrit-review.googlesource.com/Documentation/intro-gerrit-walkthrough-github.html">
-Gerrit 基础教程 — 面向 GitHub 用户</a> 页面。
+和<a href="https://gerrit-review.googlesource.com/Documentation/intro-gerrit-walkthrough-github.html">
+Gerrit基础教程 — 适用于GitHub用户</a>页面。
 </p>
 
 <h3 id="gerrit_overview">概览</h3>
@@ -300,10 +326,9 @@ Gerrit 基础教程 — 面向 GitHub 用户</a> 页面。
 
 <ul>
 <li>
-<b>步骤 1：</b> 从 <code>go.googlesource.com</code> 克隆源代码，并通过编译和测试一次确保其稳定。
+<b>步骤 1：</b> 从 <code>go.googlesource.com</code> 克隆源代码，并通过一次编译和测试确保其状态稳定。
 
-<p>如果您要修改
-<a href="https://go.googlesource.com/go">Go 主仓库</a>：</p>
+<p>如果您要对<a href="https://go.googlesource.com/go">主Go仓库</a>进行更改：</p>
 
 <pre>
 $ git clone https://go.googlesource.com/go
@@ -312,8 +337,8 @@ $ ./all.bash                                # 编译并测试
 </pre>
 
 <p>
-如果您要修改某个 golang.org/x/... 仓库（此处以
-<a href="https://go.googlesource.com/tools">golang.org/x/tools</a> 为例）：
+如果您要对某个 golang.org/x/... 仓库进行更改
+（例如本例中的 <a href="https://go.googlesource.com/tools">golang.org/x/tools</a>）：
 </p>
 
 <pre>
@@ -324,8 +349,8 @@ $ go test ./...                             # 编译并测试
 </li>
 
 <li>
-<b>步骤 2：</b> 在从 master 分支创建的新分支中准备更改。
-要提交更改，请使用 <code>git</code> <code>codereview</code> <code>change</code>；这将在分支中创建或修改单个提交。
+<b>步骤 2：</b> 在基于 master 分支创建的新分支中准备更改。
+要提交更改，请使用 <code>git</code> <code>codereview</code> <code>change</code>；这将在分支中创建或修改一个单一的提交。
 <pre>
 $ git checkout -b mybranch
 $ [编辑文件...]
@@ -333,15 +358,15 @@ $ git add [文件...]
 $ git codereview change   # 在分支中创建提交
 $ [再次编辑...]
 $ git add [文件...]
-$ git codereview change   # 将新更改修改到已有提交中
-$ [重复操作]
+$ git codereview change   # 用新的更改修改现有的提交
+$ [等等]
 </pre>
 </li>
 
 <li>
-<b>步骤 3：</b> 测试您的更改，可通过运行所修改包的测试，或重新运行 <code>all.bash</code>。
+<b>步骤 3：</b> 测试您的更改，可以通过运行您编辑的包中的测试，或者重新运行 <code>all.bash</code>。
 
-<p>在 Go 主仓库中：</p>
+<p>在主Go仓库中：</p>
 <pre>
 $ ./all.bash    # 重新编译并测试
 </pre>
@@ -353,45 +378,44 @@ $ go test ./... # 重新编译并测试
 </li>
 
 <li>
-<b>步骤 4：</b> 使用 <code>git</code> <code>codereview</code> <code>mail</code> 将更改发送到 Gerrit 进行审查（尽管名称包含“mail”，但实际不使用电子邮件）。
+<b>步骤 4：</b> 使用 <code>git</code> <code>codereview</code> <code>mail</code> 将更改发送到 Gerrit 进行审查（尽管名称中有 mail，但它不使用电子邮件）。
 <pre>
 $ git codereview mail     # 将更改发送到 Gerrit
 </pre>
 </li>
 
 <li>
-<b>步骤 5：</b> 根据审查意见，将更改应用到同一个提交，并重新发送到 Gerrit：
+<b>步骤 5：</b> 审查后，将更改应用到同一个提交并再次发送到 Gerrit：
 <pre>
 $ [编辑文件...]
 $ git add [文件...]
 $ git codereview change   # 更新同一个提交
-$ git codereview mail     # 重新发送到 Gerrit
+$ git codereview mail     # 再次发送到 Gerrit
 </pre>
 </li>
 </ul>
 
 <p>
-本节后续内容将更详细地描述这些步骤。
+本节的剩余部分将更详细地描述这些步骤。
 </p>
 
 <h3 id="checkout_go">步骤 1：克隆源代码</h3>
 
 <p>
-除了需要较新版本的 Go 安装环境，您还需要从正确的仓库签出一份本地源代码副本。
-您可以将 Go 源代码仓库克隆到本地文件系统的任意位置，
-只要该位置不在您的 <code>GOPATH</code> 内
-（默认为用户主目录下的 <code>go</code> 目录）。
-请从 <code>go.googlesource.com</code>（而非 GitHub）克隆：
+除了最近版本的Go安装，您还需要从正确的仓库检出一份源代码本地副本。
+您可以将Go源代码仓库克隆到本地文件系统上的任何位置，只要在您的<code>GOPATH</code>
+（默认为用户主目录下的<code>go</code>目录）之外。
+请从 <code>go.googlesource.com</code>（而非GitHub）克隆：
 </p>
 
-<p>Go 主仓库：</p>
+<p>主Go仓库：</p>
 <pre>
 $ git clone https://go.googlesource.com/go
 $ cd go
 </pre>
 
 <p>golang.org/x/... 仓库</p>
-（此处以 <a href="https://go.googlesource.com/tools">golang.org/x/tools</a> 为例）：
+（本例为 <a href="https://go.googlesource.com/tools">golang.org/x/tools</a>）：
 <pre>
 $ git clone https://go.googlesource.com/tools
 $ cd tools
@@ -400,9 +424,8 @@ $ cd tools
 <h3 id="make_branch">步骤 2：在新分支中准备更改</h3>
 
 <p>
-每个 Go 更改都必须在从 master 分支创建的单独分支中进行。
-您可以使用
-常规 <code>git</code> 命令创建分支并将更改添加到暂存区：
+每次Go更改都必须在一个单独的分支中进行，该分支基于 master 分支创建。
+您可以使用普通的 <code>git</code> 命令创建分支并将更改添加到暂存区：
 </p>
 
 <pre>
@@ -412,19 +435,18 @@ $ git add [文件...]
 </pre>
 
 <p>
-要提交更改，请使用 <code>git codereview change</code> 而非 <code>git commit</code>。
+要提交更改，请使用 <code>git codereview change</code>，而不是 <code>git commit</code>。
 </p><pre>
 $ git codereview change
 （打开 $EDITOR）
 </pre>
 
 <p>
-您可以像往常一样，在惯用的编辑器中编辑提交说明。
-<code>git</code> <code>codereview</code> <code>change</code> 命令
-会自动在底部附近添加一行唯一的 Change-Id。
-Gerrit 使用该行来匹配同一变更的后续上传。
+您可以像往常一样在您喜欢的编辑器中编辑提交描述。
+<code>git codereview change</code> 命令会自动在底部附近添加一个唯一的 Change-Id 行。
+该行被 Gerrit 用来匹配同一更改的连续上传。
 请勿编辑或删除它。
-Change-Id 样例如下：
+Change-Id 看起来像这样：
 </p>
 
 <pre>
@@ -432,35 +454,29 @@ Change-Id: I2fbdbffb3aab626c4b6f56348861b7909e3e8990
 </pre>
 
 <p>
-该工具还会检查您是否已对源代码运行了 <code>go</code> <code>fmt</code>，
-以及提交消息是否遵循<a href="#commit_messages">建议的格式</a>。
+该工具还会检查您是否在源代码上运行了 <code>go fmt</code>，以及提交信息是否遵循了<a href="#commit_messages">建议的格式</a>。
 </p>
 
 <p>
-如果您需要再次编辑文件，可以暂存新的更改并
-重新运行 <code>git</code> <code>codereview</code> <code>change</code>：每次后续
-运行都会修改现有提交，同时保留 Change-Id。
+如果您需要再次编辑文件，可以暂存新的更改并重新运行 <code>git codereview change</code>：
+后续每次运行都会修改现有的提交，同时保留 Change-Id。
 </p>
 
 <p>
-请确保在每个分支中始终保持只有一个提交。
-如果您不小心添加了更多
-提交，可以使用 <code>git</code> <code>rebase</code> 将它们
-<a href="https://stackoverflow.com/questions/31668794/squash-all-your-commits-in-one-before-a-pull-request-in-github">压缩合并</a>
-为一个提交。
+请确保在每个分支中始终只保留一个提交。
+如果您错误地添加了多个提交，可以使用 <code>git rebase</code> 来<a href="https://stackoverflow.com/questions/31668794/squash-all-your-commits-in-one-before-a-pull-request-in-github">将它们合并</a>为一个提交。
 </p>
 
 <h3 id="testing">步骤 3：测试您的更改</h3>
 
 <p>
-您已经<a href="code.html">编写并测试了代码</a>，但在
-将代码发送供审查之前，请运行<i>针对整个代码库的所有测试</i>，以确保更改不会破坏其他包或程序。
+您已经<a href="code.html">编写并测试了代码</a>，但在提交代码供审查之前，请运行<i>整个代码树的所有测试</i>，以确保您的更改不会破坏其他包或程序。
 </p>
 
-<h4 id="test-gorepo">在主 Go 代码库中</h4>
+<h4 id="test-gorepo">在主 Go 仓库中</h4>
 
 <p>
-对于标准库包，包内的所有测试都必须通过：
+对于标准库包，包内的所有测试必须通过：
 </p>
 
 <pre>
@@ -468,8 +484,7 @@ $ go test
 </pre>
 
 <p>
-可以使用 <code>all.bash</code> 运行整个代码库的简短测试套件
-（在 Windows 下构建请使用 <code>all.bat</code>）：
+可以使用 <code>all.bash</code> 运行整个代码树的简短测试套件（在 Windows 下构建请使用 <code>all.bat</code>）：
 </p>
 
 <pre>
@@ -478,8 +493,7 @@ $ ./all.bash
 </pre>
 
 <p>
-运行一段时间并打印大量测试输出后，命令最终应以
-以下内容结束：
+在运行一段时间并打印出大量测试输出后，该命令应以如下内容结束：
 </p>
 
 <pre>
@@ -487,18 +501,15 @@ ALL TESTS PASSED
 </pre>
 
 <p>
-您可以使用 <code>make.bash</code> 代替 <code>all.bash</code>，以仅构建编译器和标准库，而不运行测试套件。
-<code>go</code> 工具构建完成后，它将被安装在您克隆 Go 代码库的目录下的 <code>bin/go</code>，
-您可以直接从那里运行它。
-另请参阅
-如何<a href="#quick_test">快速测试您的更改</a>部分。
+您可以使用 <code>make.bash</code> 代替 <code>all.bash</code>，只构建编译器和标准库而不运行测试套件。
+一旦 <code>go</code> 工具构建完成，它将被安装在您克隆 Go 仓库目录下的 <code>bin/go</code>，您可以直接从那里运行它。
+另请参阅关于如何<a href="#quick_test">快速测试您的更改</a>的部分。
 </p>
 
-<h4 id="test-xrepo">在 golang.org/x/... 代码库中</h4>
+<h4 id="test-xrepo">在 golang.org/x/... 仓库中</h4>
 
 <p>
-运行整个代码库的测试
-（此处以 <a href="https://go.googlesource.com/tools">golang.org/x/tools</a> 为例）：
+运行整个仓库的测试（以此示例中的 <a href="https://go.googlesource.com/tools">golang.org/x/tools</a> 为例）：
 </p>
 
 <pre>
@@ -507,25 +518,19 @@ $ go test ./...
 </pre>
 
 <p>
-如果您关注构建状态，
-可以查看<a href="https://build.golang.org">构建信息中心</a>。
-代码审查中的 TryBots 也可能捕获测试失败。
+如果您担心构建状态，可以查看<a href="https://build.golang.org">构建状态面板</a>。
+测试失败也可能被代码审查中的 TryBots 捕获。
 </p>
 
 <p>
-一些代码库，例如
-<a href="https://go.googlesource.com/vscode-go">golang.org/x/vscode-go</a>，可能拥有
-不同的测试基础设施，因此请始终查阅您正在工作的
-代码库的文档。代码库根目录的 README 文件通常
-包含此信息。
+一些仓库，如 <a href="https://go.googlesource.com/vscode-go">golang.org/x/vscode-go</a>，将拥有不同的测试基础设施，因此请务必查看您正在工作的仓库的文档。仓库根目录下的 README 文件通常包含此信息。
 </p>
 
-<h3 id="mail">步骤 4：发送更改供审查</h3>
+<h3 id="mail">步骤 4：提交更改进行审查</h3>
 
 <p>
-一旦更改准备就绪并在整个代码库上测试完毕，即可发送供审查。
-这通过 <code>mail</code> 子命令完成，尽管名称如此，它并非直接
-发送邮件；它只是将更改发送到 Gerrit：
+当更改准备就绪并在整个代码树上测试通过后，即可提交审查。
+这是通过 <code>mail</code> 子命令完成的，尽管其名称如此，但它并不会直接发送任何邮件；它只是将更改发送到 Gerrit：
 </p>
 
 <pre>
@@ -533,7 +538,7 @@ $ git codereview mail
 </pre>
 
 <p>
-Gerrit 会为您的更改分配一个编号和 URL，<code>git</code> <code>codereview</code> <code>mail</code> 会打印它们，类似如下：
+Gerrit 会为您的更改分配一个编号和 URL，<code>git codereview mail</code> 命令将打印出来，类似于：
 </p>
 
 <pre>
@@ -542,28 +547,23 @@ remote:   https://go-review.googlesource.com/99999 math: improved Sin, Cos and T
 </pre>
 
 <p>
-如果您遇到错误，请检查
-<a href="#troubleshooting_mail">邮件错误排查</a>部分。
+如果出现错误，请查看<a href="#troubleshooting_mail">排查邮件错误</a>部分。
 </p>
 
 <p>
-如果您的更改与一个开放的 GitHub 问题相关，并且您遵循了<a href="#commit_messages">建议的提交消息格式</a>，
-该问题将在几分钟内由一个机器人更新，在评论中将您的 Gerrit 更改链接到该问题。
+如果您的更改与一个未解决的 GitHub issue 相关，并且您遵循了<a href="#commit_messages">建议的提交信息格式</a>，几分钟内，一个机器人将通过评论更新该 issue，将您的 Gerrit 更改链接到它。
 </p>
 
-<h3 id="revise">步骤 5：审查后修订更改</h3>
+<h3 id="revise">步骤 5：根据审查意见修改更改</h3>
 
 <p>
 Go 维护者将在 Gerrit 上审查您的代码，您将通过电子邮件收到通知。
-您可以在 Gerrit 上查看审查内容并在此处发表评论。
-您也可以选择
-<a href="https://gerrit-review.googlesource.com/Documentation/intro-user.html#reply-by-email">通过电子邮件</a>回复。
+您可以在 Gerrit 上查看审查意见并在那里进行评论。
+如果您愿意，也可以<a href="https://gerrit-review.googlesource.com/Documentation/intro-user.html#reply-by-email">使用电子邮件回复</a>。
 </p>
 
 <p>
-如果您在审查后需要修订更改，请在您之前创建的
-同一分支中编辑文件，将它们添加到 Git 暂存区，
-然后使用 <code>git</code> <code>codereview</code> <code>change</code> 修改提交：
+如果您需要在审查后修改更改，请在您之前创建的相同分支中编辑文件，将它们添加到 Git 暂存区，然后使用 <code>git codereview change</code> 修改提交：
 </p>
 
 <pre>
@@ -573,285 +573,290 @@ $ git codereview mail       # 将新更改发送到 Gerrit
 </pre>
 
 <p>
-如果不需要更改提交说明，只需保存并退出编辑器即可。
-记住不要触碰特殊的 Change-Id 行。
+如果您不需要更改提交描述，只需保存并退出编辑器即可。
+请记住不要触动特殊的 Change-Id 行。
 </p>
 
 <p>
-再次提醒，请确保在每个分支中始终保持只有一个提交。
-如果您不小心添加了更多
-提交，可以使用 <code>git rebase</code> 将它们
-<a href="https://stackoverflow.com/questions/31668794/squash-all-your-commits-in-one-before-a-pull-request-in-github">压缩合并</a>
-为一个提交。
+再次提醒，请确保在每个分支中始终只保留一个提交。
+如果您错误地添加了多个提交，可以使用 <code>git rebase</code> 来<a href="https://stackoverflow.com/questions/31668794/squash-all-your-commits-in-one-before-a-pull-request-in-github">将它们合并</a>为一个提交。
 </p>
 
-<h2 id="sending_a_change_github">通过 GitHub 发送更改</h2>
+<h2 id="sending_a_change_github">通过 GitHub 提交更改</h2>
 
 <p>
-	尽管推荐使用且有更好的支持，Gerrit 流程适用于
-	已经熟悉 <a href="https://guides.github.com/introduction/flow/">GitHub 流程</a> 的
-	贡献者，他们可以使用相同的流程进行 Go 语言贡献。
-	尽管 Go 维护者使用 Gerrit 进行代码审查，
-	但已经创建了一个名为 <a href="/wiki/GerritBot">GerritBot</a> 的工具来同步
-	GitHub 拉取请求到 Gerrit。
+	尽管推荐使用 Gerrit 工作流并且其支持更好，
+	但已经熟悉 <a href="https://guides.github.com/introduction/flow/">GitHub 工作流</a>的贡献者
+	也能够使用相同的流程进行 Go 贡献。
+	即使 Go 维护者使用 Gerrit 进行代码审查，
+	也创建了一个名为 <a href="/wiki/GerritBot">GerritBot</a> 的工具，
+	用于将 GitHub 拉取请求同步到 Gerrit。
 </p><p>
-	像往常一样打开一个 GitHub 拉取请求。GerritBot 会创建一个相应的 Gerrit 变更列表（一个“CL”），并在你的 GitHub 拉取请求上发布一个链接；对拉取请求的更新也会同步反映到 Gerrit CL 中。当有人在 CL 上评论时，他们的评论也会发布在你的拉取请求中，因此你会收到通知。
+	按照常规方式提交GitHub拉取请求即可。
+	GerritBot会创建对应的Gerrit变更列表（即"CL"），并在您的GitHub拉取请求中发布链接；对拉取请求的更新也会同步到Gerrit的CL中。
+	当有人在该CL上发表评论时，评论也会同步发布到您的拉取请求中，以便您收到通知。
 </p>
 
 <p>
-	需要记住的一些事项：
+	需要注意以下几点：
 </p>
 
 <ul>
 	<li>
-		你需要一个 <a href="https://go-review.googlesource.com/login/">Gerrit 账户</a>
-		来回复你的审查者，包括<a href="#reviews">将反馈标记为“完成”</a>（如果按照建议实施的话）。熟悉 Gerrit 是个好主意，例如
-		<a href="https://go-review.googlesource.com/q/status:open+-is:wip">浏览打开的 CL</a>，
-		订阅你感兴趣的 CL 的更新（通过星标图标），
-		或者<a href="/wiki/Gardening#pending-cls">审查或给其他人的 CL 点 +1</a>。
+		您需要拥有一个<a href="https://go-review.googlesource.com/login/">Gerrit账户</a>来回复审阅者，
+		包括根据建议实现后<a href="#reviews">将反馈标记为"已完成"</a>。
+		建议您熟悉Gerrit的使用，例如<a href="https://go-review.googlesource.com/q/status:open+-is:wip">浏览开放状态的CL</a>、
+		订阅感兴趣的CL更新（通过星标图标），
+		或<a href="/wiki/Gardening#pending-cls">审阅或给予+1评价</a>他人的CL。
 	</li>
 	<li>
-		要使用新代码更新拉取请求，只需将其推送到分支；你可以添加更多提交，也可以 rebase 并强制推送（两种方式都被接受）。
+		若要更新拉取请求中的代码，只需推送到对应分支即可；您可以选择新增提交，
+		或进行变基后强制推送（两种方式均可接受）。
 	</li>
 	<li>
-		如果请求被接受，所有提交将被压缩，最终的提交描述将通过拼接拉取请求的标题和描述来组成。各个提交的描述将被丢弃。
-		请参阅<a href="#commit_messages">编写好的提交消息</a>获取一些建议。
+		如果请求被接受，所有提交将被压缩合并，
+		最终提交描述将由拉取请求的标题和描述拼接而成。
+		各个独立提交的描述信息将被舍弃。
+		具体建议请参阅<a href="#commit_messages">编写规范的提交消息</a>。
 	</li>
 	<li>
-		更多详情请参见 <a href="/wiki/GerritBot#frequently-asked-questions">GerritBot 常见问题解答</a>。
+		更多详情请查看<a href="/wiki/GerritBot#frequently-asked-questions">GerritBot常见问题</a>。
 	</li>
 </ul>
 
-<h2 id="commit_messages">好的提交消息</h2>
+<h2 id="commit_messages">规范的提交消息</h2>
 
 <p>
-Go 中的提交消息遵循一套特定的约定，
-我们在本节中讨论它们。
+Go项目的提交消息需遵循特定规范，本节将详细说明。
 </p>
 
 <p>
-这是一个好的提交消息示例：
+以下是一个规范的示例：
 </p>
 
 <pre>
-math: 改进极大参数下 Sin、Cos 和 Tan 的精度
+math: 改进超大参数下的Sin、Cos和Tan精度
 
-现有实现在处理大参数时数值特性不佳，
-因此使用 McGillicutty 算法来提高 1e10 以上的精度。
+现有实现在处理大参数时数值特性较差，
+现采用McGillicutty算法提升1e10以上数值的计算精度。
 
-该算法在 https://wikipedia.org/wiki/McGillicutty_Algorithm 上有描述
+该算法详见 https://wikipedia.org/wiki/McGillicutty_Algorithm
 
-修复 #159
+Fixes #159
 </pre>
 
-<h3 id="first_line">第一行</h3>
+<h3 id="first_line">首行说明</h3>
 
 <p>
-变更描述的第一行通常是对变更的简短单行摘要，
-并以主要受影响的包为前缀。
+变更描述的首行通常是对本次变更的简短总结，需以受影响的主要包名作为前缀。
 </p>
 
 <p>
-一个经验法则是，它应该被写成能完成句子
-“此变更修改了 Go 以实现 ____。”
-这意味着它不以大写字母开头，不是一个完整的句子，
-并且实际上总结了变更的结果。
+判断标准是：该行内容应能完善"本变更修改了Go的_____"这个句子。
+这意味着它不应以大写字母开头，不是完整句子，且需准确概括变更带来的结果。
 </p>
 
 <p>
-在第一行之后跟一个空行。
+首行后必须空一行。
 </p>
 
-<h3 id="main_content">主要内容</h3>
+<h3 id="main_content">正文内容</h3>
 
 <p>
-描述的其余部分应详细阐述，并提供变更的背景信息，
-解释其作用。使用正确标点的完整句子编写，
-就像你在 Go 代码中的注释一样。不要使用 HTML、Markdown
-或任何其他标记语言。文本应在大约 72 列处换行。
-更多详情请参阅 <a href="/wiki/CommitMessage">提交消息</a>。
-</p>
-
-<p>
-添加任何相关信息，例如如果变更影响性能，
-则包含基准测试数据。通常使用
-<a href="https://godoc.org/golang.org/x/perf/cmd/benchstat">benchstat</a>
-工具来格式化变更描述中的基准测试数据。
-</p>
-
-<h3 id="ref_issues">引用问题</h3>
-
-<p>
-特殊表示法 "Fixes #12345" 将变更与
-<a href="/issue/12345">Go 问题跟踪器</a>中的问题 12345 关联起来。
-当此变更最终被应用时，问题跟踪器会自动将该问题标记为已修复。
+后续描述应详细阐述，提供变更背景并说明具体作用。
+请使用完整句子和正确标点，如同编写Go代码注释一样规范。
+禁止使用HTML、Markdown或其他标记语言。
+文本建议控制在72列宽度左右。
+更多细节请参阅<a href="/wiki/CommitMessage">提交消息规范</a>。
 </p>
 
 <p>
-如果该变更只是解决问题的部分步骤，
-请改为写 "Updates #12345"。
-这将在问题中留下一条评论，链接回 Gerrit 中的变更，
-但变更应用时不会关闭该问题。
+可补充相关信息，例如影响性能的变更需提供基准测试数据。
+规范做法是使用<a href="https://godoc.org/golang.org/x/perf/cmd/benchstat">benchstat</a>工具格式化变更描述中的基准数据。
+</p>
+
+<h3 id="ref_issues">关联问题追踪</h3>
+
+<p>
+使用特殊标记"Fixes #12345"可将变更与<a href="/issue/12345">Go问题追踪器</a>中的12345号问题关联。
+当变更最终合入后，问题追踪器会自动将该问题标记为已解决。
 </p>
 
 <p>
-如果你针对 golang.org/x/... 仓库提交变更，
-你必须使用 GitHub 支持的完全限定语法，
-以确保该变更链接到主仓库而不是 x/ 仓库中的问题。
-大多数问题都在主仓库的问题跟踪器中跟踪。
-正确的形式是 "Fixes golang/go#159"。
+若变更仅是解决问题过程中的阶段性步骤，请改用"Updates #12345"。
+这会在问题中留下指向Gerrit变更的评论，但变更合入时不会关闭该问题。
 </p>
 
-<h2 id="review">审查流程</h2>
-
 <p>
-本节详细解释审查流程，以及在变更提交后如何处理审查。
+若您向golang.org/x/...仓库提交变更，必须使用GitHub支持的完整语法格式，
+以确保变更关联至主仓库而非x/仓库的问题。绝大多数问题均通过主仓库的问题追踪器管理。
+正确格式应为"Fixes golang/go#159"。
 </p>
 
-<h3 id="mistakes">常见的初学者错误</h3>
+<h2 id="review">代码审查流程</h2>
 
 <p>
-当变更提交到 Gerrit 后，通常会在几天内进行分类。
-维护者会查看并提供一些初步审查，对于首次贡献者来说，
-审查通常侧重于基本的格式规范和常见错误。
-这些包括诸如：
+本节将详细说明代码审查流程，以及变更提交后的处理方式。
+</p>
+
+<h3 id="mistakes">初学者常见错误</h3>
+
+<p>
+变更提交至Gerrit后，通常会在几天内进行初步筛选。
+维护者将查看代码并进行初步审查，对首次贡献者通常侧重于基础格式和常见问题检查，包括但不限于：
 </p>
 
 <ul>
 <li>
-提交消息未遵循<a href="#commit_messages">建议的格式</a>。
+提交消息未遵循<a href="#commit_messages">建议格式</a>。
 </li>
 
 <li>
-缺少关联的 GitHub 问题。绝大多数变更
-都需要一个关联的问题来描述该变更修复或实现的缺陷或功能，
-并且在进行变更之前，应在跟踪器上达成共识。
-Gerrit 审查不讨论变更的优点，
-只讨论其实现。
+缺少关联的GitHub问题。绝大多数变更需要关联具体问题，
+用以说明所修复的缺陷或实现的功能，且需在问题追踪器中达成共识后方可进行。
+Gerrit审查仅讨论实现方案，不评估变更价值。
 <br>
-只有微不足道或纯格式化的变更才会在没有关联问题的情况下被接受。
+仅微小或格式性修改可豁免此要求。
 </li>
 
 <li>
-在开发周期的冻结阶段发送变更，此时代码库
-不对常规变更开放。在这种情况下，
-维护者可能会用类似 <code>R=go1.12</code> 的标记审查代码，
-这意味着它将在代码库为新的开发窗口开放时稍后审查。
-如果你知道当前不是该变更的正确时间框架，
-你可以自己添加 <code>R=go1.XX</code> 作为评论。
+在开发周期的冻结阶段提交变更（此时主干暂停接受常规变更）。
+此类情况下，维护者可能会标注<code>R=go1.12</code>进行审查，
+表示将在下一个开发窗口期重新审查。
+若您知晓当前非合适时间窗口，可自行添加<code>R=go1.XX</code>注释。
 </li>
 </ul>
 
-<h3 id="trybots">测试机器人</h3>
+<h3 id="trybots">测试机器人集群</h3>
 
 <p>
-在初步阅读你的变更后，维护者会触发测试机器人，
-这是一个服务器集群，将在多种不同的架构上运行完整的测试套件。
-大多数测试机器人在几分钟内完成，届时 Gerrit 中会发布一个链接，
-你可以查看结果。
+初步审阅后，维护者将触发测试机器人集群（Trybots），
+该集群将在多种不同架构上运行完整测试套件。
+多数测试在几分钟内完成，结果链接将发布在Gerrit中供查看。
 </p><p>
-如果测试机器人运行失败，请点击链接检查失败平台上的完整日志。
-尝试理解问题原因，更新补丁进行修复，然后重新上传。
-维护者会触发新一轮测试机器人运行以确认问题是否已解决。
+若测试机器人运行失败，请点击链接查看失败平台的完整日志。
+尝试分析问题原因，更新您的补丁以修复问题后重新上传。
+维护者将触发新一轮测试机器人运行以确认问题是否已解决。
 </p>
 
 <p>
-有时某些平台的代码库可能会暂时中断数小时；如果测试机器人报告的失败与您的补丁无关，请访问<a href="https://build.golang.org">构建仪表盘</a>检查同一平台的近期提交是否出现相同故障。此时，您可以在Gerrit中留言说明故障与您的变更无关，以帮助维护者理解情况。您也可以在GitHub Issues中搜索故障错误信息，或浏览<a href="https://github.com/golang/go/issues?q=is%3Aissue%20watchflakes%20sort%3Aupdated-desc">最近更新的<code>watchflakes</code>问题</a>。如果您的变更基于较早的提交，或看起来可能已有其他人修复了该问题，请尝试通过<code>git rebase</code>变基到最新的主分支提交。
+某些情况下，主干代码可能在部分平台上出现数小时的构建故障。
+若测试机器人报告的失败与您的补丁无关，请访问
+<a href="https://build.golang.org">构建信息面板</a>，检查同一平台上其他近期提交是否出现相同故障。
+此时，您可在Gerrit中留言说明该故障与您的变更无关，以帮助维护者了解情况。
+您也可在GitHub Issues中搜索故障错误信息，或浏览
+<a href="https://github.com/golang/go/issues?q=is%3Aissue%20watchflakes%20sort%3Aupdated-desc">近期更新的<code>watchflakes</code>标签问题</a>。
+若您的变更基于较早的提交，或可能已被他人修复，请尝试通过<code>git rebase</code>变基至最新的主干提交。
 </p>
 
 <h3 id="reviews">代码审查</h3>
 
 <p>
-Go社区非常重视全面的代码审查。
-请将每条审查意见视为待办工单：您需要通过实施建议或说服审查者等方式来"关闭"该工单。
+Go社区重视彻底严谨的代码审查。
+请将每条审查意见视为待处理工单：您需要采取行动（实施建议或说服审查者）来"关闭"它。
 </p>
 
 <p>
-更新变更后，请仔细阅读所有审查意见并逐一回复。
-您可以点击"完成"按钮表示已采纳审查者建议；若未采纳，请点击"回复"并说明原因或替代方案。
+更新变更后，请逐条回复所有审查意见。
+您可点击"Done"按钮表示已采纳建议；
+否则请点击"Reply"解释未采纳原因或替代方案。
 </p>
 
 <p>
-变更经历多轮审查是完全正常的现象，审查者会不断提出新意见并等待您更新变更后继续审查。即使是有经验的贡献者也会经历这个过程，请勿因此气馁。
+变更经历多轮审查是正常现象：审查者每次提出新意见后，会等待更新后的变更再次审查。
+即使经验丰富的贡献者也会经历此过程，请勿因此气馁。
 </p>
 
-<h3 id="votes">投票机制</h3>
+<h3 id="votes">投票规范</h3>
 
 <p>
-临近决策时，审查者会对您的变更进行代码审查"投票"。投票分为两种：
+临近决策时，审查者将对变更进行代码审查投票。投票类型包括：
 </p>
 
 <ul>
 	<li>
-	<b>+2</b> 表示变更已获批准可合并。仅Go维护者（亦称"审批者"）可投出+2票。
+	<b>+2</b>：变更获准合并。仅Go维护者（亦称"审批者"）可投+2票。
 	</li>
 	<li>
-	<b>+1</b> 表示变更质量良好，但审查者要求微调后才批准；或审查者非维护者无法批准，但希望鼓励批准。
+	<b>+1</b>：变更基本合格，但审查者要求小幅修改后方可批准；
+	或非维护者无法批准但支持批准。
 	</li>
 </ul>
 
 <p>
-变更必须获得维护者的代码审查+2票才能提交。
+变更必须获得维护者的代码审查+2票方可提交。
 </p>
 
 <p>
-维护者还可对变更投出"保留+1"票，表示当前不应提交（例如该变更中的新API尚处于<a href="/s/proposal-process">提案审查</a>阶段）。
+维护者还可投出Hold +1票，标记当前不应提交的变更
+（例如变更涉及的新API正处<a href="/s/proposal-process">提案审查</a>阶段）。
 </p>
 
 <p>
-变更必须不存在任何维护者的"保留+1"票才能提交。
+变更不得存在任何维护者的Hold +1票方可提交。
 </p>
 
 <p>
-最终，变更必须包含两名谷歌员工的参与——可以是变更上传者或至少投出代码审查+1票的审查者。此要求基于合规性及供应链安全考虑。
+最后，变更必须有两名谷歌员工参与（作为提交者或至少投出代码审查+1票的审查者）。
+此要求出于合规性与供应链安全考虑。
 </p>
 
 <h3 id="submit">提交已批准的变更</h3>
 
 <p>
-当变更就绪后，维护者将执行提交操作，将其作为新提交加入Gerrit代码库。
+当变更准备就绪时，维护者将提交变更，将其作为提交记录添加至Gerrit仓库。
 </p>
 
 <p>
-批准与提交是两个独立步骤，因为某些情况下维护者可能希望批准但暂缓提交（例如代码库处于暂时冻结期）。
+批准与提交分两步进行，因为某些情况下维护者可能批准但暂不提交（例如主干临时冻结）。
 </p>
 
 <p>
-提交变更会将其检入代码库。变更描述中将包含代码审查链接，该链接将同步更新为代码库中的变更地址。由于采用Git的"Cherry Pick"方式集成变更，提交操作会改变代码库中的提交哈希值。
+提交变更将使其入库。变更说明中将包含代码审查链接，
+该链接会更新仓库中的变更地址。
+由于集成采用Git的"Cherry Pick"方式，
+提交操作会改变仓库中的提交哈希值。
 </p>
 
 <p>
-如果您的变更已获批准数日仍未提交，可在Gerrit中留言请求提交。
+若您的变更获批数日后仍未提交，可在Gerrit中留言请求提交。
 </p>
 
 <h3 id="more_information">更多信息</h3>
 
 <p>
-除本文内容外，Go社区维护着<a href="/wiki/CodeReview">代码审查</a>维基页面。随着您对审查流程的深入了解，欢迎为该页面贡献力量。
+除本文内容外，Go社区维护了<a
+href="/wiki/CodeReview">代码审查</a>维基页面。
+随着对审查流程的深入了解，欢迎您为该页面贡献力量。
 </p>
 
-<h2 id="advanced_topics">杂项主题</h2>
+<h2 id="advanced_topics">其他主题</h2>
 
 <p>
-本节汇总了问题/编辑/代码审查/提交流程之外的补充说明。
+本节收录超出问题报告/编辑/代码审查/提交流程本身的补充说明。
 </p>
 
 <h3 id="gopls">Gopls</h3>
 
 <p>
-在主Go仓库中使用编辑器配合<code>gopls</code>时，<code>gopls</code>调用的<code>go</code>命令必须与您正在处理的源代码版本匹配。可通过<code>make.bash</code>构建<code>go</code>命令，并将<code>bin</code>目录添加至<code>PATH</code>环境变量。详见<a href="/gopls/advanced">Gopls：高级主题</a>。
+在编辑器中使用<code>gopls</code>处理Go主仓库时，
+<code>gopls</code>调用的<code>go</code>命令必须与源码版本匹配。
+可通过<code>make.bash</code>构建<code>go</code>命令，
+并将<code>bin</code>目录添加至系统<code>PATH</code>。
+详见<a href="/gopls/advanced">Gopls: 高级主题</a>。
 </p>
 
-<p>Gopls完整文档请访问 https://go.dev/gopls</p>
+<p>Gopls完整文档请访问 https://go.dev/gopls。</p>
 
 <h3 id="copyright">版权声明</h3>
 
 <p>
-Go仓库中的文件不列出作者姓名，既避免冗余也免于维护更新。您的姓名将出现在<a href="/change">变更日志</a>中。
+Go仓库文件不列作者姓名，既为保持简洁也免维护更新。
+您的贡献信息将体现在<a href="/change">变更日志</a>中。
 </p>
 
 <p>
-您贡献的新文件应使用标准版权声明：
+您提交的新文件应使用标准版权声明：
 </p>
 
 <pre>
@@ -861,14 +866,15 @@ Go仓库中的文件不列出作者姓名，既避免冗余也免于维护更新
 </pre>
 
 <p>
-仓库中的文件版权年份以添加时为准，请勿更新您修改文件的版权年份。
+仓库文件以添加年份为版权年份。请勿更新所修改文件的版权年份。
 </p>
 
 <h3 id="troubleshooting_mail">邮件错误排查</h3>
 
 <p>
-<code>git</code> <code>codereview</code> <code>mail</code>命令最常见的失败原因是提交中的电子邮箱与<a href="#google_account">注册流程</a>中使用的邮箱不一致。<br>
-如果看到类似这样的信息...
+<code>git</code> <code>codereview</code> <code>mail</code>命令失败最常见的原因是
+提交记录中的邮箱地址与<a href="#google_account">注册流程</a>中使用的地址不一致。<br>
+如果您看到类似这样的提示...
 </p>
 
 <pre>
@@ -881,7 +887,7 @@ remote: ERROR:  does not match your user account.
 
 <p>
 您需要为此仓库配置 Git，使其使用您注册时使用的电子邮箱地址。
-要更改电子邮箱地址以确保不再发生这种情况，请运行：
+要更改电子邮箱地址以避免再次出现此问题，请运行：
 </p>
 
 <pre>
@@ -889,7 +895,7 @@ $ git config user.email email@address.com
 </pre>
 
 <p>
-然后，使用此命令将提交更改为此备用电子邮箱地址：
+然后使用以下命令将提交的作者信息更改为这个备用电子邮箱地址：
 </p>
 
 <pre>
@@ -907,24 +913,24 @@ $ git codereview mail
 <h3 id="quick_test">快速测试您的更改</h3>
 
 <p>
-对代码树的每处更改都运行 <code>all.bash</code> 是很繁琐的。
-尽管强烈建议在提交更改前运行它，但在日常开发周期中，您可能只想编译和测试您正在开发的那个包。
+每次更改代码树都运行 <code>all.bash</code> 会很繁琐。
+虽然强烈建议在提交更改前运行它，但在正常的开发周期中，您可能只想编译和测试您正在开发的包。
 </p>
 
 <ul>
 <li>
 通常，您可以运行 <code>make.bash</code> 而不是 <code>all.bash</code>，
-这样只重建 Go 工具链而不运行整个测试套件。
-或者，您可以运行 <code>run.bash</code> 来只运行整个测试套件而不重建工具链。
-您可以将 <code>all.bash</code> 看作是 <code>make.bash</code>
-之后运行 <code>run.bash</code>。
+这样只会重新构建 Go 工具链，而不会运行整个测试套件。
+或者您可以运行 <code>run.bash</code>，这样只会运行整个测试套件而不会重新构建工具链。
+您可以将 <code>all.bash</code> 视为 <code>make.bash</code> 后接 <code>run.bash</code>。
 </li>
 
 <li>
 在本节中，我们将您克隆 Go 仓库的目录称为 <code>$GOROOT</code>。
-由 <code>$GOROOT/src/make.bash</code> 构建的 <code>go</code> 工具将被安装在
+由 <code>$GOROOT/src/make.bash</code> 构建的 <code>go</code> 工具将安装在
 <code>$GOROOT/bin/go</code>，您可以调用它来测试您的代码。
-例如，如果您修改了编译器并想测试它如何影响您自己项目的测试套件，只需使用它运行 <code>go</code> <code>test</code>：
+例如，如果您修改了编译器并想测试它如何影响您自己项目的测试套件，
+只需使用它运行 <code>go</code> <code>test</code>：
 
 <pre>
 $ cd &lt;MYPROJECTDIR&gt;
@@ -933,8 +939,9 @@ $ $GOROOT/bin/go test
 </li>
 
 <li>
-如果您正在修改标准库，您可能不需要重新编译编译器：您可以只运行您所修改的包的测试。
-您可以使用您通常使用的 Go 版本来做这件事，也可以使用从您的克隆版本构建的 Go 编译器来做（有时这是必需的，因为您修改的标准库代码可能需要比您安装的稳定版本更新的版本）。
+如果您正在更改标准库，您可能不需要重新构建编译器：只需运行您已更改包的测试即可。
+您可以使用您通常使用的 Go 版本，也可以使用从您的克隆构建的 Go 编译器
+（这有时是必要的，因为您正在修改的标准库代码可能需要比您已安装的稳定版本更新的版本）。
 
 <pre>
 $ cd $GOROOT/src/crypto/sha1
@@ -944,26 +951,25 @@ $ $GOROOT/bin/go test .
 </li>
 
 <li>
-如果您正在修改编译器本身，您可以只重新编译
-<code>compile</code> 工具（这是 <code>go</code> <code>build</code> 用来编译每个单独包的内部二进制文件）。
-之后，您会希望通过编译或运行某些东西来测试它。
+如果您正在修改编译器本身，您可以只重新编译 <code>compile</code> 工具
+（这是 <code>go</code> <code>build</code> 调用的内部二进制文件，用于编译每个单独的包）。
+之后，您需要通过编译或运行某些东西来测试它。
 
 <pre>
 $ cd $GOROOT/src
 $ [make changes...]
 $ $GOROOT/bin/go install cmd/compile
-$ $GOROOT/bin/go build [something...]   # 测试新的编译器
-$ $GOROOT/bin/go run [something...]     # 测试新的编译器
-$ $GOROOT/bin/go test [something...]    # 测试新的编译器
+$ $GOROOT/bin/go build [something...]   # 测试新编译器
+$ $GOROOT/bin/go run [something...]     # 测试新编译器
+$ $GOROOT/bin/go test [something...]    # 测试新编译器
 </pre>
-同样的方法也适用于 Go 工具链的其他内部工具，
-例如 <code>asm</code>、<code>cover</code>、<code>link</code> 等等。
-只需使用 <code>go</code> <code>install</code> <code>cmd/&lt;TOOL&gt;</code> 重新编译并安装该工具，然后使用构建好的 Go 二进制文件来测试它。
+
+这同样适用于 Go 工具链的其他内部工具，例如 <code>asm</code>、<code>cover</code>、<code>link</code> 等。
+只需使用 <code>go</code> <code>install</code> <code>cmd/&lt;TOOL&gt;</code> 重新编译并安装该工具，然后使用构建的 Go 二进制文件进行测试。
 </li>
 
 <li>
-除了标准的按包测试之外，在 <code>$GOROOT/test</code> 中还有一个顶层测试套件，其中包含
-几个黑盒和回归测试。
+除了标准的按包测试外，<code>$GOROOT/test</code> 中还有一个顶层测试套件，包含多个黑盒测试和回归测试。
 该测试套件由 <code>all.bash</code> 运行，但您也可以手动运行它：
 
 <pre>
@@ -974,14 +980,13 @@ $ $GOROOT/bin/go test cmd/internal/testdir
 <h3 id="cc">指定审查者 / 抄送其他人</h3>
 
 <p>
-除非另有明确说明，例如在发送更改之前的讨论中，最好不要指定审查者。
-所有更改都会自动抄送到
-<a href="https://groups.google.com/group/golang-codereviews">golang-codereviews@googlegroups.com</a> 邮件列表。
-如果这是您的第一次更改，在它出现在邮件列表之前可能会有审核延迟，以防止垃圾邮件。
+除非有明确说明（例如在提交更改前的讨论中），否则最好不要指定审查者。
+所有更改都会自动抄送到 <a href="https://groups.google.com/group/golang-codereviews">golang-codereviews@googlegroups.com</a> 邮件列表。
+如果这是您的第一次更改，在防止垃圾邮件的机制下，它可能会在出现在邮件列表之前有一个审核延迟。
 </p>
 
 <p>
-您可以使用 <code>-r</code> 或 <code>-cc</code> 选项来指定审查者或抄送相关方。
+您可以使用 <code>-r</code> 或 <code>-cc</code> 选项指定审查者或抄送相关方。
 两者都接受逗号分隔的电子邮箱地址列表：
 </p>
 
@@ -992,8 +997,7 @@ $ git codereview mail -r joe@golang.org -cc mabel@example.com,math-nuts@swtch.co
 <h3 id="sync">同步您的客户端</h3>
 
 <p>
-在您工作的同时，其他人可能已经向仓库提交了更改。
-要更新您的本地分支，请运行
+在您工作期间，其他人可能已向仓库提交了更改。要更新您的本地分支，请运行
 </p>
 
 <pre>
@@ -1001,15 +1005,17 @@ $ git codereview sync
 </pre>
 
 <p>
-（在底层，它运行的是 <code>git</code> <code>pull</code> <code>-r</code>。）
+（在底层，这运行 <code>git</code> <code>pull</code> <code>-r</code>。）
 </p>
 
 <h3 id="download">审查他人的代码</h3>
 
 <p>
-作为审查过程的一部分，审查者可以直接提出更改（在 GitHub 工作流中，这相当于其他人将提交附加到拉取请求）。
+作为审查过程的一部分，审查者可以直接提出更改（在 GitHub 工作流中，这相当于其他人向拉取请求添加提交）。
 
-Gerrit 提供了访问命令的途径，这些命令将帮助您导入另一位开发者提出的更改，以便您可以在本地审查/测试它们。从您要导入的 CL 的 Gerrit 页面，打开 "⋮" 菜单，点击 "Download patch" 链接。根据您首选的 git 工作流，选择适当的命令。选项看起来会像这样：
+Gerrit 提供了访问命令的功能，这些命令可帮助您导入另一位开发者提议的更改，以便您在本地审查/测试它们。
+从您想要导入的 CL 的 Gerrit 页面，打开“⋮”菜单，点击“下载补丁”链接。
+根据您首选的 git 工作流，选择适当的命令。选项看起来像这样：
 </p>
 
 <pre>
@@ -1017,13 +1023,13 @@ $ git fetch https://go.googlesource.com/review refs/changes/21/13245/1 &amp;&amp
 </pre>
 
 <p>
-要撤销，请切换回您之前工作的分支。
+要撤消，切换回您之前工作的分支。
 </p>
 
 <h3 id="git-config">设置 git 别名</h3>
 
 <p>
-<code>git-codereview</code> 命令可以直接在 shell 中输入来运行，例如：
+<code>git-codereview</code> 命令可以直接从 shell 运行，例如通过输入
 </p>
 
 <pre>
@@ -1031,14 +1037,14 @@ $ git codereview sync
 </pre>
 
 <p>
-但为 <code>git-codereview</code> 自身的子命令设置别名会更方便，这样上面的命令就变成了：
+但更方便的做法是为 <code>git-codereview</code> 自己的子命令设置别名，这样上面的命令就变成了
 </p>
 
 <pre>
 $ git sync
 </pre><p>
-<code>git-codereview</code> 的子命令被设计为与 Git 自身的命令有所不同，因此可以安全地定义这些别名。
-要安装它们，请将以下文本复制到您的 Git 配置文件中（通常是您主目录下的 <code>.gitconfig</code> 文件）：
+<code>git-codereview</code> 的子命令经过精心设计，与 Git 自身命令有所区别，因此可以安全地设置这些别名。
+要安装这些别名，请将以下文本复制到您的 Git 配置文件中（通常是位于主目录下的 <code>.gitconfig</code>）：
 </p>
 
 <pre>
@@ -1051,16 +1057,16 @@ $ git sync
 	sync = codereview sync
 </pre>
 
-<h3 id="multiple_changes">发送多个相互依赖的变更</h3>
+<h3 id="multiple_changes">发送多个相互依赖的更改</h3>
 
 <p>
-高级用户可能希望将相关的提交堆叠在单个分支中。
-Gerrit 允许变更之间相互依赖，形成这样的依赖链。
-每个变更都需要单独批准和提交，但依赖关系对审查者是可见的。
+高级用户可能希望将相关的多个提交堆叠在一个分支上。
+Gerrit 允许更改之间相互依赖，从而形成这样的依赖链。
+每个更改都需要被单独批准和提交，但其依赖关系对审查者是可见的。
 </p>
 
 <p>
-要发送一组相互依赖的变更，请在同一个分支下将每个变更作为不同的提交保存，然后运行：
+要发送一组相互依赖的更改，请将每个更改作为不同的提交保留在同一个分支下，然后运行：
 </p>
 
 <pre>
@@ -1068,11 +1074,11 @@ $ git codereview mail HEAD
 </pre>
 
 <p>
-请确保明确指定 <code>HEAD</code>，这在发送单个变更时通常是不需要的。更多详情可在 <a href="https://pkg.go.dev/golang.org/x/review/git-codereview?tab=doc#hdr-Multiple_Commit_Work_Branches">git-codereview 文档</a> 中找到。
+请注意要显式指定 <code>HEAD</code>，这在发送单个更改时通常不是必需的。更多详细信息可在 <a href="https://pkg.go.dev/golang.org/x/review/git-codereview?tab=doc#hdr-Multiple_Commit_Work_Branches">git-codereview 文档</a> 中找到。
 </p>
 
 <h3 id="minor_releases">小版本发布</h3>
 
 <p>
-如果您希望对发布分支进行更改以进行向后移植，请参阅 <a href="/wiki/MinorReleases">小版本发布</a>。
+如果您希望对发布分支进行更改以进行回移，请参阅 <a href="/wiki/MinorReleases">小版本发布</a>。
 </p>

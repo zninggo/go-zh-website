@@ -89,7 +89,8 @@
       "source": "doc/contribute.html",
       "target": "doc/contribute.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T12:40:55.638Z"
     },
     {
       "source": "doc/copyright.md",
