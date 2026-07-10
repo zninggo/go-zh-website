@@ -9,7 +9,6 @@ import (
 	"archive/zip"
 	"bytes"
 	"context"
-	"crypto/tls"
 	"embed"
 	"encoding/json"
 	"errors"
@@ -20,7 +19,6 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"os"
 	"path"
@@ -287,22 +285,39 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Playground endpoints - reverse proxy to go.dev
+	// Playground endpoints - proxy compile to go.dev
 	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
-		target, _ := url.Parse("https://go.dev")
-		proxy := &httputil.ReverseProxy{
-			Director: func(req *http.Request) {
-				req.URL.Scheme = target.Scheme
-				req.URL.Host = target.Host
-				req.Host = target.Host
-			},
-			Transport: &http.Transport{
-				ForceAttemptHTTP2: false,
-				TLSNextProto:     make(map[string]func(string, *tls.Conn) http.RoundTripper),
-			},
+		body, _ := io.ReadAll(r.Body)
+		r.Body.Close()
+
+		proxyURL := "https://go.dev/_/compile"
+		if r.URL.RawQuery != "" {
+			proxyURL += "?" + r.URL.RawQuery
 		}
+
+		req, err := http.NewRequest("POST", proxyURL, bytes.NewReader(body))
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte(`{"Errors":"playground proxy error","Events":null}`))
+			return
+		}
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("User-Agent", "GoZhWebsite/1.0")
+
+		client := &http.Client{Timeout: 30 * time.Second}
+		resp, err := client.Do(req)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte(`{"Errors":"playground unavailable","Events":null}`))
+			return
+		}
+		defer resp.Body.Close()
+
+		respBody, _ := io.ReadAll(resp.Body)
+		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		proxy.ServeHTTP(w, r)
+		w.WriteHeader(resp.StatusCode)
+		w.Write(respBody)
 	})
 	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
