@@ -712,7 +712,8 @@
       "source": "doc/security/vuln/index.md",
       "target": "doc/security/vuln/index.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:22:14.941Z"
     },
     {
       "source": "doc/security/vuln/vulncheck.md",
