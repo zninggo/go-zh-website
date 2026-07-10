@@ -356,6 +356,18 @@ func NewHandler(contentDir, goroot string) http.Handler {
 	h = hostPathHandler(h)
 	h = pathPrefixHandler(h)
 
+	// Debug: log request body size for playground endpoints
+	h = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/_/") {
+			// Peek at body without consuming it
+			bodyBytes, _ := io.ReadAll(r.Body)
+			r.Body.Close()
+			r.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+			log.Printf("DEBUG %s %s body=%d bytes ct=%s", r.Method, r.URL.Path, len(bodyBytes), r.Header.Get("Content-Type"))
+		}
+		h.ServeHTTP(w, r)
+	})
+
 	// If translations are enabled, redirect non-translated pages to go.dev
 	if *lang != "" {
 		h = translationRedirectHandler(h)
