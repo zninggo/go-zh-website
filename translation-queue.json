@@ -544,7 +544,8 @@
       "source": "doc/modules/developing.md",
       "target": "doc/modules/developing.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:51:21.369Z"
     },
     {
       "source": "doc/modules/gomod-ref.md",
