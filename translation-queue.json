@@ -852,7 +852,8 @@
       "source": "doc/tutorial/handle-errors.html",
       "target": "doc/tutorial/handle-errors.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:50:28.609Z"
     },
     {
       "source": "doc/tutorial/index.html",
