@@ -19,6 +19,21 @@ async function loadJSON(filePath) {
   }
 }
 
+function resolveEnvVars(obj) {
+  const result = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === 'string' && value.startsWith('${') && value.endsWith('}')) {
+      const envVar = value.slice(2, -1);
+      result[key] = process.env[envVar] || '';
+    } else if (typeof value === 'object' && value !== null) {
+      result[key] = resolveEnvVars(value);
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
 function loadGlossary() {
   try {
     return require(GLOSSARY_FILE);
@@ -261,7 +276,8 @@ async function main() {
   try {
     console.log('=== 开始翻译验证 ===\n');
 
-    const config = await loadJSON(path.join(__dirname, '..', 'config.json'));
+    const rawConfig = await loadJSON(path.join(__dirname, '..', 'config.json'));
+    const config = resolveEnvVars(rawConfig);
     const glossary = loadGlossary();
 
     // Scan all source files
