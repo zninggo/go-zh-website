@@ -838,7 +838,8 @@
       "source": "doc/tutorial/govulncheck.md",
       "target": "doc/tutorial/govulncheck.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:49:22.612Z"
     },
     {
       "source": "doc/tutorial/greetings-multiple-people.html",
