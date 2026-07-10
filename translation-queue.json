@@ -887,7 +887,8 @@
       "source": "doc/tutorial/workspaces.md",
       "target": "doc/tutorial/workspaces.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:59:32.354Z"
     },
     {
       "source": "learn/index.md",
