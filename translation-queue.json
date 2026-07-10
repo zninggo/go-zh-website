@@ -264,7 +264,8 @@
       "source": "doc/go-get-install-deprecation.md",
       "target": "doc/go-get-install-deprecation.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T14:03:06.825Z"
     },
     {
       "source": "doc/go1.1.md",
