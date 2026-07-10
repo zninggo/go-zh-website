@@ -467,7 +467,8 @@
       "source": "doc/go1compat.html",
       "target": "doc/go1compat.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:42:40.964Z"
     },
     {
       "source": "doc/go_faq.md",
