@@ -1,5 +1,3 @@
-```json
 <!--{
-	"Redirect": "/project/"
+	"重定向": "/project/"
 }-->
-```
