@@ -40,7 +40,8 @@
       "source": "doc/articles/wiki/view.html",
       "target": "doc/articles/wiki/view.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T07:48:07.638Z"
     },
     {
       "source": "doc/build-cover.md",
