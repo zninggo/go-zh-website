@@ -698,7 +698,8 @@
       "source": "doc/security/vuln/database.md",
       "target": "doc/security/vuln/database.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:20:43.026Z"
     },
     {
       "source": "doc/security/vuln/editor.md",
