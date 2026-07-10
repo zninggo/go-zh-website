@@ -222,7 +222,8 @@
       "source": "doc/faq.md",
       "target": "doc/faq.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T09:04:41.081Z"
     },
     {
       "source": "doc/fuzz.md",
