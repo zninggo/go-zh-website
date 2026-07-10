@@ -705,7 +705,8 @@
       "source": "doc/security/vuln/editor.md",
       "target": "doc/security/vuln/editor.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:21:29.783Z"
     },
     {
       "source": "doc/security/vuln/index.md",
