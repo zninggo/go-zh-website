@@ -747,7 +747,8 @@
       "source": "doc/security/vulndb/policy.md",
       "target": "doc/security/vulndb/policy.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:22:57.287Z"
     },
     {
       "source": "doc/telemetry.md",
