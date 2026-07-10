@@ -96,7 +96,8 @@
       "source": "doc/copyright.md",
       "target": "doc/copyright.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T07:59:25.824Z"
     },
     {
       "source": "doc/database/cancel-operations.md",
