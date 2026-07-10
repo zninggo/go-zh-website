@@ -295,9 +295,6 @@ func NewHandler(contentDir, goroot string) http.Handler {
 		w.Header().Set("Content-Type", "text/plain")
 		w.Write([]byte("playground-disabled"))
 	})
-	mux.HandleFunc("/doc/play/", func(w http.ResponseWriter, r *http.Request) {
-		http.NotFound(w, r)
-	})
 
 	mux.Handle("/explore/", http.StripPrefix("/explore/", redirectPrefix("https://pkg.go.dev/")))
 	if err := blog.RegisterFeeds(mux, "", godevSite); err != nil {
