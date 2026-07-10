@@ -565,7 +565,8 @@
       "source": "doc/modules/major-version.md",
       "target": "doc/modules/major-version.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:00:16.288Z"
     },
     {
       "source": "doc/modules/managing-dependencies.md",
