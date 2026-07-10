@@ -293,6 +293,13 @@ func NewHandler(contentDir, goroot string) http.Handler {
 		}
 		http.Redirect(w, r, target, http.StatusTemporaryRedirect)
 	})
+	mux.HandleFunc("/_/fmt", func(w http.ResponseWriter, r *http.Request) {
+		target := "https://go.dev/_/fmt"
+		if r.URL.RawQuery != "" {
+			target += "?" + r.URL.RawQuery
+		}
+		http.Redirect(w, r, target, http.StatusTemporaryRedirect)
+	})
 	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
 		w.Write([]byte("playground-disabled"))
