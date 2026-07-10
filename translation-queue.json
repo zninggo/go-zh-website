@@ -866,7 +866,8 @@
       "source": "doc/tutorial/module-conclusion.html",
       "target": "doc/tutorial/module-conclusion.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:51:06.213Z"
     },
     {
       "source": "doc/tutorial/random-greeting.html",
