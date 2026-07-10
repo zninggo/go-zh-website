@@ -740,7 +740,8 @@
       "source": "doc/security/vulndb/index.md",
       "target": "doc/security/vulndb/index.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:22:47.976Z"
     },
     {
       "source": "doc/security/vulndb/policy.md",
