@@ -768,7 +768,8 @@
       "source": "doc/tos.html",
       "target": "doc/tos.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:27:03.715Z"
     },
     {
       "source": "doc/tutorial/add-a-test.html",
