@@ -810,7 +810,8 @@
       "source": "doc/tutorial/fuzz.md",
       "target": "doc/tutorial/fuzz.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:41:18.355Z"
     },
     {
       "source": "doc/tutorial/generics.md",
