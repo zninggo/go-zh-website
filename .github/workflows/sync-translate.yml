@@ -37,6 +37,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Sync upstream changes
         run: |
           git remote add upstream https://github.com/golang/website.git || true
@@ -51,14 +56,19 @@ jobs:
       - name: Detect changed files
         id: changes
         run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD -- '_content/doc/' '_content/learn/' | grep -E '\.(md|html)$' || true)
-          if [ -n "$CHANGED" ] || [ "${{ inputs.force_translate }}" = "true" ]; then
+          if [ "${{ inputs.force_translate }}" = "true" ]; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "Changed files:"
-            echo "$CHANGED"
+            echo "Force translate enabled"
           else
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "No documentation changes detected."
+            CHANGED=$(git diff --name-only HEAD~1 HEAD -- '_content/doc/' '_content/learn/' 2>/dev/null | grep -E '\.(md|html)$' || true)
+            if [ -n "$CHANGED" ]; then
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+              echo "Changed files:"
+              echo "$CHANGED"
+            else
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+              echo "No documentation changes detected."
+            fi
           fi
 
       - name: Translate documentation
@@ -80,8 +90,6 @@ jobs:
 
       - name: Commit and push
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add _translations/ .file-hashes.json translation-queue.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "chore: update translations [skip ci]"
           git push
