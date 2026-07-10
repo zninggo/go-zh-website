@@ -110,7 +110,8 @@
       "source": "doc/database/change-data.md",
       "target": "doc/database/change-data.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T12:42:16.848Z"
     },
     {
       "source": "doc/database/execute-transactions.md",
