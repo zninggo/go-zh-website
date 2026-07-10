@@ -635,7 +635,8 @@
       "source": "doc/security/best-practices.md",
       "target": "doc/security/best-practices.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:13:19.323Z"
     },
     {
       "source": "doc/security/decisions.md",
