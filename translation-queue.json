@@ -194,7 +194,8 @@
       "source": "doc/diagnostics.html",
       "target": "doc/diagnostics.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T08:42:28.381Z"
     },
     {
       "source": "doc/docs.md",

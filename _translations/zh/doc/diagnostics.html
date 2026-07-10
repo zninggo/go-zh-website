@@ -1,0 +1,322 @@
+<!--{
+	"Title": "诊断",
+  	"Breadcrumb": true
+}-->
+
+<!--
+注意：在本文档及本目录下的其他文档中，约定为使用固定宽度的短语并配合非固定宽度的空格，如：
+<code>hello</code> <code>world</code>。
+请勿提交移除了此类短语内部标签的变更。
+-->
+
+<h2 id="introduction">简介</h2>
+
+<p>
+Go生态系统提供了一套丰富的API和工具，用于诊断Go程序中的逻辑和性能问题。本页概述了可用的工具，并帮助Go用户根据其特定问题选择最合适的工具。
+</p>
+
+<p>
+诊断解决方案可分为以下几类：
+</p>
+
+<ul>
+<li><strong>性能分析</strong>：性能分析工具用于分析Go程序的复杂度和开销，例如其内存使用情况和频繁调用的函数，以识别程序中的高耗时部分。</li>
+<li><strong>跟踪</strong>：跟踪是一种通过插桩代码来分析调用或用户请求整个生命周期中延迟的方法。跟踪提供了每个组件对系统整体延迟贡献程度的概览。跟踪可以跨越多个Go进程。</li>
+<li><strong>调试</strong>：调试允许我们暂停Go程序并检查其执行状态。程序的状态和流程可以通过调试来验证。</li>
+<li><strong>运行时统计与事件</strong>：收集和分析运行时统计信息及事件，可以提供关于Go程序健康状况的高级概览。指标的峰值/谷值变化有助于我们识别吞吐量、利用率和性能方面的变化。</li>
+</ul>
+
+<p>
+注意：某些诊断工具可能会相互干扰。例如，精确的内存性能分析会扭曲CPU性能分析结果，而协程阻塞性能分析会影响调度器跟踪。为了获得更精确的信息，请单独使用各个工具。
+</p>
+
+<h2 id="profiling">性能分析</h2>
+
+<p>
+性能分析对于识别代码中开销大或频繁调用的部分非常有用。Go运行时以 <a href="https://github.com/google/pprof/blob/master/doc/README.md">pprof可视化工具</a> 期望的格式提供 <a href="/pkg/runtime/pprof/">性能分析数据</a>。这些性能分析数据可以在测试期间通过 <code>go</code> <code>test</code> 或通过 <a href="/pkg/net/http/pprof/">net/http/pprof</a> 包提供的端点来收集。用户需要收集性能分析数据，并使用pprof工具来过滤和可视化主要代码路径。
+</p>
+
+<p><a href="/pkg/runtime/pprof">runtime/pprof</a> 包提供的预定义配置：</p>
+
+<ul>
+<li>
+<strong>cpu</strong>：CPU配置文件确定程序在主动消耗CPU周期时（而非在休眠或等待I/O时）的时间花销位置。
+</li>
+<li>
+<strong>heap</strong>：堆配置文件报告内存分配样本；用于监控当前和历史内存使用情况，并检查内存泄漏。
+</li>
+<li>
+<strong>threadcreate</strong>：线程创建配置文件报告导致创建新操作系统线程的程序部分。
+</li>
+<li>
+<li>
+<strong>goroutine</strong>：协程配置文件报告所有当前协程的栈跟踪信息。
+</li>
+<li>
+<strong>block</strong>：阻塞配置文件显示协程在同步原语（包括计时器通道）上阻塞等待的位置。默认情况下未启用阻塞配置文件；使用 <code>runtime.SetBlockProfileRate</code> 来启用它。
+</li>
+<li>
+<strong>mutex</strong>：互斥锁配置文件报告锁竞争情况。当您认为由于互斥锁竞争导致CPU未得到充分利用时，请使用此配置文件。默认情况下未启用互斥锁配置文件，请参阅 <code>runtime.SetMutexProfileFraction</code> 来启用它。
+</li>
+</ul>
+
+<p><strong>我还可以使用哪些其他分析器来分析Go程序？</strong></p>
+
+<p>
+在Linux上，可以使用 <a href="https://perf.wiki.kernel.org/index.php/Tutorial">perf工具</a> 来分析Go程序。Perf可以分析并展开cgo/SWIG代码和内核，因此有助于洞察原生/内核性能瓶颈。在macOS上，可以使用 <a href="https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/">Instruments</a> 套件来分析Go程序。
+</p>
+
+<p><strong>我可以在生产环境中分析服务吗？</strong></p>
+
+<p>是的。在生产环境中分析程序是安全的，但启用某些配置文件（例如CPU配置文件）会增加开销。您应该预期会看到性能下降。性能损失可以通过在生产环境中启用分析器之前测量其开销来估算。
+</p>
+
+<p>
+您可能希望定期对生产服务进行分析。特别是在具有单个进程多个副本的系统中，定期随机选择一个副本进行分析是一个安全的选择。选择一个生产进程，每Y秒分析X秒，并保存结果以供可视化和分析；然后定期重复。结果可以手动和/或自动审查以发现问题。
+配置文件的收集可能会相互干扰，因此建议一次只收集一个配置文件。
+</p>
+
+<p>
+<strong>可视化性能分析数据的最佳方式是什么？</strong>
+</p>
+
+<p>
+Go工具使用 <code><a href="https://github.com/google/pprof/blob/master/doc/README.md">go tool pprof</a></code> 提供了文本、图形和 <a href="http://valgrind.org/docs/manual/cl-manual.html">callgrind</a> 格式的配置文件数据可视化。
+阅读 <a href="/blog/profiling-go-programs">分析Go程序</a> 以了解其实际应用。
+</p>
+
+<p>
+<img width="800" src="../images/diagnostics/pprof-text.png">
+<br>
+<small>以文本形式列出开销最大的调用。</small>
+</p>
+
+<p>
+<img width="800" src="../images/diagnostics/pprof-dot.png">
+<br>
+<small>以图形形式可视化开销最大的调用。</small>
+</p><p>Weblist视图以HTML页面逐行显示源代码中最耗时的部分。在以下示例中，<code>runtime.concatstrings</code>函数消耗了530毫秒，清单中展示了每行代码的耗时。</p>
+
+<p>
+<img width="800" src="../images/diagnostics/pprof-weblist.png">
+<br>
+<small>以weblist形式可视化最耗时的调用。</small>
+</p>
+
+<p>
+另一种可视化分析数据的方法是使用<a href="http://www.brendangregg.com/flamegraphs.html">火焰图</a>。火焰图允许您沿特定调用链路径移动，从而可以放大/缩小代码的特定部分。
+<a href="https://github.com/google/pprof">上游pprof工具</a>支持火焰图功能。
+</p>
+
+<p>
+<img width="800" src="../images/diagnostics/flame.png">
+<br>
+<small>火焰图提供可视化方式以识别最耗时的代码路径。</small>
+</p>
+
+<p><strong>我是否只能使用内置的配置文件？</strong></p>
+
+<p>
+除了运行时提供的功能外，Go用户可以通过<a href="/pkg/runtime/pprof/#Profile">pprof.Profile</a>创建自定义配置文件，并使用现有工具进行检查。
+</p>
+
+<p><strong>我能否在不同路径和端口上提供性能分析器处理器（/debug/pprof/...）？</strong></p>
+
+<p>
+可以。<code>net/http/pprof</code>包默认将其处理器注册到默认路由器，但您也可以使用该包导出的处理器自行注册。
+</p>
+
+<p>
+例如，以下示例将在7777端口的/custom_debug_path/profile路径上提供pprof.Profile处理器：
+</p>
+
+<p>
+<pre>
+package main
+
+import (
+	"log"
+	"net/http"
+	"net/http/pprof"
+)
+
+func main() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/custom_debug_path/profile", pprof.Profile)
+	log.Fatal(http.ListenAndServe(":7777", mux))
+}
+</pre>
+</p>
+
+<h2 id="tracing">追踪</h2>
+
+<p>
+追踪是一种通过代码插桩来分析调用链生命周期内延迟的方法。Go提供
+<a href="https://godoc.org/golang.org/x/net/trace">golang.org/x/net/trace</a>
+包作为每个Go节点的最小追踪后端，并提供带简单仪表板的最小插桩库。Go还提供
+执行追踪器来跟踪运行时事件的时间段。
+</p>
+
+<p>追踪使我们能够：</p>
+
+<ul>
+<li>对Go进程中的应用延迟进行插桩分析。</li>
+<li>测量长调用链中特定调用的开销。</li>
+<li>识别利用率并优化性能。没有追踪数据时，瓶颈往往不明显。</li>
+</ul>
+
+<p>
+在单体系统中，从程序的基本组件收集诊断数据相对容易。所有模块存在于同一进程中，共享公共资源来报告日志、错误和其他诊断信息。一旦您的系统扩展到超出单个进程并开始分布式部署，从前端Web服务器跟踪一个调用直到响应返回给用户的所有后端就会变得困难。这正是分布式追踪在生产系统插桩和分析中发挥重要作用的地方。
+</p>
+
+<p>
+分布式追踪是一种通过代码插桩来分析用户请求生命周期内延迟的方法。当系统分布式部署且传统分析调试工具无法扩展时，您可能需要使用分布式追踪工具来分析用户请求和RPC的性能。
+</p>
+
+<p>分布式追踪使我们能够：</p>
+
+<ul>
+<li>在大规模系统中对应用延迟进行插桩分析。</li>
+<li>跟踪用户请求生命周期内的所有RPC调用，发现仅在生产环境中可见的集成问题。</li>
+<li>识别可应用于系统性能改进的方法。在收集追踪数据前，许多瓶颈并不明显。</li>
+</ul>
+
+<p>Go生态系统为每种追踪系统提供了各种分布式追踪库，以及与后端无关的通用库。</p>
+
+<p><strong>是否有方法可以自动拦截每个函数调用并创建追踪？</strong></p>
+
+<p>
+Go没有提供自动拦截每个函数调用并创建追踪跨度的方法。您需要手动插桩代码来创建、结束和标注跨度。
+</p>
+
+<p><strong>如何在Go库中传播追踪头信息？</strong></p>
+
+<p>
+您可以在
+<a href="/pkg/context#Context"><code>context.Context</code></a>中
+传播追踪标识符和标签。目前行业中尚无标准的追踪键或通用的追踪头信息表示格式。每个追踪提供商负责在其Go库中提供传播工具。
+</p>
+
+<p>
+<strong>标准库或运行时中还有哪些其他底层事件可以包含在追踪中？**
+</p>
+
+<p>
+标准库和运行时正尝试暴露多个额外的API来通知底层内部事件。例如，
+<a href="/pkg/net/http/httptrace#ClientTrace"><code>httptrace.ClientTrace</code></a>
+提供API来跟踪传出请求生命周期中的底层事件。目前正在进行的工作是从运行时执行追踪器获取底层运行时事件，并允许用户定义和记录自定义事件。
+</p>
+
+<h2 id="debugging">调试</h2>
+
+<p>
+调试是识别程序异常行为原因的过程。调试器帮助我们理解程序的执行流程和当前状态。调试有多种方式；本节仅关注将调试器附加到程序和核心转储调试。
+</p>
+
+<p>Go用户主要使用以下调试器：</p><ul>
+<li>
+<a href="https://github.com/go-delve/delve">Delve</a>：
+Delve 是 Go 编程语言的调试器。它支持 Go 的运行时概念和内置类型。Delve 致力于成为 Go 程序的全面且可靠的调试器。
+</li>
+<li>
+<a href="/doc/gdb">GDB</a>：
+Go 通过标准 Go 编译器和 Gccgo 提供 GDB 支持。栈管理、线程和运行时所包含的方面与 GDB 预期的执行模型存在足够大的差异，这可能会让调试器感到困惑，即使程序是用 gccgo 编译的。尽管 GDB 可用于调试 Go 程序，但它并非理想之选，可能会造成混淆。
+</li>
+</ul>
+
+<p><strong>调试器与 Go 程序配合得如何？</strong></p>
+
+<p>
+<code>gc</code> 编译器会执行诸如函数内联和变量寄存器化之类的优化。这些优化有时会使使用调试器进行调试变得更加困难。目前正在进行的努力是提高为优化二进制文件生成的 DWARF 信息的质量。在这些改进可用之前，我们建议在构建被调试的代码时禁用优化。以下命令在不进行任何编译器优化的情况下构建一个包：
+</p>
+
+<pre>
+$ go build -gcflags=all="-N -l"
+</pre>
+
+<p>
+作为改进工作的一部分，Go 1.10 引入了一个新的编译器标志 <code>-dwarflocationlists</code>。该标志使编译器能够添加位置列表，以帮助调试器处理优化的二进制文件。以下命令在启用优化但包含 DWARF 位置列表的情况下构建一个包：
+</p>
+
+<pre>
+$ go build -gcflags="-dwarflocationlists=true"
+</pre>
+
+<p><strong>推荐的调试器用户界面是什么？</strong></p>
+
+<p>
+尽管 delve 和 gdb 都提供命令行界面，但大多数编辑器集成和 IDE 都提供特定于调试的用户界面。
+</p>
+
+<p><strong>是否可以对 Go 程序进行事后调试？</strong></p>
+
+<p>
+核心转储文件是一个包含运行中进程的内存转储及其进程状态的文件。它主要用于程序的事后调试，以及在程序仍在运行时了解其状态。这两种情况使得核心转储调试成为对生产服务进行事后分析和诊断的良好辅助手段。可以从 Go 程序获取核心文件，并使用 delve 或 gdb 进行调试，请参阅<a href="/wiki/CoreDumpDebugging">核心转储调试</a>页面获取分步指南。
+</p>
+
+<h2 id="runtime">运行时统计和事件</h2>
+
+<p>
+运行时提供统计信息和内部事件报告，供用户诊断运行时级别的性能和利用率问题。
+</p>
+
+<p>
+用户可以监控这些统计数据，以更好地了解 Go 程序的整体健康状况和性能。
+一些经常监控的统计数据和状态：
+</p>
+
+<ul>
+<li><code><a href="/pkg/runtime/#ReadMemStats">runtime.ReadMemStats</a></code>
+报告与堆分配和垃圾回收相关的指标。内存统计数据对于监控进程消耗了多少内存资源、进程是否能有效利用内存以及发现内存泄漏非常有用。
+</li>
+<li><code><a href="/pkg/runtime/debug/#ReadGCStats">debug.ReadGCStats</a></code>
+读取有关垃圾回收的统计数据。它有助于查看有多少资源花费在 GC 暂停上。它还报告垃圾回收器暂停的时间线和暂停时间百分位数。
+</li>
+<li><code><a href="/pkg/runtime/debug/#Stack">debug.Stack</a></code>
+返回当前的栈跟踪。栈跟踪对于查看当前有多少个 goroutine 正在运行、它们正在做什么以及它们是否被阻塞非常有用。
+</li>
+<li><code><a href="/pkg/runtime/debug/#WriteHeapDump">debug.WriteHeapDump</a></code>
+挂起所有 goroutine 的执行，并允许您将堆转储到文件。堆转储是 Go 进程在给定时间点的内存快照。它包含所有已分配的对象，以及 goroutine、终结器等。
+</li>
+<li><code><a href="/pkg/runtime#NumGoroutine">runtime.NumGoroutine</a></code>
+返回当前 goroutine 的数量。该值可用于监控是否有足够的 goroutine 被利用，或用于检测 goroutine 泄漏。
+</li>
+</ul>
+
+<h3 id="execution-tracer">执行追踪器</h3>
+
+<p>Go 自带一个运行时执行追踪器，用于捕获广泛的运行时事件。调度、系统调用、垃圾回收、堆大小和其他事件由运行时收集，并可由 <code>go tool trace</code> 工具进行可视化。执行追踪器是一个用于检测延迟和利用率问题的工具。您可以检查 CPU 的利用情况，以及网络或系统调用何时导致 goroutine 被抢占。</p>
+
+<p>追踪器对于以下情况很有用：</p>
+<ul>
+<li>理解您的 goroutine 是如何执行的。</li>
+<li>理解一些核心运行时事件，例如 GC 运行。</li>
+<li>识别并行化较差的执行。</li>
+</ul>
+
+<p>然而，它不太适合用于识别热点，例如分析过度内存或 CPU 使用的原因。请首先使用分析工具来解决这些问题。</p>
+
+<p>
+<img width="800" src="../images/diagnostics/tracer-lock.png">
+</p>
+
+<p>上图中，<code>go tool trace</code> 的可视化显示执行开始时良好，然后变得串行化。这表明可能存在对共享资源的锁争用，从而造成了瓶颈。</p>
+
+<p>请参阅 <a href="/cmd/trace/"><code>go</code> <code>tool</code> <code>trace</code></a> 以收集和分析运行时追踪。
+</p>
+
+<h3 id="godebug">GODEBUG</h3>
+
+<p>如果相应设置了 <a href="/pkg/runtime/#hdr-Environment_Variables">GODEBUG</a> 环境变量，运行时也会发出事件和信息。</p><ul>
+<li><code>GODEBUG=gctrace=1</code> 在每次垃圾回收时打印垃圾回收器事件，汇总收集的内存量和暂停时长。</li>
+<li><code>GODEBUG=inittrace=1</code> 打印已完成的包初始化工作的执行时间和内存分配信息摘要。</li>
+<li><code>GODEBUG=schedtrace=X</code> 每 X 毫秒打印一次调度事件。</li>
+</ul>
+
+<p>GODEBUG 环境变量可用于禁用标准库和运行时中使用的指令集扩展。</p>
+
+<ul>
+<li><code>GODEBUG=cpu.all=off</code> 禁用所有可选的指令集扩展。</li>
+<li><code>GODEBUG=cpu.<em>extension</em>=off</code> 禁用指定指令集扩展中的指令。<br>
+其中 <em>extension</em> 是指令集扩展的小写名称，例如 <em>sse41</em> 或 <em>avx</em>。</li>
+</ul>
