@@ -495,7 +495,8 @@
       "source": "doc/help.md",
       "target": "doc/help.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:43:19.822Z"
     },
     {
       "source": "doc/index.html",
