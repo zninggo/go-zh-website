@@ -593,7 +593,8 @@
       "source": "doc/modules/publishing.md",
       "target": "doc/modules/publishing.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:07:57.643Z"
     },
     {
       "source": "doc/modules/release-workflow.md",
