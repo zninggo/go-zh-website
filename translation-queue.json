@@ -215,7 +215,8 @@
       "source": "doc/effective_go.html",
       "target": "doc/effective_go.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T13:38:33.963Z"
     },
     {
       "source": "doc/faq.md",
