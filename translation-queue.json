@@ -530,7 +530,8 @@
       "source": "doc/install.html",
       "target": "doc/install.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T15:50:13.096Z"
     },
     {
       "source": "doc/manage-install.html",
