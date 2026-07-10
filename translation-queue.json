@@ -12,7 +12,8 @@
       "source": "doc/articles/index.html",
       "target": "doc/articles/index.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T12:25:55.421Z"
     },
     {
       "source": "doc/articles/race_detector.html",
