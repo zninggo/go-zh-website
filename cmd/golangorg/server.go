@@ -9,7 +9,6 @@ import (
 	"archive/zip"
 	"bytes"
 	"context"
-	"crypto/tls"
 	"embed"
 	"encoding/json"
 	"errors"
@@ -20,7 +19,6 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"os"
 	"path"
@@ -288,24 +286,41 @@ func NewHandler(contentDir, goroot string) http.Handler {
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
 	// Playground proxy - forward requests to go.dev (CORS-safe)
-	playProxy := &httputil.ReverseProxy{
-		Director: func(req *http.Request) {
-			req.URL.Scheme = "https"
-			req.URL.Host = "go.dev"
-			req.Host = "go.dev"
-			// Body must be re-read in Director for POST requests
-			if req.Body != nil {
-				bodyBytes, _ := io.ReadAll(req.Body)
-				req.Body = io.NopCloser(bytes.NewReader(bodyBytes))
-				req.ContentLength = int64(len(bodyBytes))
+	playProxyHandler := func(path string) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			bodyBytes, _ := io.ReadAll(r.Body)
+			r.Body.Close()
+
+			target := "https://go.dev" + path
+			if r.URL.RawQuery != "" {
+				target += "?" + r.URL.RawQuery
 			}
-		},
-		Transport: &http.Transport{
-			TLSNextProto: make(map[string]func(string, *tls.Conn) http.RoundTripper),
-		},
+
+			proxyReq, _ := http.NewRequestWithContext(r.Context(), r.Method, target, bytes.NewReader(bodyBytes))
+			proxyReq.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+			proxyReq.Header.Set("User-Agent", r.Header.Get("User-Agent"))
+
+			client := &http.Client{Timeout: 30 * time.Second}
+			resp, err := client.Do(proxyReq)
+			if err != nil {
+				w.Header().Set("Content-Type", "application/json")
+				w.Write([]byte(`{"Errors":"proxy error","Events":null}`))
+				return
+			}
+			defer resp.Body.Close()
+
+			for k, vv := range resp.Header {
+				for _, v := range vv {
+					w.Header().Add(k, v)
+				}
+			}
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.WriteHeader(resp.StatusCode)
+			io.Copy(w, resp.Body)
+		}
 	}
-	mux.Handle("/_/compile", playProxy)
-	mux.Handle("/_/fmt", playProxy)
+	mux.HandleFunc("/_/compile", playProxyHandler("/_/compile"))
+	mux.HandleFunc("/_/fmt", playProxyHandler("/_/fmt"))
 	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
 		w.Write([]byte("playground-disabled"))
