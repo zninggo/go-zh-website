@@ -579,7 +579,8 @@
       "source": "doc/modules/managing-source.md",
       "target": "doc/modules/managing-source.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:06:56.766Z"
     },
     {
       "source": "doc/modules/pruning.md",
