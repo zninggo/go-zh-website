@@ -803,7 +803,8 @@
       "source": "doc/tutorial/database-access.md",
       "target": "doc/tutorial/database-access.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T16:35:11.300Z"
     },
     {
       "source": "doc/tutorial/fuzz.md",
