@@ -4,78 +4,79 @@
 }-->
 
 <p>
-有一系列程序用于构建和处理Go源代码。这些程序通常不是直接运行，而是通过<a href="/cmd/go/">go</a>程序来调用。
+Go 语言提供了一套用于构建和处理 Go 源代码的程序集合。这些程序通常不直接运行，而是通过 <a href="/cmd/go/">go</a> 程序来调用。
 </p>
 
 <p>
-运行这些程序最常见的方式是将其作为go程序的子命令，例如<code>go fmt</code>。以这种方式运行时，命令会处理完整的Go源代码包，go程序会使用适合包级别处理的参数来调用底层二进制程序。
+运行这些程序最常见的方式是作为 go 程序的子命令，例如 <code>go fmt</code>。以这种方式运行时，命令会处理完整的 Go 源代码包，go 程序会以适合包级别处理的参数调用底层二进制程序。
 </p>
 
 <p>
-这些程序也可以作为独立的二进制文件运行，使用未经修改的参数，通过go的<code>tool</code>子命令调用，例如<code>go tool cgo</code>。对于大多数命令来说，这主要用于调试。有些命令，如<code>pprof</code>，只能通过go的<code>tool</code>子命令访问。
+这些程序也可以作为独立的二进制文件运行，使用未修改的参数，通过 go 的 <code>tool</code> 子命令，例如 <code>go tool cgo</code>。对于大多数命令，这主要用于调试。部分命令，如 <code>pprof</code>，只能通过 go 的 <code>tool</code> 子命令访问。
 </p>
 
 <p>
-Go安装过程还会安装一个名为<code>gofmt</code>的可执行文件，它等同于<code>go fmt</code>，因为它经常被引用。
+Go 的安装过程还会安装一个名为 <code>gofmt</code> 的可执行文件，它等同于 <code>go fmt</code>，因为后者被频繁引用。
 </p>
 
 <p>
-点击链接可以查看更多文档、调用方式和使用详情。
+点击链接可查看更多文档、调用方法和使用细节。
 </p>
 
 <table class="dir">
 <tr>
 <th>名称</th>
 <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
-<th>概述</th>
+<th>概要</th>
 </tr>
 
 <tr>
 <td><a href="/cmd/go/">go</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td>
-<code>go</code>程序管理Go源代码并运行此处列出的其他命令。有关使用详情，请参阅命令文档。
+<code>go</code> 程序用于管理 Go 源代码并运行此处列出的其他命令。详细用法请参见命令文档。
 </td>
 </tr>
 
 <tr>
 <td><a href="/cmd/cgo/">cgo</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Cgo支持创建调用C代码的Go包。</td>
+<td>Cgo 使得创建能够调用 C 代码的 Go 包成为可能。</td>
 </tr>
 
 <tr>
 <td><a href="/cmd/cover/">cover</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Cover是一个用于创建和分析<code>"go test -coverprofile"</code>生成的覆盖率配置文件的程序。</td>
+<td>Cover 是一个用于创建和分析由 <code>"go test -coverprofile"</code> 生成的覆盖率分析结果的程序。</td>
 </tr>
 
 <tr>
 <td><a href="/cmd/fix/">fix</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Fix查找使用旧版语言和库特性的Go程序，并将其重写为使用新特性。</td>
+<td>Fix 用于查找使用旧版语言和库特性的 Go 程序，并将它们重写为使用新特性。</td>
 </tr>
 
 <tr>
 <td><a href="/cmd/gofmt/">fmt</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Fmt格式化Go包，它也可以作为独立的<a href="/cmd/gofmt/">gofmt</a>命令使用，具有更通用的选项。</td>
+<td>Fmt 用于格式化 Go 包。它也可以作为独立的 <a href="/cmd/gofmt/">
+gofmt</a> 命令使用，并提供更多通用选项。</td>
 </tr>
 
 <tr>
 <td><a href="/cmd/doc">doc</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Doc提取并生成Go包的文档。</td>
+<td>Doc 用于提取和生成 Go 包的文档。</td>
 </tr>
 
 <tr>
 <td><a href="/cmd/vet/">vet</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Vet检查Go源代码并报告可疑的构造，例如参数与格式字符串不匹配的Printf调用。</td>
+<td>Vet 用于检查 Go 源代码并报告可疑的构造，例如参数与格式化字符串不匹配的 Printf 调用。</td>
 </tr>
 
 </table>
 
 <p>
-这是一个精简列表。有关编译器及更多内容的文档，请参阅<a href="/cmd/">完整命令参考</a>。
+此处为节选列表。请参阅 <a href="/cmd/">完整命令参考</a> 以获取编译器等更多内容的文档。
 </p>

@@ -54,7 +54,8 @@
       "source": "doc/cmd.html",
       "target": "doc/cmd.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T12:32:21.725Z"
     },
     {
       "source": "doc/code.html",
