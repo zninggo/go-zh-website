@@ -1,0 +1,341 @@
+<!--{
+	"Title": "发布历史",
+	"Template": true
+}-->
+
+<p>本页汇总了Go语言官方稳定版本之间的变更内容。
+完整的详细信息请查阅<a href="/change">变更日志</a>。</p>
+
+<p>如需更新到特定版本，请使用以下命令：</p>
+
+<pre>
+git fetch --tags
+git checkout <i>goX.Y.Z</i>
+</pre>
+
+<h2 id="policy">发布策略</h2>
+
+<p>
+每个Go语言主要版本将获得支持，直到后续出现两个新的主要版本。
+例如，Go 1.5在Go 1.7发布前一直获得支持，Go 1.6则在Go 1.8发布前持续获得支持。
+我们会根据需要通过发布次要修订版本（例如Go 1.6.1、Go 1.6.2等）来修复支持版本中的关键问题，包括<a href="/security">关键安全问题</a>。
+</p>
+
+{{range releases}}
+{{if ge .Version.Y 9}}
+	<h2 id="go{{.Version}}">go{{.Version}}（发布于 {{.Date}}）</h2>
+
+	<p>
+	Go {{.Version}}是Go语言的一个主要版本。
+	详情请阅读<a href="/doc/go{{.Version.MajorPrefix}}">Go {{.Version.MajorPrefix}} 发布说明</a>。
+	</p>
+
+	{{if .Minor}}<h3 id="go{{.Version.MajorPrefix}}.minor">次要修订</h3>{{end}}
+
+	{{range .Minor}}
+		<p id="go{{.Version}}">
+		go{{.Version}}
+		（{{if .Future}}计划于{{else}}发布于{{end}} {{.Date}}）
+		{{with .CustomSummary}}
+			{{.}}
+		{{else}}
+			{{if .Future}}将包含{{else}}包含{{end}}
+			{{with .Security}}
+				{{.Quantifier}}
+				安全
+				{{if (or (eq .Quantifier "a") (eq .Quantifier "one"))}}修复{{else}}修复{{end -}}
+				{{with .ComponentsAndPackages}} 针对 {{.}}{{end -}}
+			{{end}}
+			{{- if and .Security .Bug}}, 以及{{end -}}
+			{{if .Bug}}
+				{{.Bug.Quantifier}}
+				{{if .Security}}错误{{end}} {{/* 如果也有安全修复，则明确指明接下来是错误修复。 */}}
+				{{if eq .Bug.Quantifier "a"}}修复{{else}}修复{{end -}}
+				{{with .Bug.ComponentsAndPackages}} 针对 {{.}}{{end -}}
+			{{end}}
+			{{- if or .Security .Bug}}。{{end}}
+			{{.More}}
+
+			{{if not .Future}}
+			详情请查阅我们的问题跟踪器中的
+			<a href="https://github.com/golang/go/issues?q=milestone%3AGo{{.Version}}+label%3ACherryPickApproved">Go {{.Version}} 里程碑</a>。
+			{{end}}
+		{{end}}
+		</p>
+	{{end}}
+{{end}}
+{{end}}
+
+{{/* Go 1.9及更高版本的条目使用 internal/history 包中的数据生成。 */}}
+{{/* Go 1.8.7及更早版本的条目以原始HTML形式手动编写如下。 */}}
+
+<h2 id="go1.8">go1.8（发布于 2017年02月16日）</h2>
+
+<p>
+Go 1.8是Go语言的一个主要版本。
+详情请阅读<a href="/doc/go1.8">Go 1.8 发布说明</a>。
+</p>
+
+<h3 id="go1.8.minor">次要修订</h3>
+
+<p id="go1.8.1">
+go1.8.1（发布于 2017年04月07日）包含了对编译器、链接器、运行时、文档、<code>go</code> 命令以及 <code>crypto/tls</code>、<code>encoding/xml</code>、<code>image/png</code>、<code>net</code>、<code>net/http</code>、<code>reflect</code>、<code>text/template</code> 和 <code>time</code> 包的修复。
+详情请查阅我们的问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.8.1">Go 1.8.1 里程碑</a>。
+</p>
+
+<p id="go1.8.2">
+go1.8.2（发布于 2017年05月23日）包含了针对 <code>crypto/elliptic</code> 包的安全修复。
+详情请查阅我们的问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.8.2">Go 1.8.2 里程碑</a>。
+</p>
+
+<p id="go1.8.3">
+go1.8.3（发布于 2017年05月24日）包含了对编译器、运行时、文档以及 <code>database/sql</code> 包的修复。
+详情请查阅我们的问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.8.3">Go 1.8.3 里程碑</a>。
+</p>
+
+<p id="go1.8.4">
+go1.8.4（发布于 2017年10月04日）包含了两个安全修复。
+它包含了与Go 1.9.1相同的修复，并在同一时间发布。
+详情请查阅我们的问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.8.4">Go 1.8.4 里程碑</a>。
+</p>
+
+<p id="go1.8.5">
+go1.8.5（发布于 2017年10月25日）包含了对编译器、链接器、运行时、文档、<code>go</code> 命令以及 <code>crypto/x509</code> 和 <code>net/smtp</code> 包的修复。
+它修复了一个在Go 1.8.4中引入的错误，该错误导致在某些条件下 <code>go get</code> 无法获取非Git仓库。
+详情请查阅我们的问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.8.5">Go 1.8.5 里程碑</a>。
+</p>
+
+<p id="go1.8.6">
+go1.8.6（发布于 2018年01月22日）包含了与Go 1.9.3中 <code>math/big</code> 包相同的修复，并在同一时间发布。
+详情请查阅我们的问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.8.6">Go 1.8.6 里程碑</a>。
+</p>
+
+<p id="go1.8.7">
+go1.8.7（发布于 2018年02月07日）包含了针对“go get”的安全修复。
+它包含了与Go 1.9.4相同的修复，并在同一时间发布。
+详情请查阅我们的问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.8.7">Go 1.8.7 里程碑</a>。
+</p>
+
+<h2 id="go1.7">go1.7（发布于 2016年08月15日）</h2>
+
+<p>
+Go 1.7是Go语言的一个主要版本。
+详情请阅读<a href="/doc/go1.7">Go 1.7 发布说明</a>。
+</p>
+
+<h3 id="go1.7.minor">次要修订</h3>
+
+<p id="go1.7.1">
+go1.7.1（发布于 2016年09月07日）包含了对编译器、运行时、文档以及 <code>compress/flate</code>、<code>hash/crc32</code>、<code>io</code>、<code>net</code>、<code>net/http</code>、<code>path/filepath</code>、<code>reflect</code> 和 <code>syscall</code> 包的修复。
+详情请查阅我们的问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.7.1">Go 1.7.1 里程碑</a>。
+</p>
+
+<p id="go1.7.2">
+go1.7.2 不应使用。该版本已打标签但并未完全发布。
+由于最后一刻收到的错误报告，发布被推迟。
+请改用go1.7.3，并参考下文的变更摘要。
+</p><p id="go1.7.3">
+go1.7.3（发布于 2016-10-19）包含了对编译器、运行时以及 <code>crypto/cipher</code>、<code>crypto/tls</code>、<code>net/http</code> 和 <code>strings</code> 包的修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.7.3">Go 1.7.3 里程碑</a>。
+</p>
+
+<p id="go1.7.4">
+go1.7.4（发布于 2016-12-01）包含了两项安全修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.7.4">Go 1.7.4 里程碑</a>。
+</p>
+
+<p id="go1.7.5">
+go1.7.5（发布于 2017-01-26）包含了对编译器、运行时以及 <code>crypto/x509</code> 和 <code>time</code> 包的修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.7.5">Go 1.7.5 里程碑</a>。
+</p>
+
+<p id="go1.7.6">
+go1.7.6（发布于 2017-05-23）包含了与 Go 1.8.2 相同的安全修复，并于同一时间发布。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.8.2">Go 1.8.2 里程碑</a>。
+</p>
+
+<h2 id="go1.6">go1.6（发布于 2016-02-17）</h2>
+
+<p>
+Go 1.6 是 Go 的一个重要版本。
+更多信息请阅读 <a href="/doc/go1.6">Go 1.6 发布说明</a>。
+</p>
+
+<h3 id="go1.6.minor">小版本修订</h3>
+
+<p id="go1.6.1">
+go1.6.1（发布于 2016-04-12）包含了两项安全修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.6.1">Go 1.6.1 里程碑</a>。
+</p>
+
+<p id="go1.6.2">
+go1.6.2（发布于 2016-04-20）包含了对编译器、运行时、工具、文档以及 <code>mime/multipart</code>、<code>net/http</code> 和 <code>sort</code> 包的修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.6.2">Go 1.6.2 里程碑</a>。
+</p>
+
+<p id="go1.6.3">
+go1.6.3（发布于 2016-07-17）包含了针对 <code>net/http/cgi</code> 包以及在 CGI 环境下使用的 <code>net/http</code> 包的安全修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.6.3">Go 1.6.3 里程碑</a>。
+</p>
+
+<p id="go1.6.4">
+go1.6.4（发布于 2016-12-01）包含了两项安全修复。
+它包含了与 Go 1.7.4 相同的修复，并于同一时间发布。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.7.4">Go 1.7.4 里程碑</a>。
+</p>
+
+<h2 id="go1.5">go1.5（发布于 2015-08-19）</h2>
+
+<p>
+Go 1.5 是 Go 的一个重要版本。
+更多信息请阅读 <a href="/doc/go1.5">Go 1.5 发布说明</a>。
+</p>
+
+<h3 id="go1.5.minor">小版本修订</h3>
+
+<p id="go1.5.1">
+go1.5.1（发布于 2015-09-08）包含了对编译器、汇编器以及 <code>fmt</code>、<code>net/textproto</code>、<code>net/http</code> 和 <code>runtime</code> 包的错误修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.5.1">Go 1.5.1 里程碑</a>。
+</p>
+
+<p id="go1.5.2">
+go1.5.2（发布于 2015-12-02）包含了对编译器、链接器以及 <code>mime/multipart</code>、<code>net</code> 和 <code>runtime</code> 包的错误修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.5.2">Go 1.5.2 里程碑</a>。
+</p>
+
+<p id="go1.5.3">
+go1.5.3（发布于 2016-01-13）包含了对 <code>math/big</code> 包的一项安全修复，此修复影响 <code>crypto/tls</code> 包。
+详情请查阅 <a href="/s/go153announce">发布通告</a>。
+</p>
+
+<p id="go1.5.4">
+go1.5.4（发布于 2016-04-12）包含了两项安全修复。
+它包含了与 Go 1.6.1 相同的修复，并于同一时间发布。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.6.1">Go 1.6.1 里程碑</a>。
+</p>
+
+<h2 id="go1.4">go1.4（发布于 2014-12-10）</h2>
+
+<p>
+Go 1.4 是 Go 的一个重要版本。
+更多信息请阅读 <a href="/doc/go1.4">Go 1.4 发布说明</a>。
+</p>
+
+<h3 id="go1.4.minor">小版本修订</h3>
+
+<p id="go1.4.1">
+go1.4.1（发布于 2015-01-15）包含了对链接器以及 <code>log</code>、<code>syscall</code> 和 <code>runtime</code> 包的错误修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.4.1">Go 1.4.1 里程碑</a>。
+</p>
+
+<p id="go1.4.2">
+go1.4.2（发布于 2015-02-17）包含了对编译器的安全修复，以及对 <code>go</code> 命令、编译器、链接器和 <code>runtime</code>、<code>syscall</code>、<code>reflect</code>、<code>math/big</code> 包的错误修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.4.2">Go 1.4.2 里程碑</a>。
+</p>
+
+<p id="go1.4.3">
+go1.4.3（发布于 2015-09-22）包含了对 <code>net/http</code> 包的安全修复和对 <code>runtime</code> 包的错误修复。
+详情请查阅我们问题跟踪器中的 <a href="https://github.com/golang/go/issues?q=milestone%3AGo1.4.3">Go 1.4.3 里程碑</a>。
+</p>
+
+<h2 id="go1.3">go1.3（发布于 2014-06-18）</h2>
+
+<p>
+Go 1.3 是 Go 的一个重要版本。
+更多信息请阅读 <a href="/doc/go1.3">Go 1.3 发布说明</a>。
+</p>
+
+<h3 id="go1.3.minor">小版本修订</h3>
+
+<p id="go1.3.1">
+go1.3.1（发布于 2014-08-13）包含了对编译器以及 <code>runtime</code>、<code>net</code> 和 <code>crypto/rsa</code> 包的错误修复。
+详情请查阅 <a href="https://github.com/golang/go/commits/go1.3.1">变更历史</a>。
+</p>
+
+<p id="go1.3.2">
+go1.3.2（发布于 2014-09-25）包含了对 <code>crypto/tls</code> 包的安全修复和对 cgo 的错误修复。
+详情请查阅 <a href="https://github.com/golang/go/commits/go1.3.2">变更历史</a>。
+</p><p id="go1.3.3">
+go1.3.3（发布于 2014-09-30）包含了对 cgo、runtime 包和 nacl 移植的进一步错误修复。
+详情请查阅 <a href="https://github.com/golang/go/commits/go1.3.3">变更历史</a>。
+</p>
+
+<h2 id="go1.2">go1.2（发布于 2013-12-01）</h2>
+
+<p>
+Go 1.2 是 Go 语言的一个重要版本。
+请阅读 <a href="/doc/go1.2">Go 1.2 版本说明</a> 了解更多信息。
+</p>
+
+<h3 id="go1.2.minor">次要修订版</h3>
+
+<p id="go1.2.1">
+go1.2.1（发布于 2014-03-02）包含了对 <code>runtime</code>、<code>net</code> 和 <code>database/sql</code> 包的错误修复。
+详情请查阅 <a href="https://github.com/golang/go/commits/go1.2.1">变更历史</a>。
+</p>
+
+<p id="go1.2.2">
+go1.2.2（发布于 2014-05-05）包含了一个影响二进制发行版中所含 tour 程序的<a href="https://github.com/golang/go/commits/go1.2.2">安全修复</a>（感谢 Guillaume T）。
+</p>
+
+<h2 id="go1.1">go1.1（发布于 2013-05-13）</h2>
+
+<p>
+Go 1.1 是 Go 语言的一个重要版本。
+请阅读 <a href="/doc/go1.1">Go 1.1 版本说明</a> 了解更多信息。
+</p>
+
+<h3 id="go1.1.minor">次要修订版</h3>
+
+<p id="go1.1.1">
+go1.1.1（发布于 2013-06-13）包含了对编译器的一个安全修复以及对编译器和 runtime 的数个错误修复。
+详情请查阅 <a href="https://github.com/golang/go/commits/go1.1.1">变更历史</a>。
+</p>
+
+<p id="go1.1.2">
+go1.1.2（发布于 2013-08-13）包含了对 <code>gc</code> 编译器和 <code>cgo</code> 的修复，以及对 <code>bufio</code>、<code>runtime</code>、<code>syscall</code> 和 <code>time</code> 包的修复。
+详情请查阅 <a href="https://github.com/golang/go/commits/go1.1.2">变更历史</a>。
+如果你在 Linux 的 ARM 或 386 架构上使用 syscall 包的 <code>Getrlimit</code> 和 <code>Setrlimit</code> 函数，请注意修复了 <a href="/issue/5949">issue 5949</a> 的变更 <a href="/cl/11803043">11803043</a>。
+</p>
+
+<h2 id="go1">go1（发布于 2012-03-28）</h2>
+
+<p>
+Go 1 是 Go 语言的一个重要版本，将保持长期稳定。
+请阅读 <a href="/doc/go1.html">Go 1 版本说明</a> 了解更多信息。
+</p>
+
+<p>
+为 Go 1 编写的程序预计将继续在 Go 1 的未来版本中无需更改即可正确编译和运行。
+关于 Go 1 的未来，请阅读 <a href="/doc/go1compat.html">Go 1 兼容性文档</a> 了解更多。
+</p>
+
+<p>
+go1 发布版本对应 <code><a href="weekly.html#2012-03-27">weekly.2012-03-27</a></code>。
+</p>
+
+<h3 id="go1.minor">次要修订版</h3>
+
+<p id="go1.0.1">
+go1.0.1（发布于 2012-04-25）是为了<a href="/cl/6061043">修复</a>一个可能导致内存损坏的<a href="/issue/3545">逃逸分析错误</a>而发布的。
+它还包含一些次要的代码和文档修复。
+</p>
+
+<p id="go1.0.2">
+go1.0.2（发布于 2012-06-13）是为了修复在使用结构体或数组作为键的 map 实现中的两个错误：<a href="/issue/3695">issue 3695</a> 和 <a href="/issue/3573">issue 3573</a>。
+它还包含许多次要的代码和文档修复。
+</p>
+
+<p id="go1.0.3">
+go1.0.3（发布于 2012-09-21）包含次要的代码和文档修复。
+</p>
+
+<p>
+完整变更列表请查阅 <a href="https://github.com/golang/go/commits/release-branch.go1">go1 发布分支历史</a>。
+</p>
+
+<h2 id="pre.go1">更早的版本</h2>
+
+<p>
+关于早期版本的说明，请查阅 <a href="pre_go1.html">Go 1 之前的发布历史</a> 页面。
+</p>

@@ -180,7 +180,8 @@
       "source": "doc/devel/release.html",
       "target": "doc/devel/release.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T08:12:02.422Z"
     },
     {
       "source": "doc/devel/weekly.html",
