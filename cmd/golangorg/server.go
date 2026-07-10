@@ -9,6 +9,7 @@ import (
 	"archive/zip"
 	"bytes"
 	"context"
+	"crypto/tls"
 	"embed"
 	"encoding/json"
 	"errors"
@@ -19,6 +20,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"path"
@@ -285,21 +287,19 @@ func NewHandler(contentDir, goroot string) http.Handler {
 
 	play.RegisterHandlers(mux, godevSite, chinaSite)
 
-	// Playground compile - redirect POST body to go.dev via 307
-	mux.HandleFunc("/_/compile", func(w http.ResponseWriter, r *http.Request) {
-		target := "https://go.dev/_/compile"
-		if r.URL.RawQuery != "" {
-			target += "?" + r.URL.RawQuery
-		}
-		http.Redirect(w, r, target, http.StatusTemporaryRedirect)
-	})
-	mux.HandleFunc("/_/fmt", func(w http.ResponseWriter, r *http.Request) {
-		target := "https://go.dev/_/fmt"
-		if r.URL.RawQuery != "" {
-			target += "?" + r.URL.RawQuery
-		}
-		http.Redirect(w, r, target, http.StatusTemporaryRedirect)
-	})
+	// Playground proxy - forward requests to go.dev (CORS-safe)
+	playProxy := &httputil.ReverseProxy{
+		Director: func(req *http.Request) {
+			req.URL.Scheme = "https"
+			req.URL.Host = "go.dev"
+			req.Host = "go.dev"
+		},
+		Transport: &http.Transport{
+			TLSNextProto: make(map[string]func(string, *tls.Conn) http.RoundTripper),
+		},
+	}
+	mux.Handle("/_/compile", playProxy)
+	mux.Handle("/_/fmt", playProxy)
 	mux.HandleFunc("/_/share", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
 		w.Write([]byte("playground-disabled"))
