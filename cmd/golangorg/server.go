@@ -293,6 +293,12 @@ func NewHandler(contentDir, goroot string) http.Handler {
 			req.URL.Scheme = "https"
 			req.URL.Host = "go.dev"
 			req.Host = "go.dev"
+			// Body must be re-read in Director for POST requests
+			if req.Body != nil {
+				bodyBytes, _ := io.ReadAll(req.Body)
+				req.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+				req.ContentLength = int64(len(bodyBytes))
+			}
 		},
 		Transport: &http.Transport{
 			TLSNextProto: make(map[string]func(string, *tls.Conn) http.RoundTripper),
