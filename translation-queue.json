@@ -26,7 +26,8 @@
       "source": "doc/articles/wiki/edit.html",
       "target": "doc/articles/wiki/edit.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-10T07:46:05.797Z"
     },
     {
       "source": "doc/articles/wiki/index.html",
