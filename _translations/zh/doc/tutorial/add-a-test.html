@@ -1,0 +1,202 @@
+```markdown
+<!--{
+    "Title": "添加测试",
+    "Breadcrumb": true
+}-->
+
+<p>
+  现在您的代码已经达到了一个稳定的状态（顺便说一句，做得不错），
+  是时候添加一个测试了。在开发过程中测试代码，可以发现在修改过程中引入的错误。
+  在本主题中，您将为 <code>Hello</code> 函数添加一个测试。
+</p>
+
+<aside class="Note">
+  <strong>注意：</strong>本主题是多部分教程的一部分，该教程从
+  <a href="/doc/tutorial/create-module.html">创建一个 Go 模块</a> 开始。
+</aside>
+
+<p>
+  Go 内置的单元测试支持使得边开发边测试变得更加容易。
+  具体来说，通过使用命名约定、Go 的 <code>testing</code> 包以及
+  <code>go test</code> 命令，您可以快速编写和执行测试。
+</p>
+
+<ol>
+  <li>
+    在 greetings 目录下，创建一个名为 greetings_test.go 的文件。
+
+    <p>
+      文件名以 _test.go 结尾会告诉 <code>go test</code> 命令
+      该文件包含测试函数。
+    </p>
+  </li>
+
+  <li>
+    在 greetings_test.go 中，粘贴以下代码并保存文件。
+
+    <pre>
+package greetings
+
+import (
+    "testing"
+    "regexp"
+)
+
+// TestHelloName 调用 greetings.Hello 并传入一个名字，检查
+// 返回值是否有效。
+func TestHelloName(t *testing.T) {
+    name := "Gladys"
+    want := regexp.MustCompile(`\b`+name+`\b`)
+    msg, err := Hello("Gladys")
+    if !want.MatchString(msg) || err != nil {
+        t.Errorf(`Hello("Gladys") = %q, %v, want match for %#q, nil`, msg, err, want)
+    }
+}
+
+// TestHelloEmpty 用一个空字符串调用 greetings.Hello，
+// 检查是否返回错误。
+func TestHelloEmpty(t *testing.T) {
+    msg, err := Hello("")
+    if msg != "" || err == nil {
+        t.Errorf(`Hello("") = %q, %v, want "", error`, msg, err)
+    }
+}
+</pre
+    >
+
+    <p>
+      在这段代码中，您：
+    </p>
+
+    <ul>
+      <li>
+        在与被测代码相同的 package 中实现测试函数。
+      </li>
+      <li>
+        创建了两个测试函数来测试 <code>greetings.Hello</code>
+        函数。测试函数名遵循 <code>Test<em>Name</em></code> 形式，
+        其中 <em>Name</em> 描述了特定测试的内容。此外，测试函数
+        以一个指向 <code>testing</code> 包的
+        <a href="/pkg/testing/#T"><code>testing.T</code>
+        类型</a> 的 pointer 作为参数。您将使用此参数的方法来从您的测试中
+        进行报告和日志记录。
+      </li>
+      <li>
+        实现了两个测试：
+
+        <ul>
+          <li>
+            <code>TestHelloName</code> 调用 <code>Hello</code> 函数，
+            传入一个 <code>name</code> 值，函数应该能够返回一个有效的响应消息。
+            如果调用返回错误或意外的响应消息（即不包含您传入的名字），
+            您可以使用 <code>t</code> 参数的
+            <a href="/pkg/testing/#T.Errorf">
+            <code>Errorf</code> 方法</a> 将消息打印到控制台。
+          </li>
+          <li>
+            <code>TestHelloEmpty</code> 用一个空字符串调用 <code>Hello</code> 函数。
+            此测试旨在确认您的错误处理是否正常工作。
+            如果调用返回了非空字符串或没有错误，您可以使用 <code>t</code> 参数的
+            <a href="/pkg/testing/#T.Errorf"><code>Errorf
+            </code> 方法</a> 将消息打印到控制台。
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    在 greetings 目录的命令行中，运行
+    <a href="/cmd/go/#hdr-Test_packages"
+      ><code>go test</code> 命令</a
+    >
+    来执行测试。
+
+    <p>
+      <code>go test</code> 命令会执行测试文件（文件名以 _test.go 结尾）
+      中的测试函数（函数名以 <code>Test</code> 开头）。您可以添加 <code>-v</code>
+      标志来获取详细输出，该输出会列出所有测试及其结果。
+    </p>
+
+    <p>
+      测试应该通过。
+    </p>
+
+    <pre>
+$ go test
+PASS
+ok      example.com/greetings   0.364s
+
+$ go test -v
+=== RUN   TestHelloName
+--- PASS: TestHelloName (0.00s)
+=== RUN   TestHelloEmpty
+--- PASS: TestHelloEmpty (0.00s)
+PASS
+ok      example.com/greetings   0.372s
+</pre
+    >
+  </li>
+
+  <li>
+    破坏 <code>greetings.Hello</code> 函数以查看失败的测试。
+
+    <p>
+      <code>TestHelloName</code> 测试函数会检查您作为 <code>Hello</code>
+      函数参数指定的名称的返回值。为了查看失败的测试结果，请修改
+      <code>greetings.Hello</code> 函数，使其不再包含该名称。
+    </p>
+
+    <p>
+      在 greetings/greetings.go 文件中，用以下代码替换
+      <code>Hello</code> 函数。请注意，高亮的行更改了函数返回的值，
+      就好像 <code>name</code> 参数被意外移除了一样。
+    </p>
+
+    <pre>
+// Hello 为指定的人返回一个问候。
+func Hello(name string) (string, error) {
+    // 如果没有提供名字，则返回带有消息的错误。
+    if name == "" {
+        return name, errors.New("empty name")
+    }
+    // 使用随机格式创建消息。
+    <ins>// message := fmt.Sprintf(randomFormat(), name)
+    message := fmt.Sprint(randomFormat())</ins>
+    return message, nil
+}
+</pre>
+  </li>
+
+  <li>
+    在 greetings 目录的命令行中，运行 <code>go test</code> 来执行测试。
+
+    <p>
+      这次，不带 <code>-v</code> 标志运行 <code>go test</code>。
+      输出将只包含失败测试的结果，这在您有大量测试时会很有用。
+      <code>TestHelloName</code> 测试应该会失败——<code>TestHelloEmpty</code>
+      仍然会通过。
+    </p>
+```<pre>
+$ go test
+--- FAIL: TestHelloName (0.00s)
+    greetings_test.go:15: Hello("Gladys") = "Hail, %v! Well met!", &lt;nil>, want match for `\bGladys\b`, nil
+FAIL
+exit status 1
+FAIL    example.com/greetings   0.182s
+</pre>
+  </li>
+</ol>
+
+<p>
+在下一个（也是最后一个）主题中，您将了解如何编译和安装代码以在本地运行。
+</p>
+
+<p class="Navigation">
+  <a class="Navigation-prev" href="/doc/tutorial/greetings-multiple-people.html"
+    >&lt; 返回为多人生成问候语</a
+  >
+  <a class="Navigation-next" href="/doc/tutorial/compile-install.html"
+    >编译和安装应用程序 &gt;</a
+  >
+</p>
