@@ -187,7 +187,8 @@
       "source": "solutions/index.md",
       "target": "solutions/index.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:17:23.505Z"
     },
     {
       "source": "solutions/mercadolibre.md",
