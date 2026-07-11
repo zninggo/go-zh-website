@@ -80,7 +80,7 @@ function extractCodeBlocks(content) {
 function stripCodeBlocks(content) {
   return content
     .replace(/<pre><code>[\s\S]*?<\/code><\/pre>/g, '<!-- CODE_BLOCK -->')
-    .replace(/```[\s\S]*??```/g, '<!-- CODE_BLOCK -->');
+    .replace(/```[\s\S]*?```/g, '<!-- CODE_BLOCK -->');
 }
 
 function countChineseChars(text) {

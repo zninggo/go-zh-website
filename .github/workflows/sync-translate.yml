@@ -92,7 +92,7 @@ jobs:
       - name: Trigger deploy
         if: steps.changes.outputs.has_changes == 'true'
         run: |
-          gh workflow run build-deploy.yml --ref master
+          gh workflow run build-deploy.yml --ref master -R ${{ github.repository }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
