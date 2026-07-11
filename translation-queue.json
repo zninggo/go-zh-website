@@ -271,7 +271,8 @@
       "source": "solutions/twitch.md",
       "target": "solutions/twitch.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:21:02.534Z"
     },
     {
       "source": "solutions/uber.md",
