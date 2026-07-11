@@ -187,31 +187,36 @@
       "source": "doc/devel/weekly.html",
       "target": "doc/devel/weekly.md",
       "type": "html",
-      "status": "pending"
+      "status": "failed",
+      "error": "API 请求失败: 404 - {\"error\":{\"message\":\"openai_error\",\"type\":\"bad_response_status_code\",\"param\":\"\",\"code\":\"bad_response_status_code\"}}"
     },
     {
       "source": "doc/diagnostics.html",
       "target": "doc/diagnostics.md",
       "type": "html",
-      "status": "pending"
+      "status": "failed",
+      "error": "API 请求失败: 404 - {\"error\":{\"message\":\"openai_error\",\"type\":\"bad_response_status_code\",\"param\":\"\",\"code\":\"bad_response_status_code\"}}"
     },
     {
       "source": "doc/docs.md",
       "target": "doc/docs.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "failed",
+      "error": "API 请求失败: 404 - {\"error\":{\"message\":\"openai_error\",\"type\":\"bad_response_status_code\",\"param\":\"\",\"code\":\"bad_response_status_code\"}}"
     },
     {
       "source": "doc/editors.html",
       "target": "doc/editors.md",
       "type": "html",
-      "status": "pending"
+      "status": "failed",
+      "error": "API 请求失败: 404 - {\"error\":{\"message\":\"openai_error\",\"type\":\"bad_response_status_code\",\"param\":\"\",\"code\":\"bad_response_status_code\"}}"
     },
     {
       "source": "doc/effective_go.html",
       "target": "doc/effective_go.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T13:54:44.934Z"
     },
     {
       "source": "doc/faq.md",

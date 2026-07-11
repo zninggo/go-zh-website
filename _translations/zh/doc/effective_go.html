@@ -5,133 +5,161 @@
 }-->
 
 <div class="Note">
-<strong>注意：</strong> 本文档撰写于2009年Go语言发布之初，且未得到持续更新。尽管它对于使用核心语言而言仍不失为一份优秀的指南，但并未涵盖此后语言（泛型）、生态系统（模块）或新增库的重要变更。背景信息请参见 <a href="/issue/28782">issue 28782</a>。
-完整的变更列表，请参阅 <a href="/doc/devel/release">发布说明</a>。
+<strong>注意：</strong>本文档撰写于2009年Go语言发布时，并未持续更新。虽然它对于使用核心语言仍是很好的指南，但并未涵盖此后语言本身（泛型）、生态系统（模块）或新增库的重要变更。相关背景请参阅<a href="/issue/28782">issue 28782</a>。
+完整变更列表请参阅<a href="/doc/devel/release">发布说明</a>。
 </div>
 
 <h2 id="introduction">引言</h2>
 
 <p>
-Go 是一种开源编程语言，旨在简洁、可靠和高效，专门设计用于轻松构建大规模软件。虽然它借鉴了现有语言的思想，但其独特的特性使得高效的 Go 程序在性质上与它的近亲语言所编写的程序有所不同。将 C++ 或 Java 程序简单直接地翻译成 Go 不太可能产生令人满意的结果——Java 程序是用 Java 写的，而不是用 Go。另一方面，从 Go 的视角来思考问题，则可能产出一个成功且截然不同的程序。换句话说，要写好 Go 代码，理解其特性和惯用法至关重要。同样重要的是了解 Go 编程的既定规范，如命名、格式、程序结构等，以便其他 Go 程序员能够轻松理解你编写的程序。
+Go是一门开源编程语言，它专注于简洁性、可靠性和高效性，专为轻松构建大规模软件而设计。尽管它借鉴了现有语言的思想，但其独特特性使得高效Go程序与它亲属语言编写的程序在本质上有显著不同。将C++或Java程序直接翻译成Go不太可能得到令人满意的结果——Java程序是用Java编写的，而非Go。另一方面，从Go的视角思考问题则可能产生成功但风格迥异的程序。换言之，要写好Go，理解其特性和惯用法至关重要。了解Go编程中既定的约定（如命名、格式化、程序结构等）也同样重要，这样你编写的程序才能让其他Go程序员易于理解。
 </p>
 
 <p>
-本文档提供编写清晰、地道 Go 代码的技巧。它对 <a href="/ref/spec">语言规范</a>、<a href="/tour/">Go 语言之旅</a> 以及 <a href="/doc/code.html">如何编写 Go 代码</a> 进行了补充，你应该首先阅读这些内容。
+本文档提供编写清晰、地道Go代码的技巧。它作为<a href="/ref/spec">语言规范</a>、<a href="/tour/">Go语言之旅</a>和<a href="/doc/code.html">如何编写Go代码</a>的补充，你应该先阅读这些内容。
 </p>
 
 <h3 id="examples">示例</h3>
 
 <p>
-<a href="/src/">Go 标准库源代码</a> 不仅旨在作为核心库，同时也作为如何使用该语言的示例。此外，许多包都包含可运行的、独立的示例程序，你可以直接从 <a href="/">go.dev</a> 网站运行它们，例如 <a href="/pkg/strings/#example-Map">这个示例</a>（如有必要，请点击单词 "Example" 以展开它）。如果你对如何处理某个问题或某项功能可能如何实现有疑问，库中的文档、代码和示例可以提供答案、思路和背景知识。
+<a href="/src/">Go包源码</a>不仅旨在作为核心库，也作为如何使用该语言的示例。此外，许多包包含可运行的、独立的可执行示例，你可以直接从<a href="/">go.dev</a>网站运行，例如<a href="/pkg/strings/#example-Map">这个示例</a>（如有必要，请点击“Example”一词展开）。如果你对如何处理某个问题或某物如何实现有疑问，库中的文档、代码和示例可以提供答案、思路和背景。
 </p>
 
 <h2 id="formatting">格式化</h2>
 
 <p>
-格式化问题是最有争议但影响最小的问题。人们可以适应不同的格式化风格，但最好不必如此；如果每个人都遵循相同的风格，就能在这个话题上花费更少的时间。问题在于，如何在没有冗长规范风格指南的情况下接近这种理想状态。
+格式化问题争议最大，但实际影响最小。人们可以适应不同的格式化风格，但最好无需如此；如果每个人都遵循同一风格，就能减少在此话题上耗费的时间。问题在于如何在没有冗长规范风格指南的情况下接近这一理想状态。
 </p>
 
 <p>
-在 Go 中，我们采取了一种不同寻常的方法，让机器处理大部分格式化问题。`gofmt` 程序（也可以通过 `go fmt` 调用，它在包级别而非源文件级别运作）读取一个 Go 程序，并以标准缩进和垂直对齐的风格输出源代码，同时保留并在必要时重新格式化注释。如果你想知道如何处理某种新的布局情况，运行 `gofmt`；如果结果看起来不对，调整你的程序（或提交一个关于 `gofmt` 的 bug），而不是变通处理。
+在Go中，我们采取了一种不寻常的方法，让机器处理大多数格式化问题。<code>gofmt</code>程序（也可作为<code>go fmt</code>使用，后者在包级别而非源文件级别操作）读取Go程序，并以标准的缩进和垂直对齐风格输出源代码，保留并在必要时重新格式化注释。如果你想知道如何处理某种新的布局情况，运行<code>gofmt</code>；如果结果似乎不正确，请调整你的程序（或就<code>gofmt</code>提交错误报告），而不是设法绕过它。
 </p>
 
 <p>
-例如，无需花费时间去对齐结构体字段的注释。`gofmt` 会为你完成这项工作。给定如下声明：
-</p>
-
-<pre>
-type T struct {
-    name string // 对象的名称
-    value int // 对象的值
-}
-</pre>
-
-<p>
-`gofmt` 会对齐这些列：
+例如，无需花费时间对齐结构体字段的注释。<code>gofmt</code>会为你完成。给定如下声明
 </p>
 
 <pre>
 type T struct {
-    name    string // 对象的名称
-    value   int    // 对象的值
+    name string // name of the object
+    value int // its value
 }
 </pre>
 
 <p>
-标准包中的所有 Go 代码均已使用 `gofmt` 格式化。
+<code>gofmt</code>将对齐各列：
+</p>
+
+<pre>
+type T struct {
+    name    string // name of the object
+    value   int    // its value
+}
+</pre>
+
+<p>
+标准库中的所有Go代码都已使用<code>gofmt</code>格式化。
 </p>
 
 <p>
-还有一些格式化细节。简要说明如下：
+仍有一些格式化细节。简述如下：
 </p>
 
 <dl>
     <dt>缩进</dt>
-    <dd>我们使用制表符进行缩进，`gofmt` 默认也输出制表符。仅在必须时才使用空格。
+    <dd>我们使用制表符进行缩进，<code>gofmt</code>默认输出制表符。仅在必须时使用空格。
     </dd>
     <dt>行长度</dt>
     <dd>
-    Go 没有行长度限制。不用担心超出打孔卡宽度。如果一行感觉太长，请换行并使用一个额外的制表符缩进。
+    Go没有行长度限制。无需担心超出打孔卡限制。如果一行感觉太长，请换行并用额外一个制表符缩进。
     </dd>
-    <dt>圆括号</dt>
+    <dt>括号</dt>
     <dd>
-    Go 需要的圆括号比 C 和 Java 少：控制结构（`if`、`for`、`switch`）的语法中没有圆括号。
-    此外，运算符优先级层次更简短清晰，因此
+    Go所需的括号比C和Java少：控制结构（<code>if</code>、<code>for</code>、<code>switch</code>）在其语法中没有括号。此外，运算符优先级层次更短且更清晰，因此
 <pre>
 x&lt;&lt;8 + y&lt;&lt;16
 </pre>
-    的含义如其空格所示，这与其他语言不同。
+    意味着间距所暗示的含义，与其他语言不同。
     </dd>
 </dl>
 
 <h2 id="commentary">注释</h2>
 
 <p>
-Go 提供 C 风格的 `/* */` 块注释和 C++ 风格的 `//` 行注释。行注释是常态；块注释主要作为包注释出现，但在表达式内部或用于禁用大段代码时也很有用。
+Go提供C风格的<code>/* */</code>块注释和C++风格的<code>//</code>行注释。行注释是常态；块注释主要作为包注释出现，但在表达式内或用于禁用大段代码时很有用。
 </p>
 
 <p>
-出现在顶层声明之前（中间没有空行）的注释被视为对该声明本身的文档。这些“文档注释”是给定 Go 包或命令的主要文档。关于文档注释的更多信息，请参阅“<a href="/doc/comment">Go 文档注释</a>”。
+出现在顶层声明之前（无间断换行）的注释被视为对该声明本身的文档。这些“文档注释”是给定Go包或命令的主要文档。关于文档注释的更多信息，请参阅“<a href="/doc/comment">Go文档注释</a>”。
 </p>
 
 <h2 id="names">命名</h2>
 
 <p>
-命名在 Go 中和在其他任何语言中一样重要。它们甚至具有语义效果：名称在包外的可见性由其首字母是否大写决定。因此，值得花点时间谈谈 Go 程序中的命名规范。
+命名在Go中与在任何其他语言中一样重要。它们甚至具有语义效果：名称在包外的可见性由其首字母是否大写决定。因此，值得花些时间谈谈Go程序中的命名约定。
 </p>
 
 <h3 id="package-names">包名</h3>
 
 <p>
-当一个包被导入时，包名就成为其内容的访问器。在
+当导入一个包时，包名成为其内容的访问器。在
 </p>
 
 <pre>
 import "bytes"
 </pre><p>
-导入包的代码可以通过 <code>bytes.Buffer</code> 来访问该包的内容。为了让所有使用该包的人都能用相同的名称来指代其内容，包名应当简洁、贴切、易记。按照惯例，包名通常采用全小写、单个单词的形式，无需使用下划线或混合大小写。
-应尽量选用简短的包名，因为所有使用你的包的人都要频繁输入这个名字。
-不必事先担心命名冲突。包名仅仅是导入时的默认名称，无需在所有源代码中唯一；即使偶尔发生冲突，导入方也可以在本地选择不同的别名。无论如何，冲突很少见，因为导入路径中的文件名决定了实际使用的是哪个包。
+导入的包可以通过 <code>bytes.Buffer</code> 这样的方式引用其中内容。如果所有使用者都能用同一个名称指代包中的内容会很方便，这意味着包名应当精心设计：简短、凝练、富有表现力。按照惯例，包名采用小写单字命名，无需使用下划线或混合大小写。
+宁可简短也不要冗长，因为所有使用者都需要频繁输入这个名称。
+也不必预先担心命名冲突。
+包名只是导入时的默认名称，不需要在整个源代码中保持唯一；在极少数冲突情况下，导入方可以在本地选择别名。通常不会造成混淆，因为导入路径中的文件名已经明确指定了具体使用哪个包。
 </p>
 
 <p>
-另一个惯例是：包名应与其源代码目录的基名一致；例如 <code>src/encoding/base64</code> 中的包被导入为 <code>"encoding/base64"</code>，但其包名为 <code>base64</code>，而非 <code>encoding_base64</code> 或 <code>encodingBase64</code>。
+另一个惯例是：包名应与其源码目录的基本名称保持一致。
+例如 <code>src/encoding/base64</code> 目录下的包，
+其导入路径是 <code>"encoding/base64"</code>，
+但包名为 <code>base64</code>，
+而非 <code>encoding_base64</code> 或 <code>encodingBase64</code>。
 </p>
 
 <p>
-包的使用者将通过包名来引用其内容，因此包内的导出名称可利用这一点避免重复。
-（应避免使用 <code>import .</code> 符号，它虽可简化必须在测试包外部运行的测试场景，但其他情况下应避免使用。）例如，<code>bufio</code> 包中的带缓冲读取器类型名为 <code>Reader</code>，而非 <code>BufReader</code>，因为用户会将其视为 <code>bufio.Reader</code>——这是一个清晰简洁的名称。此外，由于导入的实体总是通过包名访问，<code>bufio.Reader</code> 不会与 <code>io.Reader</code> 冲突。类似地，创建 <code>ring.Ring</code> 新实例的函数——在 Go 中称为“构造函数”——通常命名为 <code>NewRing</code>，但由于 <code>Ring</code> 是该包唯一导出的类型，且包名为 <code>ring</code>，因此它直接称为 <code>New</code>，包的使用者会看到 <code>ring.New</code>。
-善用包结构有助于选择优秀的名称。
+包的使用者会通过包名引用其内容，因此包内导出的名称可以利用这一点避免重复。
+（不要使用 <code>import .</code> 的写法，虽然它能简化某些必须在包外运行的测试，但其他情况下应避免使用。）
+例如 <code>bufio</code> 包中的缓冲读取器类型命名为 <code>Reader</code>，
+而非 <code>BufReader</code>，因为用户看到的名称是 <code>bufio.Reader</code>，
+这样既清晰又简洁。
+此外，由于导入的实体总是通过包名访问，<code>bufio.Reader</code>
+不会与 <code>io.Reader</code> 冲突。
+同理，创建 <code>ring.Ring</code> 新实例的函数——
+在 Go 中定义为<em>构造函数</em>——
+通常应命名为 <code>NewRing</code>，
+但由于该包只导出了 <code>Ring</code> 类型，
+且包名为 <code>ring</code>，
+因此该函数直接命名为 <code>New</code>，
+使用者看到的名称是 <code>ring.New</code>。
+善用包结构来选择合适的名称。
 </p>
 
 <p>
-另一个简短例子是 <code>once.Do</code>；<code>once.Do(setup)</code> 可读性很好，写成 <code>once.DoOrWaitUntilDone(setup)</code> 并不会更优。长名称并不自动提升可读性，有时一条有用的文档注释比冗长的名称更有价值。
+另一个简短的例子是 <code>once.Do</code>；
+<code>once.Do(setup)</code> 读起来很流畅，
+改成 <code>once.DoOrWaitUntilDone(setup)</code> 反而不利于理解。
+冗长的名称并不自动提升可读性。
+有时，清晰的文档注释比超长的命名更有价值。
 </p>
 
 <h3 id="Getters">Getters</h3>
 
 <p>
-Go 不会自动提供 getter 和 setter。自行实现 getter 和 setter 并无不妥，且常常是合适的，但不必在 getter 方法名中加入 <code>Get</code> 前缀。若字段名为 <code>owner</code>（小写、未导出），其 getter 方法应命名为 <code>Owner</code>（大写、导出），而非 <code>GetOwner</code>。通过大写名称导出即可区分字段与方法。若需 setter，通常命名为 <code>SetOwner</code>。这两个名称在实际使用中可读性良好：
+Go 不会自动生成 getter 和 setter。
+手动提供 getter 和 setter 并无不妥，这通常很合适，
+但将 <code>Get</code> 前缀加入 getter 命名既非惯例也非必要。
+若某个字段命名为 <code>owner</code>（小写未导出），
+其 getter 方法应命名为 <code>Owner</code>（大写已导出），
+而非 <code>GetOwner</code>。
+大写命名的导出机制本身就区分了字段和方法。
+若需要 setter 函数，通常命名为 <code>SetOwner</code>。
+这两个名称在实际使用中都很自然：
 </p>
 <pre>
 owner := obj.Owner()
@@ -140,61 +168,87 @@ if owner != user {
 }
 </pre>
 
-<h3 id="interface-names">接口名称</h3>
+<h3 id="interface-names">接口命名</h3>
 
 <p>
-按照惯例，单方法接口的命名通常采用方法名加 -er 后缀或类似修饰，以构成表示行为的名词：如 <code>Reader</code>、<code>Writer</code>、<code>Formatter</code>、<code>CloseNotifier</code> 等。
+按照惯例，单方法接口的命名应采用方法名加 -er 后缀或类似修饰，
+构成表示动作主体的名词：<code>Reader</code>、
+<code>Writer</code>、<code>Formatter</code>、
+<code>CloseNotifier</code> 等。
 </p>
 
 <p>
-这类名称已有众多范例，遵循它们及其所表达的函数含义是有效的做法。<code>Read</code>、<code>Write</code>、<code>Close</code>、<code>Flush</code>、<code>String</code> 等方法具有规范的签名和语义。为避免混淆，除非你的方法具有相同的签名和语义，否则不要使用这些名称。反之，若你的类型实现了与知名类型中同义的方法，应赋予相同的名称和签名；例如将字符串转换方法命名为 <code>String</code> 而非 <code>ToString</code>。
+这样的命名约定有很多，遵循它们及其蕴含的函数命名规律能提高效率。
+<code>Read</code>、<code>Write</code>、<code>Close</code>、<code>Flush</code>、
+<code>String</code> 等方法具有固定的签名和语义。
+为避免混淆，除非方法具有相同签名和语义，
+否则不要使用这些名称。
+反之，如果你的类型实现了与知名类型同名且语义相同的方法，
+应保持相同的命名和签名；
+将字符串转换方法命名为 <code>String</code> 而非 <code>ToString</code>。
 </p>
 
-<h3 id="mixed-caps">MixedCaps</h3>
+<h3 id="mixed-caps">混合大小写</h3>
 
 <p>
-最后，Go 的惯例是使用 <code>MixedCaps</code> 或 <code>mixedCaps</code>（混合大小写）而非下划线来书写多单词名称。
+最后，Go 的惯例是使用 <code>MixedCaps</code>
+或 <code>mixedCaps</code> 来书写多词名称，
+而非使用下划线分隔。
 </p>
 
 <h2 id="semicolons">分号</h2>
 
 <p>
-与 C 类似，Go 的形式文法使用分号终止语句，但不同于 C 的是，这些分号不会出现在源代码中。相反，词法分析器采用简单规则在扫描时自动插入分号，因此源文本通常不含显式分号。
+与 C 类似，Go 的正式语法使用分号结束语句，
+但与 C 不同，这些分号不会出现在源代码中。
+词法分析器在扫描时会通过简单规则自动插入分号，
+因此输入文本基本不需要手动添加分号。
 </p>
 
 <p>
-规则如下：若换行前的最后一个标记是标识符（包括 <code>int</code>、<code>float64</code> 等基本类型）、基本字面量（如数字或字符串常量），或以下标记之一：
+规则如下：如果换行前的最后一个词法元素是标识符
+（包括 <code>int</code> 和 <code>float64</code> 等单词）、
+基本字面量（如数字或字符串常量），或以下词法元素之一：
 </p>
 <pre>
 break continue fallthrough return ++ -- ) }
 </pre>
 <p>
-则词法分析器总在该标记后插入分号。可概括为“若换行出现在可能结束语句的标记后，则插入分号”。
+词法分析器总会在该元素后插入分号。
+可以概括为：“当换行出现在可能结束语句的词法元素之后时，插入分号”。
 </p>
 
 <p>
-在右花括号前也可省略分号，因此如下语句：
+在右花括号前也可以省略分号，
+因此像这样的语句：
 </p>
 <pre>
     go func() { for { dst &lt;- &lt;-src } }()
 </pre>
 <p>
-无需添加分号。惯用的 Go 程序仅在 <code>for</code> 循环子句等处使用分号，以分隔初始化语句、条件判断和后置语句。若将多条语句写在同一行，也需要分号分隔。
+不需要任何分号。
+符合 Go 习惯的代码只在 <code>for</code> 循环子句等位置使用分号，
+用于分隔初始化语句、条件表达式和后续操作。
+若将多条语句写在同一行，也需要用分号分隔。
 </p>
 
 <p>
-分号插入规则的一个重要结论是：不能将控制结构（<code>if</code>、<code>for</code>、<code>switch</code> 或 <code>select</code>）的左花括号置于下一行。否则，花括号前会被插入分号，可能导致意外错误。应这样书写：
+分号插入规则的一个重要结果是：
+不能将控制结构（<code>if</code>、<code>for</code>、<code>switch</code>
+或 <code>select</code>）的左花括号放在下一行。
+如果这样做，花括号前会被自动插入分号，可能导致意外结果。
+请这样书写：
 </p><pre>
 if i &lt; f() {
     g()
 }
 </pre>
 <p>
-而不是这样写
+不要这样写
 </p>
 <pre>
-if i &lt; f()  // 错误！
-{           // 错误！
+if i &lt; f()  // 错误!
+{           // 错误!
     g()
 }
 </pre>
@@ -202,13 +256,25 @@ if i &lt; f()  // 错误！
 <h2 id="control-structures">控制结构</h2>
 
 <p>
-Go 的控制结构与 C 相关，但在重要方面有所不同。Go 没有 <code>do</code> 或 <code>while</code> 循环，只有一种略微泛化的 <code>for</code>；<code>switch</code> 更加灵活；<code>if</code> 和 <code>switch</code> 可以接受一个可选的初始化语句，类似于 <code>for</code>；<code>break</code> 和 <code>continue</code> 语句可以带一个可选标签来指明要中断或继续的目标；此外还有一些新的控制结构，包括类型开关和多路通信复用器 <code>select</code>。语法也略有不同：没有圆括号，并且主体必须用花括号括起来。
+Go 的控制结构与 C 语言相关，但在重要方面有所不同。
+没有 <code>do</code> 或 <code>while</code> 循环，只有一个稍作泛化的
+<code>for</code>；
+<code>switch</code> 更灵活；
+<code>if</code> 和 <code>switch</code> 可以接受一个可选的
+初始化语句，类似于 <code>for</code>；
+<code>break</code> 和 <code>continue</code> 语句
+可以接受一个可选标签，用于标识要中断或继续的目标；
+并且还有一些新的控制结构，包括类型开关和一个
+多路通信复用器 <code>select</code>。
+语法也略有不同：
+没有括号，
+并且主体必须始终用花括号界定。
 </p>
 
 <h3 id="if">If</h3>
 
 <p>
-在 Go 中，一个简单的 <code>if</code> 语句如下所示：
+在 Go 中，一个简单的 <code>if</code> 看起来像这样：
 </p>
 <pre>
 if x &gt; 0 {
@@ -217,11 +283,15 @@ if x &gt; 0 {
 </pre>
 
 <p>
-强制使用花括号鼓励将简单的 <code>if</code> 语句写在多行。无论如何，这都是良好的风格，特别是当主体包含 <code>return</code> 或 <code>break</code> 等控制语句时。
+强制使用花括号鼓励将简单的 <code>if</code> 语句
+写成多行。 这无论如何都是好的风格，
+特别是当主体包含诸如 <code>return</code> 或 <code>break</code>
+这样的控制语句时。
 </p>
 
 <p>
-由于 <code>if</code> 和 <code>switch</code> 接受初始化语句，通常会看到它们用来设置一个局部变量。
+由于 <code>if</code> 和 <code>switch</code> 接受初始化
+语句，因此常见用法是用它来设置局部变量。
 </p>
 
 <pre>
@@ -232,7 +302,11 @@ if err := file.Chmod(0664); err != nil {
 </pre>
 
 <p id="else">
-在 Go 库中，你会发现，当一个 <code>if</code> 语句不会流入下一个语句时——即主体以 <code>break</code>、<code>continue</code>、<code>goto</code> 或 <code>return</code> 结束——不必要的 <code>else</code> 就会被省略。
+在 Go 的标准库中，你会发现
+当一个 <code>if</code> 语句不会流向下一个语句时——也就是说，
+主体以 <code>break</code>、<code>continue</code>、
+<code>goto</code> 或 <code>return</code> 结束——那么不必要的
+<code>else</code> 就会被省略。
 </p>
 
 <pre>
@@ -244,7 +318,10 @@ codeUsing(f)
 </pre>
 
 <p>
-这是代码需要防护一系列错误条件的常见情况的一个例子。如果成功的控制流沿着页面向下运行，随着错误的出现而排除它们，代码会更易读。由于错误情况通常以 <code>return</code> 语句结束，因此生成的代码不需要 <code>else</code> 语句。
+这是一个常见情况的例子，其中代码必须防护一系列错误条件。
+如果成功的控制流沿着页面向下运行，并在出现时消除错误情况，
+那么代码的可读性就很好。 由于错误情况往往以 <code>return</code>
+语句结束，因此生成的代码不需要 <code>else</code> 语句。
 </p>
 
 <pre>
@@ -260,10 +337,12 @@ if err != nil {
 codeUsing(f, d)
 </pre>
 
-<h3 id="redeclaration">重新声明和重新赋值</h3>
+<h3 id="redeclaration">重新声明与重新赋值</h3>
 
 <p>
-附带一提：上一节的最后一个例子演示了 <code>:=</code> 短声明形式工作方式的一个细节。调用 <code>os.Open</code> 的声明如下：
+旁白：上一节中的最后一个例子演示了
+<code>:=</code> 短变量声明形式工作方式的一个细节。
+调用 <code>os.Open</code> 的声明如下，
 </p>
 
 <pre>
@@ -271,7 +350,8 @@ f, err := os.Open(name)
 </pre>
 
 <p>
-这条语句声明了两个变量：<code>f</code> 和 <code>err</code>。几行之后，对 <code>f.Stat</code> 的调用如下：
+这条语句声明了两个变量：<code>f</code> 和 <code>err</code>。
+几行之后，对 <code>f.Stat</code> 的调用如下，
 </p>
 
 <pre>
@@ -279,45 +359,59 @@ d, err := f.Stat()
 </pre>
 
 <p>
-这看起来像是声明了 <code>d</code> 和 <code>err</code>。但请注意，<code>err</code> 在两条语句中都出现了。这种重复是合法的：<code>err</code> 由第一条语句声明，但在第二条语句中只是<em>重新赋值</em>。这意味着对 <code>f.Stat</code> 的调用使用了上面声明的现有 <code>err</code> 变量，只是给它赋了一个新值。
+这看起来似乎声明了 <code>d</code> 和 <code>err</code>。
+但请注意，<code>err</code> 出现在两条语句中。
+这种重复是合法的：<code>err</code> 由第一条语句声明，
+但在第二条语句中只是<em>被重新赋值</em>。
+这意味着对 <code>f.Stat</code> 的调用使用了上面声明的
+现有 <code>err</code> 变量，并只是给了它一个新值。
 </p>
 
 <p>
-在 <code>:=</code> 声明中，即使变量 <code>v</code> 已经被声明，它也可以再次出现，前提是：
+在 <code>:=</code> 声明中，变量 <code>v</code> 即使已经
+被声明过也可以再次出现，前提是：
 </p>
 
 <ul>
-<li>此声明与 <code>v</code> 的现有声明位于同一作用域（如果 <code>v</code> 已在外部作用域中声明，该声明将创建一个新变量 §），</li>
+<li>此声明与 <code>v</code> 的现有声明在同一个作用域内
+（如果 <code>v</code> 已经在外部作用域中声明，则该声明将创建一个新变量 §），</li>
 <li>初始化中对应的值可以赋值给 <code>v</code>，并且</li>
-<li>该声明至少创建了一个其他变量。</li>
+<li>声明中至少创建了一个其他变量。</li>
 </ul>
 
 <p>
-这种不寻常的特性纯粹是实用主义，例如，它使得在很长的 <code>if-else</code> 链中使用单个 <code>err</code> 值变得容易。你会经常看到它的使用。
+这个不寻常的特性是纯粹的实用主义，
+例如，在一个长的 <code>if-else</code> 链中可以轻松使用同一个
+<code>err</code> 值。
+你会经常看到它的使用。
 </p>
 
 <p>
-§ 值得注意的是，在 Go 中，函数参数和返回值的作用域与函数体相同，即使它们在词法上位于包含主体的花括号之外。
+§ 值得在此指出的是，在 Go 中，函数参数和返回值的作用域
+与函数体相同，即使它们在词法上出现在函数体花括号的外部。
 </p>
 
 <h3 id="for">For</h3>
 
 <p>
-Go 的 <code>for</code> 循环与 C 的相似——但并不相同。它统一了 <code>for</code> 和 <code>while</code>，并且没有 <code>do-while</code>。它有三种形式，其中只有一种使用分号。
+Go 的 <code>for</code> 循环与 C 的类似，但又不完全相同。
+它统一了 <code>for</code>
+和 <code>while</code>，并且没有 <code>do-while</code>。
+它有三种形式，其中只有一种带有分号。
 </p>
 <pre>
-// 类似 C 的 for
+// 类似于 C 的 for
 for init; condition; post { }
 
-// 类似 C 的 while
+// 类似于 C 的 while
 for condition { }
 
-// 类似 C 的 for(;;)
+// 类似于 C 的 for(;;)
 for { }
 </pre>
 
 <p>
-短声明使得在循环中直接声明索引变量变得容易。
+短变量声明使得在循环中直接声明索引变量变得容易。
 </p>
 <pre>
 sum := 0
@@ -327,7 +421,9 @@ for i := 0; i &lt; 10; i++ {
 </pre>
 
 <p>
-如果你正在遍历数组、切片、字符串或映射，或者从通道读取，<code>range</code> 子句可以管理循环。
+如果你正在遍历一个数组、切片、字符串或映射，
+或者从通道中读取，一个 <code>range</code> 子句可以
+管理这个循环。
 </p>
 <pre>
 for key, value := range oldMap {
@@ -336,7 +432,7 @@ for key, value := range oldMap {
 </pre>
 
 <p>
-如果你只需要范围中的第一个元素（键或索引），请省略第二个：
+如果你只需要范围中的第一个项（键或索引），去掉第二个：
 </p>
 <pre>
 for key := range m {
@@ -347,7 +443,7 @@ for key := range m {
 </pre>
 
 <p>
-如果你只需要范围中的第二个元素（值），请使用<em>空白标识符</em>，即下划线，来丢弃第一个：
+如果你只需要范围中的第二个项（值），使用<em>空白标识符</em>（一个下划线）来丢弃第一个：
 </p>
 <pre>
 sum := 0
@@ -357,21 +453,21 @@ for _, value := range array {
 </pre>
 
 <p>
-空白标识符有许多用途，如<a href="#blank">后续章节</a>所述。
+空白标识符有多种用途，如<a href="#blank">后面章节</a>所述。
 </p><p>
-对于字符串，<code>range</code> 会为你完成更多工作，通过解析UTF-8来分解出单个Unicode码点。
-错误的编码会消耗一个字节并产生替换符文U+FFFD。
-（名称（及关联的内置类型）<code>rune</code> 是Go术语中表示单个Unicode码点的方式。
+对于字符串，<code>range</code> 会为你处理更多工作，它通过解析 UTF-8 来逐个分解 Unicode 码点。
+错误的编码会消耗一个字节并生成替代符文 U+FFFD。
+（名称（及其关联的内置类型）<code>rune</code> 是 Go 中用于表示单个 Unicode 码点的术语。
 详情请参见<a href="/ref/spec#Rune_literals">语言规范</a>。）
-这个循环
+循环
 </p>
 <pre>
-for pos, char := range "日本\x80語" { // \x80 是一个非法的UTF-8编码
+for pos, char := range "日本\x80語" { // \x80 是非法的 UTF-8 编码
     fmt.Printf("character %#U starts at byte position %d\n", char, pos)
 }
 </pre>
 <p>
-会打印
+会输出
 </p>
 <pre>
 character U+65E5 '日' starts at byte position 0
@@ -381,10 +477,8 @@ character U+8A9E '語' starts at byte position 7
 </pre>
 
 <p>
-最后，Go没有逗号运算符，并且 <code>++</code> 和 <code>--</code>
-是语句而不是表达式。
-因此，如果你想在 <code>for</code> 中运行多个变量，
-应使用并行赋值（尽管这不能使用 <code>++</code> 和 <code>--</code>）。
+最后，Go 没有逗号运算符，并且 <code>++</code> 和 <code>--</code> 是语句而非表达式。
+因此，如果你希望在 <code>for</code> 中操作多个变量，应该使用并行赋值（尽管这意味着不能使用 <code>++</code> 和 <code>--</code>）。
 </p>
 <pre>
 // 反转 a
@@ -396,12 +490,11 @@ for i, j := 0, len(a)-1; i &lt; j; i, j = i+1, j-1 {
 <h3 id="switch">Switch</h3>
 
 <p>
-Go的 <code>switch</code> 比C语言的更为通用。
-表达式不必是常量，甚至不必是整数，
-各个分支从上到下求值，直到找到匹配项，
-如果 <code>switch</code> 没有表达式，则切换到 <code>true</code>。
-因此，将 <code>if</code>-<code>else</code>-<code>if</code>-<code>else</code>
-链写成 <code>switch</code> 是可行且惯用的做法。
+Go 的 <code>switch</code> 比 C 的更通用。
+表达式不必是常量甚至不必是整数，
+<code>case</code> 语句从上到下求值，直到找到匹配项，
+如果 <code>switch</code> 没有表达式，则它会在 <code>true</code> 上进行匹配。
+因此，可以——并且是惯用写法——将一串 <code>if</code>-<code>else</code>-<code>if</code>-<code>else</code> 链写成 <code>switch</code>。
 </p>
 
 <pre>
@@ -419,7 +512,7 @@ func unhex(c byte) byte {
 </pre>
 
 <p>
-没有自动贯穿（fall through），但可以使用逗号分隔的列表来呈现多个分支。
+没有自动贯穿（fall through），但 <code>case</code> 可以用逗号分隔的列表来表示。
 </p>
 <pre>
 func shouldEscape(c byte) bool {
@@ -432,9 +525,9 @@ func shouldEscape(c byte) bool {
 </pre>
 
 <p>
-尽管在Go中 <code>break</code> 语句不像在其他一些类C语言中那么常见，但它可用于提前终止 <code>switch</code>。
-然而，有时需要跳出的是外围的循环，而不是switch本身，在Go中可以通过在循环上放置标签并“break”到该标签来实现。
-这个例子展示了两种用法。
+尽管在 Go 中并不像在其他一些类 C 语言中那样常见，但 <code>break</code> 语句可用于提前终止 <code>switch</code>。
+然而，有时需要跳出的是外层循环，而不是 switch，在 Go 中可以通过在循环上添加标签并“break”到该标签来实现。
+此示例展示了两种用法。
 </p>
 
 <pre>
@@ -463,15 +556,15 @@ Loop:
 </pre>
 
 <p>
-当然，<code>continue</code> 语句也接受可选的标签，但它只适用于循环。
+当然，<code>continue</code> 语句也可以接受一个可选的标签，但它只适用于循环。
 </p>
 
 <p>
-在结束本节时，这里有一个使用两个 <code>switch</code> 语句对字节切片进行比较的例程：
+作为本节的结尾，这里有一个用于字节切片的比较例程，其中使用了两个 <code>switch</code> 语句：
 </p>
 <pre>
-// Compare 返回一个整数，按字典序比较两个字节切片。
-// 如果 a == b 则结果为 0，如果 a &lt; b 则为 -1，如果 a &gt; b 则为 +1
+// Compare 按字典序比较两个字节切片，返回一个整数。
+// 如果 a == b，结果为 0；如果 a &lt; b，结果为 -1；如果 a &gt; b，结果为 +1
 func Compare(a, b []byte) int {
     for i := 0; i &lt; len(a) &amp;&amp; i &lt; len(b); i++ {
         switch {
@@ -494,10 +587,9 @@ func Compare(a, b []byte) int {
 <h3 id="type_switch">类型开关</h3>
 
 <p>
-switch也可以用于发现接口变量的动态类型。
-这种 <em>类型开关</em> 使用了类型断言的语法，并在括号内使用关键字 <code>type</code>。
-如果switch在表达式中声明了一个变量，该变量将在每个分支中具有相应的类型。
-在这种情况下，重新使用变量名称也是惯用做法，实际上在每个分支中声明了一个同名但类型不同的新变量。
+<code>switch</code> 也可以用来发现接口变量的动态类型。这种 <em>类型开关</em> 使用类型断言的语法，将关键字 <code>type</code> 放在括号内。
+如果 switch 在表达式中声明了一个变量，那么该变量在每个 <code>case</code> 子句中都会具有相应的类型。
+在这种情况下，重新使用相同的变量名也是惯用做法，实际上是在每个 case 中声明了一个同名但类型不同的新变量。
 </p>
 <pre>
 var t interface{}
@@ -521,16 +613,13 @@ case *int:
 <h3 id="multiple-returns">多返回值</h3>
 
 <p>
-Go的一个不寻常的特性是函数和方法可以返回多个值。
-这种形式可用于改进C程序中一些笨拙的惯用法：带内的错误返回（例如用 <code>-1</code> 表示 <code>EOF</code>）
-以及修改通过地址传递的参数。
+Go 的一个不寻常特性是函数和方法可以返回多个值。这种形式可以改进 C 程序中一些笨拙的惯用法，例如用于表示 <code>EOF</code> 的带内错误返回码 <code>-1</code>，以及通过地址传递参数进行修改。
 </p>
 
 <p>
-在C中，写入错误通过负计数来指示，错误代码隐藏在一个volatile位置中。
-在Go中，<code>Write</code>
-可以返回计数 <i>和</i> 一个错误：“是的，你写入了一些字节，但不是全部，因为你填满了设备”。
-<code>os</code> 包中文件的 <code>Write</code> 方法签名为：
+在 C 中，写入错误通过负的计数值来表示，而错误代码隐藏在一个易失性位置。
+在 Go 中，<code>Write</code> 可以返回计数值 <i>和</i> 一个错误：“是的，你写入了一些字节，但并非全部，因为你填满了设备”。
+来自 <code>os</code> 包的文件的 <code>Write</code> 方法签名为：
 </p>
 
 <pre>
@@ -538,20 +627,19 @@ func (file *File) Write(b []byte) (n int, err error)
 </pre>
 
 <p>
-正如文档所说，当 <code>n</code>
-<code>!=</code> <code>len(b)</code> 时，它返回写入的字节数和一个非nil的 <code>error</code>。
-这是一种常见的风格；有关更多示例，请参见关于错误处理的章节。
+正如文档所说，当 <code>n</code> <code>!=</code> <code>len(b)</code> 时，它会返回写入的字节数和一个非 nil 的 <code>error</code>。
+这是一种常见风格；更多示例请参见关于错误处理的章节。
 </p><p>
-类似的方法可以避免向返回值传递指针来模拟引用参数。
-这里是一个简单的函数，用于从字节切片中的某个位置抓取一个数字，返回该数字和下一个位置。
+类似的方法消除了将指向返回值的指针作为引用参数传递的需要。
+这是一个简单的函数，用于从字节切片的指定位置获取一个数字，返回该数字及下一个位置。
 </p>
 
 <pre>
 func nextInt(b []byte, i int) (int, int) {
-    for ; i < len(b) && !isDigit(b[i]); i++ {
+    for ; i &lt; len(b) &amp;&amp; !isDigit(b[i]); i++ {
     }
     x := 0
-    for ; i < len(b) && isDigit(b[i]); i++ {
+    for ; i &lt; len(b) &amp;&amp; isDigit(b[i]); i++ {
         x = x*10 + int(b[i]) - '0'
     }
     return x, i
@@ -559,26 +647,26 @@ func nextInt(b []byte, i int) (int, int) {
 </pre>
 
 <p>
-你可以像这样使用它来扫描输入切片 <code>b</code> 中的数字：
+你可以这样使用它来扫描输入切片 <code>b</code> 中的数字：
 </p>
 
 <pre>
-    for i := 0; i < len(b); {
+    for i := 0; i &lt; len(b); {
         x, i = nextInt(b, i)
         fmt.Println(x)
     }
 </pre>
 
-<h3 id="named-results">具名结果参数</h3>
+<h3 id="named-results">命名结果参数</h3>
 
 <p>
-Go 函数的返回或结果 "参数" 可以被命名，并像常规变量一样使用，就像传入参数一样。
-当被命名时，它们在函数开始时会被初始化为其类型的零值；如果函数执行一个不带参数的 <code>return</code> 语句，则结果参数的当前值将用作返回值。
+Go 函数的返回或结果“参数”可以被命名，并像常规变量一样使用，就像输入参数一样。
+当被命名时，它们在函数开始时会被初始化为其类型的零值；如果函数执行一个不带参数的 <code>return</code> 语句，则结果参数的当前值将作为返回值使用。
 </p>
 
 <p>
-这些名称并非强制要求，但它们可以使代码更简短、更清晰：它们是文档。
-如果我们命名 <code>nextInt</code> 的结果，那么哪个返回的 <code>int</code> 对应什么就变得显而易见了。
+命名不是强制性的，但它们可以使代码更简短、更清晰：它们就是文档。
+如果我们为 <code>nextInt</code> 的结果命名，那么哪个返回的 <code>int</code> 代表什么就一目了然了。
 </p>
 
 <pre>
@@ -586,13 +674,13 @@ func nextInt(b []byte, pos int) (value, nextPos int) {
 </pre>
 
 <p>
-因为具名结果是初始化的，并且与无参数的 return 关联，所以它们既能简化代码也能使其更清晰。
-这是一个良好运用了它们的 <code>io.ReadFull</code> 版本：
+因为命名结果参数已被初始化并与不带参数的 <code>return</code> 绑定，它们既能简化代码又能增强清晰度。
+这是一个很好地使用了它们的 <code>io.ReadFull</code> 版本：
 </p>
 
 <pre>
 func ReadFull(r Reader, buf []byte) (n int, err error) {
-    for len(buf) > 0 && err == nil {
+    for len(buf) &gt; 0 &amp;&amp; err == nil {
         var nr int
         nr, err = r.Read(buf)
         n += nr
@@ -605,13 +693,13 @@ func ReadFull(r Reader, buf []byte) (n int, err error) {
 <h3 id="defer">延迟执行</h3>
 
 <p>
-Go 的 <code>defer</code> 语句安排一个函数调用（<i>延迟</i>函数）在执行 <code>defer</code> 的函数返回之前立即运行。
-这是一种不寻常但有效的方式，用于处理诸如资源释放之类的场景，无论函数通过哪条路径返回都必须释放这些资源。
+Go 的 <code>defer</code> 语句将一个函数调用（<i>被延迟</i> 的函数）安排在执行 <code>defer</code> 的函数返回之前立即运行。
+这是一种不寻常但有效的方式，用于处理那些无论函数通过哪条路径返回都必须释放资源的情况。
 典型的例子是解锁互斥锁或关闭文件。
 </p>
 
 <pre>
-// Contents 返回文件内容作为字符串。
+// Contents 以字符串形式返回文件内容。
 func Contents(filename string) (string, error) {
     f, err := os.Open(filename)
     if err != nil {
@@ -623,35 +711,40 @@ func Contents(filename string) (string, error) {
     buf := make([]byte, 100)
     for {
         n, err := f.Read(buf[0:])
-        result = append(result, buf[0:n]...) // append 将在后面讨论。
+        result = append(result, buf[0:n]...) // append 会在后面讨论。
         if err != nil {
             if err == io.EOF {
                 break
             }
-            return "", err  // f 会在这里返回时关闭。
+            return "", err  // 如果我们在这里返回，f 将被关闭。
         }
     }
-    return string(result), nil // f 会在这里返回时关闭。
+    return string(result), nil // 如果我们在这里返回，f 将被关闭。
 }
 </pre>
 
 <p>
-延迟调用 <code>Close</code> 这样的函数有两个优点。首先，它保证你永远不会忘记关闭文件，如果你后来编辑函数以添加新的返回路径，这是一个容易犯的错误。其次，它意味着关闭操作紧挨着打开操作，这比将其放在函数末尾要清晰得多。
+延迟调用像 <code>Close</code> 这样的函数有两个优点。
+首先，它保证你永远不会忘记关闭文件，如果你后来编辑函数以添加新的返回路径，这是一个很容易犯的错误。
+其次，它意味着关闭操作靠近打开操作，这比将其放在函数末尾要清晰得多。
 </p>
 
 <p>
-延迟函数的参数（如果函数是方法，则包括接收器）在 <i>defer</i> 执行时求值，而不是在 <i>call</i> 执行时求值。除了不用担心变量在函数执行过程中改变值之外，这意味着一个单一的延迟调用点可以延迟多个函数执行。这里有一个简单的例子。
+被延迟函数的参数（如果函数是方法，则包括接收器）是在 <i>defer</i> 执行时求值的，而不是在 <i>call</i> 执行时。
+除了避免担心变量值在函数执行过程中变化之外，这意味着单个延迟调用点可以延迟多个函数执行。
+这里有一个简单的例子。
 </p>
 
 <pre>
-for i := 0; i < 5; i++ {
+for i := 0; i &lt; 5; i++ {
     defer fmt.Printf("%d ", i)
 }
 </pre>
 
 <p>
-延迟函数以 LIFO（后进先出）顺序执行，因此此代码将导致函数返回时打印 <code>4 3 2 1 0</code>。
-一个更实际的例子是跟踪程序中函数执行的简单方法。我们可以编写几个简单的跟踪例程，像这样：
+被延迟的函数按后进先出 (LIFO) 顺序执行，因此当函数返回时，这段代码将打印 <code>4 3 2 1 0</code>。
+一个更合理的例子是跟踪程序中函数执行的简单方法。
+我们可以编写几个简单的跟踪例程，如下所示：
 </p>
 
 <pre>
@@ -662,12 +755,13 @@ func untrace(s string) { fmt.Println("leaving:", s) }
 func a() {
     trace("a")
     defer untrace("a")
-    // 做些事情....
+    // 做一些事情....
 }
 </pre>
 
 <p>
-我们可以通过利用延迟函数的参数在 <code>defer</code> 执行时求值这一事实来做得更好。跟踪例程可以设置反跟踪例程的参数。
+我们可以利用被延迟函数的参数在 <code>defer</code> 执行时求值这一事实来做得更好。
+跟踪例程可以设置用于取消跟踪的例程的参数。
 这个例子：
 </p>
 
@@ -698,7 +792,7 @@ func main() {
 </pre>
 
 <p>
-打印
+将打印：
 </p>
 
 <pre>
@@ -711,35 +805,36 @@ leaving: b
 </pre>
 
 <p>
-对于习惯于其他语言基于代码块的资源管理的程序员来说，<code>defer</code> 可能看起来很特别，但它最有趣和最强大的应用恰恰来自于它不是基于代码块而是基于函数这一事实。
-在关于 <code>panic</code> 和 <code>recover</code> 的章节中，我们将看到它的可能性的另一个例子。
+对于习惯于其他语言基于块的资源管理的程序员来说，<code>defer</code> 可能看起来很特别，但它最有趣和最强大的应用恰恰来源于它不是基于块而是基于函数的这一事实。
+在关于 <code>panic</code> 和 <code>recover</code> 的部分，我们将看到另一个展示其可能性的例子。
 </p>
 
 <h2 id="data">数据</h2>
 
 <h3 id="allocation_new">使用 <code>new</code> 进行分配</h3><p>
-Go 有两种分配原语：内建函数 <code>new</code> 和 <code>make</code>。
-它们所做的事情不同，适用的类型也不同，这可能会让人感到困惑，但规则很简单。
-我们先讨论 <code>new</code>。
-它是一个分配内存的内建函数，但与某些其他语言中的同名函数不同，它不会<em>初始化</em>内存，而只会将其<em>清零</em>。
-也就是说，<code>new(T)</code> 为类型 <code>T</code> 的新变量分配清零的存储空间，并返回其地址，即类型为 <code>*T</code> 的值。
-用 Go 的术语来说，它返回一个指向新分配的类型 <code>T</code> 零值的指针。
+Go 有两种内存分配原语：内建函数 <code>new</code> 和 <code>make</code>。
+它们的功能不同，所适用的类型也不同，这可能会让人困惑，但规则其实很简单。
+我们先从 <code>new</code> 讲起。
+<code>new</code> 是一个分配内存的内建函数，但与一些同名函数不同，它不会 <em>初始化</em> 内存，只会 <em>置零</em>。
+也就是说，<code>new(T)</code> 会为一个类型为 <code>T</code> 的新项分配一块置零的存储空间，并返回其地址，即一个类型为 <code>*T</code> 的值。
+用 Go 的术语来说，它返回一个指向新分配的、类型为 <code>T</code> 的零值的指针。
 </p>
 
 <p>
-从 Go 1.26 开始，<code>new</code> 也接受一个（值）表达式作为参数，用于指定变量的初始值。
-例如，<code>new(int64(300))</code> 会分配一个类型为 <code>int64</code> 的新变量，将其初始化为 300，并返回其地址。
+从 Go 1.26 开始，<code>new</code> 还接受一个（值）表达式作为参数，用于指定变量的初始值。
+例如，<code>new(int64(300))</code> 会分配一个新的 <code>int64</code> 类型的变量，将其初始化为 300，并返回其地址。
 </p>
 
 <p>
-由于 <code>new</code> 返回的内存是清零的，因此在设计数据结构时，安排每种类型的零值无需进一步初始化即可使用会很有帮助。这意味着数据结构的用户可以使用 <code>new</code> 创建一个实例并立即开始使用。
-例如，<code>bytes.Buffer</code> 的文档说明：“<code>Buffer</code> 的零值是一个已准备好使用的空缓冲区。”
-同样，<code>sync.Mutex</code> 没有显式的构造函数或 <code>Init</code> 方法。
-相反，<code>sync.Mutex</code> 的零值被定义为一个未锁定的互斥锁。
+由于 <code>new</code> 返回的内存是置零的，在设计数据结构时，安排每个类型的零值无需进一步初始化即可使用会很有帮助。这意味着数据结构的用户可以通过 <code>new</code> 创建一个实例并直接开始使用。
+例如，<code>bytes.Buffer</code> 的文档指出：
+"<code>Buffer</code> 的零值是一个准备好使用的空缓冲区。"
+类似地，<code>sync.Mutex</code> 也没有显式的构造函数或 <code>Init</code> 方法。
+相反，<code>sync.Mutex</code> 的零值被定义为一个未上锁的互斥锁。
 </p>
 
 <p>
-零值可用这一特性是传递性的。考虑以下类型声明。
+零值可用的属性具有传递性。考虑以下类型声明。
 </p>
 
 <pre>
@@ -750,18 +845,18 @@ type SyncedBuffer struct {
 </pre>
 
 <p>
-类型为 <code>SyncedBuffer</code> 的值在分配或声明后也立即可用。在下面的代码片段中，<code>p</code> 和 <code>v</code> 都无需进一步设置即可正常工作。
+<code>SyncedBuffer</code> 类型的值在分配或声明后也能立即使用。在下面的代码片段中，<code>p</code> 和 <code>v</code> 都无需额外设置就能正常工作。
 </p>
 
 <pre>
-p := new(SyncedBuffer)  // type *SyncedBuffer
-var v SyncedBuffer      // type  SyncedBuffer
+p := new(SyncedBuffer)  // 类型 *SyncedBuffer
+var v SyncedBuffer      // 类型  SyncedBuffer
 </pre>
 
-<h3 id="composite_literals">构造函数和复合字面量</h3>
+<h3 id="composite_literals">构造函数与复合字面量</h3>
 
 <p>
-有时零值不够好，需要一个初始化构造函数，正如下面这个从 <code>os</code> 包派生而来的示例所示。
+有时零值并不够用，这时就需要一个初始化构造函数，例如以下源自 <code>os</code> 包的例子。
 </p>
 
 <pre>
@@ -779,7 +874,7 @@ func NewFile(fd int, name string) *File {
 </pre>
 
 <p>
-这里有很多样板代码。我们可以使用<i>复合字面量</i>来简化它，复合字面量是一种每次求值时都会创建新实例的表达式。
+这里面有很多样板代码。我们可以使用 <i>复合字面量</i> 来简化它，复合字面量是一种每次求值时都会创建新实例的表达式。
 </p>
 
 <pre>
@@ -793,8 +888,8 @@ func NewFile(fd int, name string) *File {
 </pre>
 
 <p>
-请注意，与 C 语言不同，返回局部变量的地址是完全可以的；与变量关联的存储空间在函数返回后仍然存在。
-实际上，对复合字面量取地址会在每次求值时分配一个新的实例，因此我们可以将最后两行合并。
+注意，与 C 语言不同，在 Go 中返回局部变量的地址是完全没问题的；与该变量关联的存储空间在函数返回后依然存在。
+事实上，对复合字面量取地址会在每次求值时分配一个新的实例，因此我们可以将最后两行合并。
 </p>
 
 <pre>
@@ -802,8 +897,8 @@ func NewFile(fd int, name string) *File {
 </pre>
 
 <p>
-复合字面量的字段按顺序排列，并且必须全部存在。
-然而，通过将元素显式标记为 <i>field</i><code>:</code><i>value</i> 对，初始化器可以以任何顺序出现，缺失的字段将保留其各自的零值。因此，我们可以这样写：
+复合字面量的字段必须按顺序排列并且全部出现。
+然而，通过将元素显式标记为 <i>字段</i><code>:</code><i>值</i> 对，初始化器可以以任意顺序出现，缺失的字段将保留其各自的零值。因此我们可以这样写：
 </p>
 
 <pre>
@@ -811,12 +906,12 @@ func NewFile(fd int, name string) *File {
 </pre>
 
 <p>
-作为一种极端情况，如果复合字面量根本不包含任何字段，它会创建该类型的零值。表达式 <code>new(File)</code> 和 <code>&amp;File{}</code> 是等价的。
+作为一种极限情况，如果复合字面量根本不包含任何字段，它将创建该类型的零值。表达式 <code>new(File)</code> 和 <code>&amp;File{}</code> 是等价的。
 </p>
 
 <p>
-复合字面量也可以用于数组、切片和映射，其字段标签分别是索引或映射键。
-在这些示例中，只要 <code>Enone</code>、<code>Eio</code> 和 <code>Einval</code> 的值不同，初始化就能正常工作。
+复合字面量也可以用于创建数组、切片和映射，其中的字段标签分别对应索引或映射键。
+在这些例子中，初始化方式与 <code>Enone</code>、<code>Eio</code> 和 <code>Einval</code> 的具体值无关，只要它们互不相同即可。
 </p>
 
 <pre>
@@ -828,13 +923,13 @@ m := map[int]string{Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
 <h3 id="allocation_make">使用 <code>make</code> 进行分配</h3>
 
 <p>
-回到分配的话题。
+回到内存分配。
 内建函数 <code>make(T, </code><i>args</i><code>)</code> 的用途与 <code>new(T)</code> 不同。
-它只用于创建切片、映射和通道，并且返回一个<em>已初始化</em>（而非<em>清零</em>）的类型 <code>T</code>（而非 <code>*T</code>）的值。
-之所以有这种区别，是因为这三种类型在底层代表了必须在使用前初始化的数据结构的引用。
-例如，切片是一个包含三个字段的描述符：一个指向数据（在数组内）的指针、长度和容量，在这些字段初始化之前，切片是 <code>nil</code>。
-对于切片、映射和通道，<code>make</code> 会初始化内部数据结构并为值的使用做好准备。
-例如，
+它只用于创建切片、映射和通道，并且返回一个 <em>已初始化</em> 的（而非 <em>已置零</em> 的）类型为 <code>T</code> 的值（不是 <code>*T</code>）。
+这种区分的原因在于，这三种类型在底层代表的是引用，其关联的数据结构必须在使用前进行初始化。
+例如，切片是一个包含三项内容的描述符：一个指向数据（位于某个数组内）的指针、长度和容量，在这些内容被初始化之前，切片是 <code>nil</code>。
+对于切片、映射和通道，<code>make</code> 会初始化其内部的数据结构，并为使用做好准备。
+例如：
 </p>
 
 <pre>
@@ -842,19 +937,18 @@ make([]int, 10, 100)
 </pre>
 
 <p>
-会分配一个包含 100 个 int 的数组，然后创建一个长度为 10、容量为 100 的切片结构，指向该数组的前 10 个元素。
-（创建切片时，容量可以省略；有关更多信息，请参阅切片章节。）
-相比之下，<code>new([]int)</code> 返回一个指向新分配的、已清零的切片结构的指针，即一个指向 <code>nil</code> 切片值的指针。
+会分配一个包含 100 个整数的数组，然后创建一个长度为 10、容量为 100 的切片结构，指向该数组的前 10 个元素。
+（创建切片时，容量参数可以省略；更多信息请参阅关于切片的章节。）
+相比之下，<code>new([]int)</code> 返回一个指向新分配的、置零的切片结构的指针，即一个指向 <code>nil</code> 切片值的指针。
 </p>
 
 <p>
-这些示例说明了 <code>new</code> 和 <code>make</code> 之间的区别。
+以下示例说明了 <code>new</code> 和 <code>make</code> 的区别。
 </p>
 
 <pre>
-var p *[]int = new([]int)       // allocates slice structure; *p == nil; rarely useful
-var v  []int = make([]int, 100) // the slice v now refers to a new array of 100 ints
-</pre>// 不必要的复杂写法：
+var p *[]int = new([]int)       // 分配切片结构；*p == nil；很少有用
+var v  []int = make([]int, 100) // 切片 v 现在引用一个包含 100 个整数的新数组</pre>// 不必要的复杂写法：
 var p *[]int = new([]int)
 *p = make([]int, 100, 100)
 
@@ -863,35 +957,34 @@ v := make([]int, 100)
 </pre>
 
 <p>
-请记住，<code>make</code> 只适用于映射（map）、切片（slice）和通道（channel），且不会返回指针。
-若需获得显式指针，请使用 <code>new</code> 分配或直接取变量的地址。
+记住 <code>make</code> 只适用于映射、切片和通道，并且不返回指针。
+若需显式指针，应使用 <code>new</code> 分配或显式取变量的地址。
 </p>
 
 <h3 id="arrays">数组</h3>
 
 <p>
-数组在规划内存详细布局时很有用，有时能帮助避免内存分配，但它们主要是作为构建切片的基础——切片将是下一节的主题。
-为该主题奠定基础，这里先简要介绍一下数组。
+数组在规划内存的详细布局时很有用，有时可以帮助避免分配，但主要是作为切片（下一节的主题）的构建块。
+为了给该主题奠定基础，这里简要介绍数组。
 </p>
 
 <p>
-Go 语言中数组的工作方式与 C 语言存在重大差异。
-在 Go 中：
+Go 和 C 中数组的工作方式有很大区别。
+在 Go 中，
 </p>
 <ul>
 <li>
-数组是值类型。将一个数组赋值给另一个数组会复制所有元素。
+数组是值。将一个数组赋值给另一个会复制所有元素。
 </li>
 <li>
-特别是，如果将数组传递给函数，函数接收的是该数组的<i>副本</i>，而非指向它的指针。
-</li>
+具体来说，如果将数组传递给函数，它将收到该数组的<i>副本</i>，而不是指向它的指针。
 <li>
 数组的大小是其类型的一部分。<code>[10]int</code> 和 <code>[20]int</code> 是不同的类型。
 </li>
 </ul>
 
 <p>
-值属性可能很有用，但也可能开销很大；如果您希望获得类似 C 的行为和效率，可以传递指向数组的指针。
+值的属性可能很有用，但也可能开销很大；如果你想要类似 C 的行为和效率，可以传递数组的指针。
 </p>
 
 <pre>
@@ -903,42 +996,44 @@ func Sum(a *[3]float64) (sum float64) {
 }
 
 array := [...]float64{7.0, 8.5, 9.1}
-x := Sum(&array)  // 注意显式的取地址运算符
+x := Sum(&amp;array)  // 注意显式的取地址运算符
 </pre>
 
 <p>
-但即便这种风格也不是惯用的 Go 写法。请改用切片。
+但即便这种风格也不是惯用的 Go 代码。
+应使用切片代替。
 </p>
 
 <h3 id="slices">切片</h3>
 
 <p>
-切片是对数组的包装，为数据序列提供了更通用、更强大和更便捷的接口。
-除了像变换矩阵这类具有显式维度的项目外，Go 中的大多数数组编程都是通过切片而非简单数组完成的。
+切片包裹数组，为数据序列提供了更通用、强大和便捷的接口。
+除了像变换矩阵这样具有显式维度的项目外，Go 中的大部分数组编程都是通过切片而不是简单数组来完成的。
 </p>
 <p>
-切片持有一个指向底层数组的引用，如果将一个切片赋值给另一个切片，两者将引用同一个数组。
-如果一个函数接收切片参数，它对切片元素所做的修改对调用者是可见的，这类似于传递指向底层数组的指针。
-因此，一个 <code>Read</code> 函数可以接收切片参数而非指针和计数；切片内的长度设置了要读取数据的上限。
-以下是 <code>os</code> 包中 <code>File</code> 类型的 <code>Read</code> 方法的签名：
+切片持有对底层数组的引用，如果将一个切片赋值给另一个，两者将引用同一个数组。
+如果一个函数接受切片参数，它对切片元素所做的更改将对调用者可见，类似于传递指向底层数组的指针。
+因此，一个 <code>Read</code> 函数可以接受切片参数，而不是指针和计数；切片的长度设置了要读取数据量的上限。
+这是 <code>os</code> 包中 <code>File</code> 类型的 <code>Read</code> 方法的签名：
 </p>
 <pre>
 func (f *File) Read(buf []byte) (n int, err error)
 </pre>
 <p>
-该方法返回读取的字节数以及一个错误值（如果有的话）。
-要读取较大的缓冲区 <code>buf</code> 的前 32 个字节，请<i>切片</i>（此处用作动词）该缓冲区。
+该方法返回读取的字节数和错误值（如果有的话）。
+要读取到一个较大缓冲区 <code>buf</code> 的前 32 字节，可以对该缓冲区进行<i>切片</i>（这里用作动词）。
 </p>
 <pre>
     n, err := f.Read(buf[0:32])
 </pre>
 <p>
-这种切片操作既常见又高效。事实上，暂时抛开效率不谈，下面的代码片段也能读取缓冲区的前 32 个字节。
+这种切片操作很常见且高效。
+实际上，暂时不考虑效率的话，以下代码片段同样会读取缓冲区的前 32 字节。
 </p>
 <pre>
     var n int
     var err error
-    for i := 0; i < 32; i++ {
+    for i := 0; i &lt; 32; i++ {
         nbytes, e := f.Read(buf[i:i+1])  // 读取一个字节。
         n += nbytes
         if nbytes == 0 || e != nil {
@@ -948,18 +1043,18 @@ func (f *File) Read(buf []byte) (n int, err error)
     }
 </pre>
 <p>
-只要仍在底层数组的范围内，就可以更改切片的长度；只需将其赋值给它自身的一个切片即可。
-切片的<i>容量</i>可通过内置函数 <code>cap</code> 访问，它报告了切片可以具有的最大长度。
-下面是一个向切片追加数据的函数。如果数据超过容量，切片会被重新分配。
-函数返回结果切片。该函数利用了这样一个事实：将 <code>len</code> 和 <code>cap</code> 应用于 <code>nil</code> 切片是合法的，并会返回 0。
+切片的长度可以更改，只要它仍然适合底层数组的限制；只需将其赋值给自身的一个切片。
+切片的<i>容量</i>，可以通过内置函数 <code>cap</code> 访问，报告切片可以容纳的最大长度。
+下面是一个向切片追加数据的函数。如果数据超过容量，切片将被重新分配。
+返回结果切片。该函数利用了这样一个事实：<code>len</code> 和 <code>cap</code> 应用于 <code>nil</code> 切片时是合法的，并返回 0。
 </p>
 <pre>
 func Append(slice, data []byte) []byte {
     l := len(slice)
-    if l + len(data) > cap(slice) {  // 重新分配
-        // 分配所需空间的两倍，以备将来增长。
+    if l + len(data) &gt; cap(slice) {  // 重新分配
+        // 分配所需空间的两倍，以备未来增长。
         newSlice := make([]byte, (l+len(data))*2)
-        // copy 函数是预声明的，适用于任何切片类型。
+        // copy 函数是预定义的，适用于任何切片类型。
         copy(newSlice, slice)
         slice = newSlice
     }
@@ -969,29 +1064,29 @@ func Append(slice, data []byte) []byte {
 }
 </pre>
 <p>
-我们必须返回该切片，因为尽管 <code>Append</code> 可以修改 <code>slice</code> 的元素，但切片本身（运行时持有的包含指针、长度和容量的数据结构）是按值传递的。
+我们必须在之后返回切片，因为虽然 <code>Append</code> 可以修改 <code>slice</code> 的元素，但切片本身（持有指针、长度和容量的运行时数据结构）是按值传递的。
 </p>
 
 <p>
-向切片追加数据这一思想非常有用，以至于它已被内置函数 <code>append</code> 所捕获。
-然而，要理解该函数的设计，我们需要更多信息，因此稍后会再讨论它。
+向切片追加元素的想法非常有用，因此被内置函数 <code>append</code> 所捕获。
+然而，要理解该函数的设计，我们需要更多信息，因此稍后再讨论它。
 </p>
 
 <h3 id="two_dimensional_slices">二维切片</h3>
 
 <p>
 Go 的数组和切片是一维的。
-要创建等效的二维数组或切片，必须定义数组的数组或切片的切片，如下所示：
+要创建相当于二维数组或切片，需要定义数组的数组或切片的切片，如下所示：
 </p>
 
 <pre>
-type Transform [3][3]float64  // 一个 3x3 的数组，实际上是数组的数组。
+type Transform [3][3]float64  // 一个 3x3 数组，实际上是数组的数组。
 type LinesOfText [][]byte     // 字节切片的切片。
 </pre>
 
 <p>
-由于切片是可变长度的，因此每个内部切片可以具有不同的长度。
-这可能是常见的情况，就像我们的 <code>LinesOfText</code> 示例：每行都有独立的长度。
+因为切片是可变长度的，所以每个内部切片可以有不同的长度。
+这可能是一个常见的情况，正如我们的 <code>LinesOfText</code> 示例所示：每行都有独立的长度。
 </p>
 
 <pre>
@@ -1003,32 +1098,32 @@ text := LinesOfText{
 </pre>
 
 <p>
-有时需要分配一个二维切片，例如在处理像素扫描线时可能会遇到这种情况。
-实现方式有两种。
-一种是独立分配每个切片；另一种是分配一个单独的数组，并将各个切片指向其中。
-使用哪种方式取决于您的应用程序。
-如果切片可能增长或缩小，则应独立分配以避免覆盖下一行；如果不会，使用单次分配构建对象可能更高效。
-为方便参考，以下是两种方法的简要概述。
+有时需要分配二维切片，例如在处理像素扫描线时可能会出现这种情况。
+有两种方法可以实现。
+一种是独立分配每个切片；另一种是分配单个数组，并将各个切片指向其中。
+选择哪种方法取决于你的应用程序。
+如果切片可能增长或缩小，它们应该独立分配，以避免覆盖下一行；如果不是，使用单次分配来构造对象可能更高效。
+作为参考，下面是两种方法的概略。
 首先，一次分配一行：
 </p><pre>
 // 分配顶层切片。
-picture := make([][]uint8, YSize) // y 方向上每单位一行。
-// 循环遍历每一行，为每行分配切片。
+picture := make([][]uint8, YSize) // 每个y值对应一行。
+// 遍历各行，为每行分配切片。
 for i := range picture {
     picture[i] = make([]uint8, XSize)
 }
 </pre>
 
 <p>
-现在改为单次分配，再将其切分为各行：
+现在作为一次分配，再分割成行：
 </p>
 
 <pre>
 // 分配顶层切片，与之前相同。
-picture := make([][]uint8, YSize) // y 方向上每单位一行。
-// 分配一个大切片以容纳所有像素。
-pixels := make([]uint8, XSize*YSize) // 类型是 []uint8，即使 picture 是 [][]uint8。
-// 循环遍历每一行，从剩余的 pixels 切片前部切出每一行。
+picture := make([][]uint8, YSize) // 每个y值对应一行。
+// 分配一个大切片存储所有像素。
+pixels := make([]uint8, XSize*YSize) // 尽管picture是[][]uint8，但其类型为[]uint8。
+// 遍历各行，从剩余像素切片的开头切出每行。
 for i := range picture {
     picture[i], pixels = pixels[:XSize], pixels[XSize:]
 }
@@ -1037,14 +1132,21 @@ for i := range picture {
 <h3 id="maps">映射</h3>
 
 <p>
-映射是一种便捷且强大的内置数据结构，它将一种类型（<em>键</em>）的值与另一种类型（<em>元素</em>或<em>值</em>）的值关联起来。
-键可以是任何定义了等式运算符的类型，例如整数、浮点数和复数、字符串、指针、接口（只要动态类型支持等式比较）、结构体和数组。
-切片不能用作映射的键，因为切片没有定义等式比较。
+映射（Map）是一种便捷且强大的内置数据结构，它将一种类型（<em>键</em>）的值与另一种类型（<em>元素</em>或<em>值</em>）关联起来。
+键可以是任何定义了等号运算符的类型，
+例如整数、
+浮点数和复数、
+字符串、指针、接口（只要动态类型支持等值比较）、结构体和数组。
+切片不能用作映射键，
+因为它们没有定义等值比较。
 与切片类似，映射持有对底层数据结构的引用。
-如果你将一个映射传递给一个函数，并且该函数更改了映射的内容，那么这些更改对调用者是可见的。
+如果你将映射传递给一个
+会改变映射内容的函数，这些改变在调用者中是可见的。
 </p>
 <p>
-映射可以使用常规的复合字面量语法构建，其中键值对由冒号分隔，因此在初始化过程中构建映射很容易。
+映射可以使用通常的复合字面量语法构建，
+用冒号分隔键值对，
+因此在初始化时很容易构建它们。
 </p>
 <pre>
 var timeZone = map[string]int{
@@ -1056,14 +1158,22 @@ var timeZone = map[string]int{
 }
 </pre>
 <p>
-映射值的赋值和获取在语法上与数组和切片的操作相同，只是索引不必是整数。
+赋值和获取映射值在语法上与
+对数组和切片进行相同操作看起来完全一样，只是索引不必
+是整数。
 </p>
 <pre>
 offset := timeZone["EST"]
 </pre>
 <p>
-尝试使用映射中不存在的键来获取值，将返回该映射条目类型的零值。例如，如果映射包含整数，查找一个不存在的键将返回 <code>0</code>。
-一个集合可以实现为值类型为 <code>bool</code> 的映射。将映射条目设置为 <code>true</code> 以将该值放入集合，然后通过简单的索引来测试它。
+尝试用一个
+不存在于映射中的键获取映射值，将返回该映射条目
+类型的零值。
+例如，如果映射包含整数，查找
+一个不存在的键将返回 <code>0</code>。
+集合可以实现为值类型为 <code>bool</code> 的映射。
+将映射条目设置为 <code>true</code> 以将值放入集合，然后
+通过简单的索引来测试它。
 </p>
 <pre>
 attended := map[string]bool{
@@ -1072,13 +1182,15 @@ attended := map[string]bool{
     ...
 }
 
-if attended[person] { // 如果 person 不在映射中，则为 false
+if attended[person] { // 如果person不在映射中，将返回false
     fmt.Println(person, "was at the meeting")
 }
 </pre>
 <p>
-有时你需要区分缺失的条目和零值。<code>"UTC"</code> 是否有条目，或者它返回 0 是因为根本不在映射中？
-你可以通过一种多重赋值的形式来区分。
+有时你需要区分缺失条目和
+零值。是存在键为 <code>"UTC"</code> 的条目，
+还是因为映射中根本不存在而返回0？
+你可以使用一种形式的多重赋值来区分。
 </p>
 <pre>
 var seconds int
@@ -1086,9 +1198,12 @@ var ok bool
 seconds, ok = timeZone[tz]
 </pre>
 <p>
-出于显而易见的原因，这被称为“逗号 ok”惯用法。
-在这个例子中，如果 <code>tz</code> 存在，<code>seconds</code> 将被适当地设置，<code>ok</code> 为 true；否则，<code>seconds</code> 将设置为零，<code>ok</code> 为 false。
-这里有一个函数将它与一个友好的错误报告结合在一起：
+出于显而易见的原因，这被称为 &ldquo;逗号-ok&rdquo; 惯用语法。
+在这个例子中，如果 <code>tz</code> 存在，<code>seconds</code>
+将被适当设置，并且 <code>ok</code> 将为 true；如果不存在，
+<code>seconds</code> 将被设置为零，<code>ok</code> 将
+为 false。
+这里有一个函数将它与一个不错的错误报告结合起来：
 </p>
 <pre>
 func offset(tz string) int {
@@ -1100,23 +1215,27 @@ func offset(tz string) int {
 }
 </pre>
 <p>
-要测试映射中是否存在某个键而不关心实际值，可以使用<a href="#blank">空白标识符</a>（<code>_</code>）代替通常用于存储值的变量。
+要测试映射中是否存在某个键而不关心其实际值，
+你可以使用 <a href="#blank">空白标识符</a> (<code>_</code>)
+代替通常的变量来接收值。
 </p>
 <pre>
 _, present := timeZone[tz]
 </pre>
 <p>
-要删除映射条目，请使用内置函数 <code>delete</code>，其参数是映射和要删除的键。即使该键在映射中已不存在，这样做也是安全的。
+要删除映射条目，请使用 <code>delete</code>
+内置函数，其参数是映射和要删除的键。
+即使该键在映射中已经不存在，这样做也是安全的。
 </p>
 <pre>
-delete(timeZone, "PDT")  // 现在使用标准时间
+delete(timeZone, "PDT")  // 现在是标准时间了
 </pre>
 
 <h3 id="printing">打印</h3><p>
-Go 语言中的格式化打印采用类似于 C 语言 <code>printf</code> 系列函数的风格，但功能更丰富、更通用。这些函数位于 <code>fmt</code> 包中，并且首字母大写：<code>fmt.Printf</code>、<code>fmt.Fprintf</code>、<code>fmt.Sprintf</code> 等等。字符串函数（如 <code>Sprintf</code>）返回一个字符串，而不是填充到提供的缓冲区中。
+Go语言中的格式化打印使用了类似C语言<code>printf</code>函数族的风格，但更加丰富和通用。这些函数位于<code>fmt</code>包中，并且使用大写名称：<code>fmt.Printf</code>、<code>fmt.Fprintf</code>、<code>fmt.Sprintf</code>等。字符串函数（如<code>Sprintf</code>）会返回一个字符串，而不是填充提供的缓冲区。
 </p>
 <p>
-您无需提供格式字符串。对于 <code>Printf</code>、<code>Fprintf</code> 和 <code>Sprintf</code>，每个都有另一对函数，例如 <code>Print</code> 和 <code>Println</code>。这些函数不接受格式字符串，而是为每个参数生成默认格式。<code>Println</code> 版本还会在参数之间插入空格，并在输出末尾追加换行符，而 <code>Print</code> 版本仅在两侧的操作数都不是字符串时才添加空格。在本例中，每一行都产生相同的输出。
+你不需要提供格式字符串。对于<code>Printf</code>、<code>Fprintf</code>和<code>Sprintf</code>，都有对应的另一对函数，例如<code>Print</code>和<code>Println</code>。这些函数不接受格式字符串，而是为每个参数生成默认格式。<code>Println</code>版本还会在参数之间插入一个空格，并在输出末尾追加换行符，而<code>Print</code>版本仅在两侧操作数都不是字符串时才添加空格。在下面的例子中，每一行都会产生相同的输出。
 </p>
 <pre>
 fmt.Printf("Hello %d\n", 23)
@@ -1125,38 +1244,38 @@ fmt.Println("Hello", 23)
 fmt.Println(fmt.Sprint("Hello ", 23))
 </pre>
 <p>
-格式化打印函数 <code>fmt.Fprint</code> 及其同类函数接受实现了 <code>io.Writer</code> 接口的任何对象作为第一个参数；变量 <code>os.Stdout</code> 和 <code>os.Stderr</code> 是常见的实例。
+格式化打印函数<code>fmt.Fprint</code>及其相关函数将实现<code>io.Writer</code>接口的任何对象作为第一个参数；变量<code>os.Stdout</code>和<code>os.Stderr</code>就是常见的实例。
 </p>
 <p>
-接下来，内容开始与 C 语言有所不同。首先，像 <code>%d</code> 这样的数字格式不接受用于表示有符号性或大小的标志；相反，打印例程使用参数的类型来决定这些属性。
+接下来的内容开始与C语言有所不同。首先，数字格式如<code>%d</code>不接受表示符号性或大小的标志；相反，打印例程使用参数的类型来决定这些属性。
 </p>
 <pre>
 var x uint64 = 1&lt;&lt;64 - 1
 fmt.Printf("%d %x; %d %x\n", x, x, int64(x), int64(x))
 </pre>
 <p>
-打印结果为
+输出为：
 </p>
 <pre>
 18446744073709551615 ffffffffffffffff; -1 -1
 </pre>
 <p>
-如果您只需要默认转换，例如整数的十进制表示，可以使用万能格式 <code>%v</code>（代表“value”）；其结果与 <code>Print</code> 和 <code>Println</code> 产生的完全相同。此外，该格式可以打印<em>任何</em>值，甚至包括数组、切片、结构体和映射。这里是上一节中定义的时区映射的打印语句。
+如果你只需要默认转换（例如对整数使用十进制），可以使用通用格式<code>%v</code>（代表“值”）；其结果与<code>Print</code>和<code>Println</code>产生的完全相同。此外，该格式可以打印<em>任何</em>值，包括数组、切片、结构体和映射。这里是一个用于打印上一节定义的时区映射的语句。
 </p>
 <pre>
-fmt.Printf("%v\n", timeZone)  // 或者直接 fmt.Println(timeZone)
+fmt.Printf("%v\n", timeZone)  // 或者直接用 fmt.Println(timeZone)
 </pre>
 <p>
-输出如下：
+其输出为：
 </p>
 <pre>
 map[CST:-21600 EST:-18000 MST:-25200 PST:-28800 UTC:0]
 </pre>
 <p>
-对于映射，<code>Printf</code> 及其同类函数按键的字典序对输出进行排序。
+对于映射，<code>Printf</code>及相关函数会按键的字典序排列输出。
 </p>
 <p>
-当打印结构体时，修改后的格式 <code>%+v</code> 会用字段名注释结构体的字段，而对于任何值，替代格式 <code>%#v</code> 会以完整的 Go 语法打印该值。
+打印结构体时，修改后的格式<code>%+v</code>会为结构体的字段附上名称注释，而对任何值，替代格式<code>%#v</code>会以完整的Go语法打印该值。
 </p>
 <pre>
 type T struct {
@@ -1171,7 +1290,7 @@ fmt.Printf("%#v\n", t)
 fmt.Printf("%#v\n", timeZone)
 </pre>
 <p>
-打印结果为
+输出为：
 </p>
 <pre>
 &amp;{7 -2.35 abc   def}
@@ -1180,23 +1299,22 @@ fmt.Printf("%#v\n", timeZone)
 map[string]int{"CST":-21600, "EST":-18000, "MST":-25200, "PST":-28800, "UTC":0}
 </pre>
 <p>
-（注意其中的 & 符号。）
-这种带引号的字符串格式也可在应用于 <code>string</code> 或 <code>[]byte</code> 类型的值时通过 <code>%q</code> 使用。替代格式 <code>%#q</code> 会在可能的情况下使用反引号代替双引号。（<code>%q</code> 格式也适用于整数和 rune，产生单引号的 rune 常量。）另外，<code>%x</code> 不仅可用于整数，也可用于字符串、字节数组和字节切片，生成一长串十六进制字符串，并且如果在格式中包含空格（<code>%&nbsp;x</code>），它会在字节之间插入空格。
+（注意上面的和号&符号。）当应用于<code>string</code>或<code>[]byte</code>类型的值时，也可以通过<code>%q</code>使用带引号的字符串格式。替代格式<code>%#q</code>在可能的情况下会使用反引号代替。（<code>%q</code>格式也适用于整数和字符，生成一个单引号括起的字符常量。）另外，<code>%x</code>也适用于字符串、字节数组和字节切片以及整数，生成一个长的十六进制字符串，并且在格式中使用空格（<code>%&nbsp;x</code>）会在字节之间加入空格。
 </p>
 <p>
-另一个方便的格式是 <code>%T</code>，它打印值的<em>类型</em>。
+另一个方便的格式是<code>%T</code>，它打印值的<em>类型</em>。
 </p>
 <pre>
 fmt.Printf(&quot;%T\n&quot;, timeZone)
 </pre>
 <p>
-打印结果为
+输出为：
 </p>
 <pre>
 map[string]int
 </pre>
 <p>
-如果您想控制自定义类型的默认格式，只需在该类型上定义一个签名为 <code>String() string</code> 的方法即可。对于我们简单的类型 <code>T</code>，可能看起来像这样。
+如果你想控制自定义类型的默认格式，只需在该类型上定义一个签名为<code>String() string</code>的方法即可。对于我们的简单类型<code>T</code>，它可能看起来像这样。
 </p>
 <pre>
 func (t *T) String() string {
@@ -1205,69 +1323,69 @@ func (t *T) String() string {
 fmt.Printf("%v\n", t)
 </pre>
 <p>
-以以下格式打印
+则以如下格式打印：
 </p>
 <pre>
 7/-2.35/"abc\tdef"
 </pre>
 <p>
-（如果您需要打印类型为 <code>T</code> 的<em>值</em>以及指向 <code>T</code> 的指针，那么 <code>String</code> 方法的接收者必须是值类型；此示例使用指针是因为这对于结构体类型更高效且更符合习惯。有关更多信息，请参见下面关于<a href="#pointers_vs_values">指针与值接收者</a>的部分。）
+（如果你需要同时打印<code>T</code>类型的<em>值</em>和指向<code>T</code>的指针，那么<code>String</code>的接收者必须是值类型；这个例子使用了指针，因为它对于结构体类型更高效且符合习惯。更多信息请参见下面关于<a href="#pointers_vs_values">指针与值接收者</a>的章节。）
 </p>
 
 <p>
-我们的 <code>String</code> 方法能够调用 <code>Sprintf</code>，因为打印例程是完全可重入的，并且可以这样包装。然而，关于这种方法有一个重要的细节需要理解：不要通过以一种会无限递归调用您自己的 <code>Sprintf</code> 方法的方式来构造 <code>String</code> 方法。如果 <code>Sprintf</code> 调用尝试直接将接收者作为字符串打印，就会发生这种情况，这反过来又会再次调用该方法。这是一个常见且容易犯的错误，如下例所示。
+我们的<code>String</code>方法能够调用<code>Sprintf</code>，是因为打印例程是完全可重入的，并且可以这样包装。然而，关于这种方法有一个重要的细节需要理解：不要以会导致无限递归调用你自己的<code>String</code>方法的方式，通过调用<code>Sprintf</code>来构造<code>String</code>方法。如果<code>Sprintf</code>调用试图将接收者直接作为字符串打印，而该接收者又实现了<code>String</code>方法，就会发生这种情况。这是一个常见且容易犯的错误，如下例所示。
 </p>
 
 <pre>
 type MyString string
 
 func (m MyString) String() string {
-    return fmt.Sprintf("MyString=%s", m) // 错误：将无限递归。
+    return fmt.Sprintf("MyString=%s", m) // 错误：会无限递归。
 }
 </pre>
 
 <p>
-修复也很简单：将参数转换为基本的字符串类型，该类型没有该方法。
+修复方法也很简单：将参数转换为基本的字符串类型，它没有这个方法。
 </p>
 
 <pre>
 type MyString string
 func (m MyString) String() string {
-    return fmt.Sprintf("MyString=%s", string(m)) // 正确：注意类型转换。
+    return fmt.Sprintf("MyString=%s", string(m)) // 正确：注意转换。
 }
 </pre>
 
 <p>
-在<a href="#initialization">初始化部分</a>，我们将看到另一种避免这种递归的技术。
+在<a href="#initialization">初始化章节</a>中，我们将看到另一种避免这种递归的技巧。
 </p><p>
 另一种打印技巧是将打印例程的参数直接传递给另一个此类例程。
-<code>Printf</code> 的签名使用 <code>...interface{}</code> 类型作为其最后一个参数，以指定在格式字符串之后可以出现任意数量（任意类型）的参数。
+<code>Printf</code> 的签名使用 <code>...interface{}</code> 类型作为其最后一个参数，以指定可以在格式字符串之后出现任意数量（任意类型）的参数。
 </p>
 <pre>
 func Printf(format string, v ...interface{}) (n int, err error) {
 </pre>
 <p>
-在函数 <code>Printf</code> 内部，<code>v</code> 的行为类似于类型为 <code>[]interface{}</code> 的变量，但如果将其传递给另一个可变参数函数，它则像一个普通的参数列表。
-这里是我们上面使用过的函数 <code>log.Println</code> 的实现。它将其参数直接传递给 <code>fmt.Sprintln</code> 进行实际的格式化。
+在函数 <code>Printf</code> 内部，<code>v</code> 的行为类似于 <code>[]interface{}</code> 类型的变量，但如果将它传递给另一个可变参数函数，它的行为则像一个普通的参数列表。
+下面是我们上面使用的函数 <code>log.Println</code> 的实现。它将其参数直接传递给 <code>fmt.Sprintln</code> 以进行实际格式化。
 </p>
 <pre>
-// Println 以 fmt.Println 的方式将输出打印到标准日志记录器。
+// Println prints to the standard logger in the manner of fmt.Println.
 func Println(v ...interface{}) {
-    std.Output(2, fmt.Sprintln(v...))  // Output 接受参数 (int, string)
+    std.Output(2, fmt.Sprintln(v...))  // Output takes parameters (int, string)
 }
 </pre>
 <p>
-我们在嵌套调用 <code>Sprintln</code> 时，在 <code>v</code> 后面写上 <code>...</code>，是为了告诉编译器将 <code>v</code> 视为一个参数列表；否则它只会将 <code>v</code> 作为一个单独的切片参数传递。
+我们在对 <code>Sprintln</code> 的嵌套调用中，在 <code>v</code> 后面写上 <code>...</code>，以告知编译器将 <code>v</code> 视为一个参数列表；否则它只会将 <code>v</code> 作为单个切片参数传递。
 </p>
 <p>
-关于打印，还有比我们这里涵盖的更多内容。详情请参阅 <code>fmt</code> 包的 <code>godoc</code> 文档。
+打印功能远不止我们这里所涵盖的内容。详情请参见 <code>fmt</code> 包的 <code>godoc</code> 文档。
 </p>
 <p>
-顺便说一下，<code>...</code> 参数可以是特定类型，例如 <code>...int</code>，用于一个从整数列表中选择最小值的 <code>Min</code> 函数：
+顺便说一下，<code>...</code> 参数可以是特定类型，例如，对于一个从整数列表中选择最小值的 min 函数，可以使用 <code>...int</code>：
 </p>
 <pre>
 func Min(a ...int) int {
-    min := int(^uint(0) &gt;&gt; 1)  // 最大的 int 值
+    min := int(^uint(0) &gt;&gt; 1)  // largest int
     for _, i := range a {
         if i &lt; min {
             min = i
@@ -1279,16 +1397,18 @@ func Min(a ...int) int {
 
 <h3 id="append">Append</h3>
 <p>
-现在我们有了缺失的部分，可以解释内置函数 <code>append</code> 的设计了。<code>append</code> 的签名与我们上面自定义的 <code>Append</code> 函数不同。其示意如下：
+现在，我们已经具备了解释内置函数 <code>append</code> 设计所需的最后一块拼图。<code>append</code> 的签名与我们上面自定义的 <code>Append</code> 函数不同。
+其概要如下：
 </p>
 <pre>
 func append(slice []<i>T</i>, elements ...<i>T</i>) []<i>T</i>
 </pre>
 <p>
-其中 <i>T</i> 是任何给定类型的占位符。实际上，你无法在 Go 中编写一个类型 <code>T</code> 由调用者决定的函数。这就是 <code>append</code> 是内置的原因：它需要编译器的支持。
+其中 <i>T</i> 是任何给定类型的占位符。实际上，在 Go 中你无法编写一个类型 <code>T</code> 由调用者决定的函数。
+这就是为什么 <code>append</code> 是内置的：它需要编译器的支持。
 </p>
 <p>
-<code>append</code> 所做的是将元素追加到切片的末尾并返回结果。需要返回结果是因为，与我们手写的 <code>Append</code> 一样，底层的数组可能会改变。这个简单的例子：
+<code>append</code> 的作用是将元素追加到切片末尾并返回结果。之所以需要返回结果，是因为与我们手写的 <code>Append</code> 一样，底层的数组可能会改变。这个简单的例子
 </p>
 <pre>
 x := []int{1,2,3}
@@ -1296,10 +1416,10 @@ x = append(x, 4, 5, 6)
 fmt.Println(x)
 </pre>
 <p>
-会打印出 <code>[1 2 3 4 5 6]</code>。所以 <code>append</code> 的工作方式有点像 <code>Printf</code>，收集任意数量的参数。
+会打印 <code>[1 2 3 4 5 6]</code>。因此，<code>append</code> 的工作方式有点像 <code>Printf</code>，可以收集任意数量的参数。
 </p>
 <p>
-但是如果我们想像我们的 <code>Append</code> 那样，将一个切片追加到另一个切片呢？很简单：在调用处使用 <code>...</code>，就像我们在上面调用 <code>Output</code> 时所做的那样。以下代码片段产生的输出与上面的例子相同。
+但如果我们想做 <code>Append</code> 所做的事情——将一个切片追加到另一个切片呢？很简单：在调用点使用 <code>...</code>，就像我们上面在调用 <code>Output</code> 时所做的一样。下面的代码片段将产生与上面完全相同的输出。
 </p>
 <pre>
 x := []int{1,2,3}
@@ -1308,41 +1428,63 @@ x = append(x, y...)
 fmt.Println(x)
 </pre>
 <p>
-如果没有那个 <code>...</code>，代码将无法编译，因为类型会不对；<code>y</code> 的类型不是 <code>int</code>。
+如果没有那个 <code>...</code>，代码将无法编译，因为类型会不匹配；<code>y</code> 的类型不是 <code>int</code>。
 </p>
 
 <h2 id="initialization">初始化</h2>
 
 <p>
-尽管表面上看起来与 C 或 C++ 中的初始化没有太大的不同，但 Go 中的初始化更加强大。复杂的结构体可以在初始化期间构建，并且被初始化对象之间（甚至不同包之间）的顺序问题会被正确处理。
+尽管表面上看起来与 C 或 C++ 中的初始化没有太大区别，但 Go 中的初始化功能更强大。
+复杂的结构可以在初始化过程中构建，并且被初始化对象之间的顺序问题（甚至在不同包之间）也能被正确处理。
 </p>
 
 <h3 id="constants">常量</h3>
 
 <p>
-Go 中的常量就是常量。它们是在编译时创建的，即使是在函数中作为局部变量定义时也是如此，并且只能是数字、字符（rune）、字符串或布尔值。由于编译时限制，定义它们的表达式必须是常量表达式，能够由编译器求值。例如，<code>1&lt;&lt;3</code> 是一个常量表达式，而 <code>math.Sin(math.Pi/4)</code> 不是，因为对 <code>math.Sin</code> 的函数调用需要在运行时发生。
+Go 中的常量就是它们字面上的意思——常量。
+它们在编译时创建，即使被定义为函数内的局部变量，
+并且只能是数字、字符（rune）、字符串或布尔值。
+由于编译时的限制，定义它们的表达式必须是常量表达式，
+能够被编译器计算。例如，
+<code>1&lt;&lt;3</code> 是一个常量表达式，而
+<code>math.Sin(math.Pi/4)</code> 不是，因为
+对 <code>math.Sin</code> 的函数调用需要在运行时进行。
 </p>
 
 <p>
-在 Go 中，枚举常量是使用 <code>iota</code> 枚举器创建的。由于 <code>iota</code> 可以是表达式的一部分，并且表达式可以隐式重复，因此很容易构建复杂的值集合。
+在 Go 中，枚举常量使用 <code>iota</code>
+枚举器创建。由于 <code>iota</code> 可以是表达式的一部分，
+而表达式可以隐式重复，因此很容易构建复杂的
+值集。
 </p>
 {{code "/doc/progs/eff_bytesize.go" `/^type ByteSize/` `/^\)/`}}
 <p>
-能够将像 <code>String</code> 这样的方法附加到任何用户定义的类型上，使得任意值都可以自动格式化自身以供打印。尽管你最常见到它应用于结构体，但这种技术对于像 <code>ByteSize</code> 这样的标量类型（例如浮点类型）也很有用。
+能够将一个方法（如 <code>String</code>）附加到任何
+用户定义类型的能力，使得任意值都可以自动格式化自身以进行打印。
+尽管你最常见到它应用于结构体，但这种技术对于
+标量类型（如浮点类型 <code>ByteSize</code>）也很有用。
 </p>
 {{code "/doc/progs/eff_bytesize.go" `/^func.*ByteSize.*String/` `/^}/`}}
 <p>
-表达式 <code>YB</code> 打印为 <code>1.00YB</code>，而 <code>ByteSize(1e13)</code> 打印为 <code>9.09TB</code>。
+表达式 <code>YB</code> 打印为 <code>1.00YB</code>，
+而 <code>ByteSize(1e13)</code> 打印为 <code>9.09TB</code>。
 </p>
 
 <p>
-这里使用 <code>Sprintf</code> 来实现 <code>ByteSize</code> 的 <code>String</code> 方法是安全的（避免了无限递归），不是因为类型转换，而是因为它使用 <code>%f</code> 调用 <code>Sprintf</code>，这不是一个字符串格式：<code>Sprintf</code> 只在需要字符串时才调用 <code>String</code> 方法，而 <code>%f</code> 需要的是浮点值。
+这里使用 <code>Sprintf</code>
+来实现 <code>ByteSize</code> 的 <code>String</code> 方法是安全的
+（避免了无限递归），这不是因为进行了类型转换，而是
+因为它使用 <code>%f</code> 调用 <code>Sprintf</code>，
+这不是一个字符串格式：<code>Sprintf</code> 仅当它需要一个字符串时才会调用
+<code>String</code> 方法，而 <code>%f</code>
+需要的是一个浮点数值。
 </p>
 
 <h3 id="variables">变量</h3>
 
 <p>
-变量可以像常量一样初始化，但初始化器可以是运行时计算的一般表达式。
+变量可以像常量一样被初始化，但
+初始化器可以是运行时计算的通用表达式。
 </p>
 <pre>
 var (
@@ -1353,16 +1495,16 @@ var (
 </pre>
 
 <h3 id="init">init 函数</h3><p>
-最后，每个源文件可以定义自己的无参数 <code>init</code> 函数，用于设置所需的状态。（实际上每个文件可以有多个 <code>init</code> 函数。）而“最后”的含义是：在包中所有变量声明的初始化器求值之后才会调用 <code>init</code>，而这些初始化器只有在所有导入的包都完成初始化后才会被求值。
+最后，每个源文件都可以定义自己的无参数 <code>init</code> 函数来设置所需的任何状态。（实际上每个文件可以有多个 <code>init</code> 函数。）这里的“最后”意味着真正的最后：<code>init</code> 在包中所有变量声明都计算完其初始化器之后才被调用，而这些初始化器又是在所有导入的包都初始化之后才计算的。
 </p>
 <p>
-除了无法用声明表达的初始化之外，<code>init</code> 函数的一个常见用途是在程序真正开始执行之前，验证或修复程序状态的正确性。
+除了那些无法用声明表达的初始化之外，<code>init</code> 函数的一个常见用途是在程序真正开始执行之前验证或修复程序状态的正确性。
 </p>
 
 <pre>
 func init() {
     if user == "" {
-        log.Fatal("$USER 未设置")
+        log.Fatal("$USER not set")
     }
     if home == "" {
         home = "/home/" + user
@@ -1370,8 +1512,8 @@ func init() {
     if gopath == "" {
         gopath = home + "/go"
     }
-    // gopath 可能被命令行的 --gopath 参数覆盖。
-    flag.StringVar(&amp;gopath, "gopath", gopath, "覆盖默认的 GOPATH")
+    // gopath may be overridden by --gopath flag on command line.
+    flag.StringVar(&amp;gopath, "gopath", gopath, "override default GOPATH")
 }
 </pre>
 
@@ -1379,56 +1521,55 @@ func init() {
 
 <h3 id="pointers_vs_values">指针与值</h3>
 <p>
-正如我们在 <code>ByteSize</code> 中看到的，方法可以为任何命名类型定义（指针或接口除外）；接收器不必是结构体。
+正如我们在 <code>ByteSize</code> 中看到的，可以为任何命名类型（除了指针或接口）定义方法；接收者不必是结构体。
 </p>
 <p>
-在前面关于切片的讨论中，我们编写了一个 <code>Append</code> 函数。我们也可以将它定义为切片的一个方法。为此，我们首先声明一个命名类型来绑定方法，然后将该类型的一个值作为方法的接收器。
+在上面关于切片的讨论中，我们编写了一个 <code>Append</code> 函数。我们也可以将其定义为切片上的一个方法。为此，我们首先声明一个可以绑定方法的命名类型，然后将该类型的一个值作为方法的接收者。
 </p>
 <pre>
 type ByteSlice []byte
 
 func (slice ByteSlice) Append(data []byte) []byte {
-    // 函数体与上面定义的 Append 函数完全相同。
+    // Body exactly the same as the Append function defined above.
 }
 </pre>
 <p>
-这仍然要求方法返回更新后的切片。我们可以通过重新定义该方法，使其接收器为 <code>ByteSlice</code> 的<i>指针</i>来消除这种笨拙，这样方法就可以覆盖调用者的切片。
+这仍然需要方法返回更新后的切片。我们可以通过重新定义方法，使其接收一个指向 <code>ByteSlice</code> 的 <i>指针</i> 作为接收者来消除这种笨拙，这样方法就可以覆盖调用者的切片。
 </p>
 <pre>
 func (p *ByteSlice) Append(data []byte) {
     slice := *p
-    // 函数体如上，但没有返回语句。
+    // Body as above, without the return.
     *p = slice
 }
 </pre>
 <p>
-事实上，我们可以做得更好。如果我们修改函数，使其看起来像一个标准的 <code>Write</code> 方法，如下所示，
+事实上，我们可以做得更好。如果我们将函数修改成看起来像标准的 <code>Write</code> 方法，像这样，
 </p>
 <pre>
 func (p *ByteSlice) Write(data []byte) (n int, err error) {
     slice := *p
-    // 再次与上面相同。
+    // Again as above.
     *p = slice
     return len(data), nil
 }
 </pre>
 <p>
-那么类型 <code>*ByteSlice</code> 就满足了标准接口 <code>io.Writer</code>，这非常方便。例如，我们可以向其中写入内容。
+那么类型 <code>*ByteSlice</code> 就满足了标准接口 <code>io.Writer</code>，这很方便。例如，我们可以向其中打印内容。
 </p>
 <pre>
     var b ByteSlice
-    fmt.Fprintf(&amp;b, "这一天有 %d 小时\n", 7)
+    fmt.Fprintf(&amp;b, "This hour has %d days\n", 7)
 </pre>
 <p>
 我们传递了 <code>ByteSlice</code> 的地址，因为只有 <code>*ByteSlice</code> 满足 <code>io.Writer</code>。
-关于接收器是指针还是值的规则是：值方法可以被指针和值调用，但指针方法只能被指针调用。
+关于接收者使用指针还是值的规则是：值方法可以被指针和值调用，但指针方法只能被指针调用。
 </p>
 
 <p>
-这条规则源于指针方法可以修改接收器；如果在一个值上调用它们，方法将接收到该值的一个副本，因此任何修改都会被丢弃。
-因此语言禁止这种错误。
-不过，有一个方便的例外情况。当值是可寻址的时，语言会自动插入取地址操作符，以处理在值上调用指针方法的常见情况。
-在我们的例子中，变量 <code>b</code> 是可寻址的，因此我们可以直接用 <code>b.Write</code> 调用其 <code>Write</code> 方法。编译器会为我们将其重写为 <code>(&amp;b).Write</code>。
+这条规则源于指针方法可以修改接收者；在值上调用它们会导致方法接收到该值的一个副本，因此任何修改都将被丢弃。因此语言禁止这种错误。
+不过有一个方便的例外。当值是可寻址时，语言会自动插入取地址操作符，来处理在值上调用指针方法的常见情况。
+在我们的例子中，变量 <code>b</code> 是可寻址的，因此我们可以只用 <code>b.Write</code> 来调用它的 <code>Write</code> 方法。编译器会为我们将其重写为 <code>(&amp;b).Write</code>。
 </p>
 
 <p>
@@ -1439,18 +1580,16 @@ func (p *ByteSlice) Write(data []byte) (n int, err error) {
 
 <h3 id="interfaces">接口</h3>
 <p>
-Go 中的接口提供了一种指定对象行为的方式：如果某个东西能做<em>这件事</em>，那么它就可以在<em>这里</em>使用。我们已经看过几个简单的例子；自定义的打印机可以通过 <code>String</code> 方法实现，而 <code>Fprintf</code> 可以将输出生成到任何拥有 <code>Write</code> 方法的东西上。
-只有一个或两个方法的接口在 Go 代码中很常见，通常以方法命名，例如实现 <code>Write</code> 的 <code>io.Writer</code>。
+Go 语言中的接口提供了一种指定对象行为的方式：如果某物可以做 <em>这件事</em>，那么它就可以被用在 <em>这里</em>。我们已经看过一些简单的例子；自定义打印机可以通过 <code>String</code> 方法实现，而 <code>Fprintf</code> 可以将输出生成到任何具有 <code>Write</code> 方法的东西上。
+只包含一两个方法的接口在 Go 代码中很常见，通常以方法命名，例如 <code>io.Writer</code> 代表实现了 <code>Write</code> 方法的东西。
 </p>
 <p>
-一个类型可以实现多个接口。
-例如，一个集合如果实现了 <code>sort.Interface</code>（包含 <code>Len()</code>、<code>Less(i, j int) bool</code> 和 <code>Swap(i, j int)</code> 方法），就可以使用 <code>sort</code> 包中的例程进行排序，同时它也可以拥有自定义的格式化器。
-在这个构造的例子中，<code>Sequence</code> 同时满足两者。
+一个类型可以实现多个接口。例如，如果一个集合实现了 <code>sort.Interface</code>（包含 <code>Len()</code>、<code>Less(i, j int) bool</code> 和 <code>Swap(i, j int)</code>），它就可以被 <code>sort</code> 包中的例程排序，并且它也可以有一个自定义的格式化器。在这个虚构的例子中，<code>Sequence</code> 同时满足两者。
 </p>
 {{code "/doc/progs/eff_sequence.go" `/^type/` "$"}}
 
-<h3 id="conversions">转换</h3><p>
-<code>Sequence</code> 的 <code>String</code> 方法正在重新实现 <code>Sprint</code> 为切片所做的工作。（它的时间复杂度为 O(N²)，性能较差。）如果在调用 <code>Sprint</code> 之前将 <code>Sequence</code> 转换为普通的 <code>[]int</code>，我们就可以共享这部分工作（并同时加速）。
+<h3 id="conversions">类型转换</h3><p>
+<code>Sequence</code> 的 <code>String</code> 方法重复实现了 <code>Sprint</code> 对切片已有的功能。（其复杂度为 O(N²)，性能较差。）我们可以通过在调用 <code>Sprint</code> 前将 <code>Sequence</code> 转换为普通的 <code>[]int</code> 来复用现有逻辑（同时提升性能）。
 </p>
 <pre>
 func (s Sequence) String() string {
@@ -1460,18 +1599,15 @@ func (s Sequence) String() string {
 }
 </pre>
 <p>
-此方法是展示如何在 <code>String</code> 方法中安全调用 <code>Sprintf</code> 的转换技巧的另一个示例。
-因为两种类型（<code>Sequence</code> 和 <code>[]int</code>）在忽略类型名称时是相同的，所以它们之间的转换是合法的。
-这种转换不会创建新值，它只是临时性地将现有值视为具有新类型。
-（存在其他会产生新值的合法转换，例如从整数到浮点数的转换。）
+这个方法展示了另一种在 <code>String</code> 方法中安全调用 <code>Sprintf</code> 的转换技巧。由于 <code>Sequence</code> 和 <code>[]int</code> 在忽略类型名称时本质相同，它们之间的转换是合法的。这种转换不会创建新值，只是临时将现有值视为另一种类型。（其他合法转换如整型转浮点型则会创建新值。）
 </p>
 <p>
-在 Go 程序中，将一个表达式的类型转换以访问不同方法集是一种惯用法。例如，我们可以使用现有的类型 <code>sort.IntSlice</code> 将整个示例简化为：
+在 Go 程序中，通过转换表达式类型来调用不同方法集合是一种常见模式。例如我们可以直接使用现有的 <code>sort.IntSlice</code> 类型简化代码：
 </p>
 <pre>
 type Sequence []int
 
-// Method for printing - sorts the elements before printing
+// 打印方法 - 排序元素后打印
 func (s Sequence) String() string {
     s = s.Copy()
     sort.IntSlice(s).Sort()
@@ -1479,15 +1615,13 @@ func (s Sequence) String() string {
 }
 </pre>
 <p>
-现在，我们不再让 <code>Sequence</code> 实现多个接口（排序和打印），而是利用数据项可以转换为多种类型（<code>Sequence</code>、<code>sort.IntSlice</code> 和 <code>[]int</code>）的能力，每种类型各司其职。这在实践中不太常见，但可能很有效。
+现在 <code>Sequence</code> 无需同时实现排序和打印两个接口，而是利用数据项可转换为多种类型（<code>Sequence</code>、<code>sort.IntSlice</code> 和 <code>[]int</code>）的特性，让每种类型各司其职。这种实践方式虽不常见但颇为有效。
 </p>
 
 <h3 id="interface_conversions">接口转换与类型断言</h3>
 
 <p>
-<a href="#type_switch">类型开关</a>是一种转换形式：它们接受一个接口，并且在 switch 语句的每个分支中，在某种意义上将其转换为该分支的类型。
-以下是 <code>fmt.Printf</code> 下代码如何使用类型开关将值转换为字符串的简化版本。
-如果它已经是字符串，我们希望获得接口持有的实际字符串值；而如果它具有 <code>String</code> 方法，我们希望获得调用该方法的结果。
+<a href="#type_switch">类型开关</a>是一种转换形式：它接收一个接口值，在每个 case 分支中将其转换为对应类型。以下是 <code>fmt.Printf</code> 底层通过类型开关将值转为字符串的简化示例。若值已是字符串则直接获取接口持有的实际字符串值，若实现了 <code>String</code> 方法则调用该方法。
 </p>
 
 <pre>
@@ -1495,7 +1629,7 @@ type Stringer interface {
     String() string
 }
 
-var value interface{} // Value provided by caller.
+var value interface{} // 调用方提供的值
 switch str := value.(type) {
 case string:
     return str
@@ -1505,14 +1639,11 @@ case Stringer:
 </pre>
 
 <p>
-第一个分支找到了一个具体值；第二个分支将一个接口转换为另一个接口。这样混合类型是完全可以的。
+第一个分支匹配具体类型；第二个分支将接口转换为另一接口。这种混合类型用法完全合法。
 </p>
 
 <p>
-如果我们只关心一种类型怎么办？如果我们知道该值包含一个 <code>string</code> 并且只是想提取它？
-单分支的类型开关可以做到，但 <em>类型断言</em> 也可以。
-类型断言接受一个接口值并从中提取指定显式类型的值。
-其语法借鉴了类型开关的开头子句，但使用显式类型而非 <code>type</code> 关键字：
+若只关心特定类型呢？比如确知值为 <code>string</code> 并想提取它？单分支类型开关可以实现，但更简洁的是使用<em>类型断言</em>。类型断言从接口值中提取指定显式类型的值，语法借鉴类型开关的 case 子句但显式声明类型：
 </p>
 
 <pre>
@@ -1520,9 +1651,7 @@ value.(typeName)
 </pre>
 
 <p>
-其结果是一个具有静态类型 <code>typeName</code> 的新值。
-该类型必须是接口持有的具体类型，或者是该值可以转换到的另一个接口类型。
-要提取我们已知存在于该值中的字符串，可以这样写：
+结果是静态类型为 <code>typeName</code> 的新值。该类型必须是接口持有的具体类型，或是值可转换的另一接口类型。要提取已知存在于值中的字符串，可以写作：
 </p>
 
 <pre>
@@ -1530,25 +1659,24 @@ str := value.(string)
 </pre>
 
 <p>
-但如果最终该值并不包含字符串，程序将在运行时错误中崩溃。
-为了防止这种情况，可以使用 "comma, ok" 惯用法安全地测试该值是否为字符串：
+但若值并非字符串，程序将因运行时错误崩溃。为预防此情况，可使用"逗号-ok"模式安全检测：
 </p>
 
 <pre>
 str, ok := value.(string)
 if ok {
-    fmt.Printf("string value is: %q\n", str)
+    fmt.Printf("字符串值为：%q\n", str)
 } else {
-    fmt.Printf("value is not a string\n")
+    fmt.Printf("值不是字符串\n")
 }
 </pre>
 
 <p>
-如果类型断言失败，<code>str</code> 仍然存在且类型为 string，但它的值将是零值，即空字符串。
+若类型断言失败，<code>str</code> 仍存在且为字符串类型，但会具有零值（空字符串）。
 </p>
 
 <p>
-为了说明此功能，这里有一个 <code>if</code>-<code>else</code> 语句，它等效于本节开头的类型开关。
+作为能力示例，以下 <code>if</code>-<code>else</code> 语句等效于本节开头的类型开关：
 </p>
 
 <pre>
@@ -1559,21 +1687,15 @@ if str, ok := value.(string); ok {
 }
 </pre>
 
-<h3 id="generality">通用性</h3>
+<h3 id="generality">泛用性原则</h3>
 <p>
-如果一个类型仅仅是为了实现一个接口而存在，并且除了该接口定义的方法外永远不会有导出的方法，那么就不需要导出该类型本身。
-仅导出接口可以明确表示，该值除了接口描述的内容外，没有其他值得关注的行为。
-这也避免了在每个通用方法实例上重复编写文档的需要。
+当某个类型仅为实现接口而存在，且不会导出该接口之外的方法时，无需导出类型本身。仅导出接口可清晰表明：该值除了接口描述的行为外不具备其他特性。这也避免了为公共方法的每个实例重复编写文档。
 </p>
 <p>
-在这种情况下，构造函数应返回接口值，而不是实现类型。
-例如，在哈希库中，<code>crc32.NewIEEE</code> 和 <code>adler32.New</code> 都返回接口类型 <code>hash.Hash32</code>。
-在 Go 程序中将 Adler-32 算法替换为 CRC-32 算法，只需更改构造函数调用；代码的其余部分不受算法变更的影响。
+在此类场景中，构造函数应返回接口值而非实现类型。例如哈希库中 <code>crc32.NewIEEE</code> 和 <code>adler32.New</code> 都返回接口类型 <code>hash.Hash32</code>。在 Go 程序中将 CRC-32 算法替换为 Adler-32 只需修改构造函数调用，其余代码完全不受算法变更影响。
 </p>
 <p>
-类似的方法允许各种 <code>crypto</code> 包中的流密码算法与它们链接的块密码分离。
-<code>crypto/cipher</code> 包中的 <code>Block</code> 接口指定了块密码的行为，它提供单个数据块的加密。
-然后，类似于 <code>bufio</code> 包，实现此接口的密码包可用于构建流密码（由 <code>Stream</code> 接口表示），而无需了解块加密的细节。
+类似方法使得各 <code>crypto</code> 包中的流式加密算法可与它们链式组合的分组密码解耦。<code>crypto/cipher</code> 包中的 <code>Block</code> 接口定义了分组密码的行为（提供单数据块加密）。通过类比 <code>bufio</code> 包，实现该接口的密码包可用于构建由 <code>Stream</code> 接口表示的流式加密，而无需了解分组加密细节。
 </p>
 <p>
 <code>crypto/cipher</code> 接口如下所示：
@@ -1589,21 +1711,21 @@ type Stream interface {
     XORKeyStream(dst, src []byte)
 }
 </pre><p>
-这里是计数器模式（CTR）流的定义，它将分组密码转化为流密码；注意分组密码的细节已被抽象化：
+这是计数器模式（CTR）流的定义，它将分组密码转换为流密码；请注意，分组密码的细节已被抽象化：
 </p>
 
 <pre>
-// NewCTR 返回一个 Stream，该 Stream 使用给定的 Block 以计数器模式进行加密/解密。
-// iv 的长度必须与 Block 的块大小相同。
+// NewCTR返回一个使用给定Block进行计数器模式加密/解密的Stream。
+// iv的长度必须与Block的块大小相同。
 func NewCTR(block Block, iv []byte) Stream
 </pre>
 <p>
-<code>NewCTR</code> 不仅适用于某个特定的加密算法和数据源，而是适用于 <code>Block</code> 接口的任何实现以及任何 <code>Stream</code>。因为它们返回接口值，所以将 CTR 加密替换为其他加密模式是一个局部化的更改。必须修改构造函数的调用，但由于周围的代码只需将结果视为 <code>Stream</code>，因此它不会察觉到差异。
+<code>NewCTR</code> 不仅适用于特定的加密算法和数据源，也适用于任何实现了 <code>Block</code> 接口的实现以及任何 <code>Stream</code>。由于它们返回接口值，将CTR加密替换为其他加密模式是一个局部性的更改。只需修改构造函数调用，但由于周边代码仅将结果视为 <code>Stream</code>，因此不会察觉到差异。
 </p>
 
 <h3 id="interface_methods">接口与方法</h3>
 <p>
-由于几乎任何东西都可以拥有方法，因此几乎任何东西都可以满足一个接口。一个说明性的例子在 <code>http</code> 包中，它定义了 <code>Handler</code> 接口。任何实现了 <code>Handler</code> 的对象都可以处理 HTTP 请求。
+由于几乎任何类型都可以附加方法，因此几乎任何类型都可以满足接口。一个说明性的例子是 <code>http</code> 包，其中定义了 <code>Handler</code> 接口。任何实现了 <code>Handler</code> 的对象都可以处理HTTP请求。
 </p>
 <pre>
 type Handler interface {
@@ -1611,11 +1733,11 @@ type Handler interface {
 }
 </pre>
 <p>
-<code>ResponseWriter</code> 本身是一个接口，它提供了将响应返回给客户端所需的方法访问。这些方法包括标准的 <code>Write</code> 方法，因此 <code>http.ResponseWriter</code> 可以在任何可以使用 <code>io.Writer</code> 的地方使用。
-<code>Request</code> 是一个结构体，包含从客户端接收到的请求的解析表示。
+<code>ResponseWriter</code> 本身是一个接口，它提供了向客户端返回响应所需的方法访问。这些方法包括标准的 <code>Write</code> 方法，因此 <code>http.ResponseWriter</code> 可以在任何可以使用 <code>io.Writer</code> 的地方使用。
+<code>Request</code> 是一个结构体，包含了从客户端解析后的请求表示。
 </p>
 <p>
-为了简洁，我们忽略 POST 请求，并假设 HTTP 请求总是 GET 请求；这种简化不会影响处理器的设置方式。这是一个用于统计页面访问次数的简单处理器实现。
+为简洁起见，我们忽略POST请求，并假设HTTP请求总是GET；这种简化不影响处理器的设置方式。这里有一个简单的处理器实现，用于统计页面被访问的次数。
 </p>
 <pre>
 // 简单的计数器服务器。
@@ -1629,11 +1751,11 @@ func (ctr *Counter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 </pre>
 <p>
-（延续我们的主题，注意 <code>Fprintf</code> 如何能够打印到 <code>http.ResponseWriter</code>。）
-在真实的服务器中，对 <code>ctr.n</code> 的访问需要并发访问保护。有关建议，请参阅 <code>sync</code> 和 <code>atomic</code> 包。
+（延续我们的主题，注意 <code>Fprintf</code> 如何能打印到 <code>http.ResponseWriter</code>。）
+在实际的服务器中，对 <code>ctr.n</code> 的访问需要保护以避免并发访问。参见 <code>sync</code> 和 <code>atomic</code> 包的建议。
 </p>
 <p>
-作为参考，以下是将此类服务器附加到 URL 树中某个节点的方法。
+作为参考，以下是如何将这样的服务器附加到URL树的节点上。
 </p>
 <pre>
 import "net/http"
@@ -1642,7 +1764,7 @@ ctr := new(Counter)
 http.Handle("/counter", ctr)
 </pre>
 <p>
-但为什么要把 <code>Counter</code> 做成结构体呢？一个整数就足够了。（接收者必须是一个指针，以便递增对接收者可见。）
+但为什么要把 <code>Counter</code> 做成结构体？只需要一个整数就够了。（接收者需要是指针，这样对调用者才是可见的递增。）
 </p>
 <pre>
 // 更简单的计数器服务器。
@@ -1654,10 +1776,10 @@ func (ctr *Counter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 </pre>
 <p>
-如果你的程序有一些内部状态需要在页面被访问时得到通知怎么办？将一个通道与网页绑定。
+如果你的程序有一些内部状态需要在页面被访问时得到通知怎么办？可以将一个通道绑定到该网页。
 </p>
 <pre>
-// 每次访问时发送通知的通道。
+// 一个在每次访问时发送通知的通道。
 // （可能希望该通道是有缓冲的。）
 type Chan chan *http.Request
 
@@ -1668,7 +1790,7 @@ func (ch Chan) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 </pre>
 <p>
 最后，假设我们想在 <code>/args</code> 上展示调用服务器二进制文件时使用的参数。
-编写一个打印参数的函数很容易。
+写一个函数来打印参数很容易。
 </p>
 <pre>
 func ArgServer() {
@@ -1676,25 +1798,26 @@ func ArgServer() {
 }
 </pre>
 <p>
-我们如何将其变成一个 HTTP 服务器呢？我们可以让 <code>ArgServer</code> 成为某个类型的方法，而忽略该类型的值，但有一种更简洁的方法。
-由于我们可以为除指针和接口以外的任何类型定义方法，因此我们可以为一个函数编写方法。
-<code>http</code> 包中包含以下代码：
+我们如何将其变成一个HTTP服务器？我们可以让 <code>ArgServer</code> 成为某个类型的方法，其值我们可以忽略，但有更简洁的方式。
+由于我们可以为除了指针和接口之外的任何类型定义方法，我们可以为一个函数编写方法。
+<code>http</code> 包包含以下代码：
 </p>
 <pre>
-// HandlerFunc 类型是一个适配器，允许将普通函数用作 HTTP 处理器。
-// 如果 f 是一个具有适当签名的函数，则 HandlerFunc(f) 是一个调用 f 的 Handler 对象。
+// HandlerFunc类型是一个适配器，它允许将普通函数用作HTTP处理器。
+// 如果f是一个具有适当签名的函数，HandlerFunc(f)就是一个
+// 调用f的Handler对象。
 type HandlerFunc func(ResponseWriter, *Request)
 
-// ServeHTTP 调用 f(w, req)。
+// ServeHTTP调用f(w, req)。
 func (f HandlerFunc) ServeHTTP(w ResponseWriter, req *Request) {
     f(w, req)
 }
 </pre>
 <p>
-<code>HandlerFunc</code> 是一个具有 <code>ServeHTTP</code> 方法的类型，因此该类型的值可以处理 HTTP 请求。看看该方法的实现：接收者是一个函数 <code>f</code>，而方法调用 <code>f</code>。这看起来可能有点奇怪，但它与接收者是一个通道并在通道上发送消息并无太大不同。
+<code>HandlerFunc</code> 是一个具有方法 <code>ServeHTTP</code> 的类型，因此该类型的值可以处理HTTP请求。查看该方法的实现：接收者是一个函数 <code>f</code>，而该方法调用 <code>f</code>。这看起来可能有些奇怪，但它与，例如，接收者是一个通道而该方法在通道上发送消息，并没有太大不同。
 </p>
 <p>
-为了将 <code>ArgServer</code> 变成一个 HTTP 服务器，我们首先修改它以具有正确的签名。
+为了将 <code>ArgServer</code> 变成一个HTTP服务器，我们首先修改它，使其具有正确的签名。
 </p>
 <pre>
 // 参数服务器。
@@ -1703,33 +1826,33 @@ func ArgServer(w http.ResponseWriter, req *http.Request) {
 }
 </pre>
 <p>
-<code>ArgServer</code> 现在与 <code>HandlerFunc</code> 具有相同的签名，因此可以将其转换为该类型以访问其方法，就像我们将 <code>Sequence</code> 转换为 <code>IntSlice</code> 以访问 <code>IntSlice.Sort</code> 一样。
-设置它的代码很简洁：
+<code>ArgServer</code> 现在具有与 <code>HandlerFunc</code> 相同的签名，因此可以将其转换为该类型以访问其方法，就像我们将 <code>Sequence</code> 转换为 <code>IntSlice</code> 以访问 <code>IntSlice.Sort</code> 一样。
+设置它的代码是简洁的：
 </p>
 <pre>
 http.Handle("/args", http.HandlerFunc(ArgServer))
 </pre>
 <p>
-当有人访问页面 <code>/args</code> 时，安装在该页面的处理器的值为 <code>ArgServer</code>，类型为 <code>HandlerFunc</code>。
-HTTP 服务器将调用该类型的 <code>ServeHTTP</code> 方法，以 <code>ArgServer</code> 作为接收者，该方法又会（通过 <code>HandlerFunc.ServeHTTP</code> 内部的调用 <code>f(w, req)</code>）调用 <code>ArgServer</code>。
-然后，参数将被显示出来。
+当有人访问页面 <code>/args</code> 时，安装在该页面的处理器具有值 <code>ArgServer</code> 和类型 <code>HandlerFunc</code>。
+HTTP服务器将调用该类型的 <code>ServeHTTP</code> 方法，以 <code>ArgServer</code> 作为接收者，这反过来又会（通过 <code>HandlerFunc.ServeHTTP</code> 内部的调用 <code>f(w, req)</code>）调用 <code>ArgServer</code>。
+然后参数就会被显示出来。
 </p>
 <p>
-在本节中，我们使用一个结构体、一个整数、一个通道和一个函数创建了一个 HTTP 服务器，这都归功于接口只是方法的集合，而方法可以为（几乎）任何类型定义。
+在本节中，我们从一个结构体、一个整数、一个通道和一个函数构建了一个HTTP服务器，这都是因为接口只是方法的集合，而方法可以为（几乎）任何类型定义。
 </p>
 
-<h2 id="blank">空白标识符</h2><p>
-我们之前在<a href="#for"><code>for</code> <code>range</code> 循环</a>和<a href="#maps">映射</a>的上下文中已经多次提到过空白标识符。空白标识符可以赋值或声明为任何类型的任意值，其值会被安全地丢弃。它有点像写入 Unix 的 <code>/dev/null</code> 文件：它代表一个只写值，用作占位符，在需要变量但实际值无关紧要的地方使用。它的用途远不止我们之前看到的那些。
+<h2 id="blank">空标识符</h2><p>
+我们已经在<a href="#for"><code>for</code> <code>range</code>循环</a>和<a href="#maps">映射</a>的上下文中多次提及空标识符。空标识符可以被赋值或声明为任意类型的任意值，该值会被无害地丢弃。这有点类似于写入Unix的<code>/dev/null</code>文件：它代表一个只写值，用作占位符，适用于需要变量但实际值无关紧要的场景。它的用途超出了我们已经看到的那些。
 </p>
 
-<h3 id="blank_assign">多重赋值中的空白标识符</h3>
+<h3 id="blank_assign">多重赋值中的空标识符</h3>
 
 <p>
-在 <code>for</code> <code>range</code> 循环中使用空白标识符是一种更通用情况——多重赋值的特例。
+在<code>for</code> <code>range</code>循环中使用空标识符，是一种通用情况——多重赋值——的特例。
 </p>
 
 <p>
-如果赋值语句左侧需要多个值，但其中某个值不会被程序使用，那么在赋值语句左侧使用空白标识符就避免了创建虚拟变量的需要，并明确表示该值将被丢弃。例如，当调用一个返回值和错误信息的函数，但只有错误信息重要时，可以使用空白标识符来丢弃无关的值。
+如果一个赋值语句左侧需要多个值，但程序不会使用其中的某个值，那么在赋值语句的左侧使用空标识符，可以避免创建占位变量，并明确表示该值将被丢弃。例如，当调用一个返回值和错误但只有错误才重要的函数时，使用空标识符来丢弃无关的值。
 </p>
 
 <pre>
@@ -1739,11 +1862,11 @@ if _, err := os.Stat(path); os.IsNotExist(err) {
 </pre>
 
 <p>
-偶尔你会看到为了忽略错误而丢弃错误值的代码；这是糟糕的做法。始终应该检查错误返回值；它们被设计出来是有原因的。
+有时你会看到为了忽略错误而丢弃错误值的代码；这是非常糟糕的做法。务必检查错误返回值；它们的存在是有原因的。
 </p>
 
 <pre>
-// 糟糕！如果 path 不存在，此代码将崩溃。
+// 糟糕！如果路径不存在，此代码将崩溃。
 fi, _ := os.Stat(path)
 if fi.IsDir() {
     fmt.Printf("%s is a directory\n", path)
@@ -1753,41 +1876,41 @@ if fi.IsDir() {
 <h3 id="blank_unused">未使用的导入和变量</h3>
 
 <p>
-导入一个包或声明一个变量却不使用，这是一个错误。未使用的导入会使程序膨胀并减慢编译速度，而一个已初始化但未使用的变量至少是浪费计算，也可能暗示着更大的 Bug。然而，当程序处于积极开发阶段时，未使用的导入和变量经常出现，仅仅为了编译通过就删除它们，然后不久后又需要它们，这会很烦人。空白标识符提供了一种变通方法。
+导入一个包或声明一个变量而不使用它，这是一个错误。未使用的导入会使程序膨胀并拖慢编译速度，而一个已初始化但未使用的变量，至少是计算资源的浪费，也可能预示着更大的bug。然而，在程序积极开发期间，未使用的导入和变量经常出现，仅仅为了让编译通过就删除它们，然后不久后又需要它们，这会非常烦人。空标识符提供了一种变通方法。
 </p>
 <p>
-这个写了一半的程序有两个未使用的导入（<code>fmt</code> 和 <code>io</code>）以及一个未使用的变量（<code>fd</code>），因此无法编译，但查看到目前为止的代码是否正确是很有用的。
+这个半完成的程序有两个未使用的导入（<code>fmt</code>和<code>io</code>）和一个未使用的变量（<code>fd</code>），因此它无法编译，但能看到目前代码是否正确就好了。
 </p>
 {{code "/doc/progs/eff_unused1.go" `/package/` `$`}}
 <p>
-为了消除关于未使用导入的报错，可以使用空白标识符来引用导入包中的符号。类似地，将未使用的变量 <code>fd</code> 赋值给空白标识符将消除未使用变量的错误。这个版本的程序可以编译。
+为了消除关于未使用导入的抱怨，可以使用空标识符来引用导入包中的符号。类似地，将未使用的变量<code>fd</code>赋值给空标识符可以消除未使用变量的错误。这个版本的程序可以编译。
 </p>
 {{code "/doc/progs/eff_unused2.go" `/package/` `$`}}
 
 <p>
-按照惯例，为了消除导入错误的全局声明应紧接在导入语句之后，并加上注释，这样既便于查找，也提醒之后清理这些代码。
+按照惯例，用于消除导入错误的全局声明应紧跟在导入语句之后，并添加注释，这样既方便查找，也提醒后续进行清理。
 </p>
 
-<h3 id="blank_import">为副作用导入</h3>
+<h3 id="blank_import">为副作用而导入</h3>
 
 <p>
-像前面例子中未使用的 <code>fmt</code> 或 <code>io</code> 导入，最终应该被使用或移除：空白赋值标识代码为半成品。但有时，仅仅为了其副作用而导入一个包是有用的，而无需任何显式使用。例如，在它的 <code>init</code> 函数期间，<code><a href="/pkg/net/http/pprof/">net/http/pprof</a></code> 包注册了提供调试信息的 HTTP 处理器。它有一个导出的 API，但大多数客户端只需要处理器注册，并通过网页访问数据。为了仅为其副作用导入该包，可以将包名重命名为空白标识符：
+像前面例子中的<code>fmt</code>或<code>io</code>这样未使用的导入，最终应该被使用或删除；空赋值标识了正在进行中的代码。但有时仅为了包的副作用而导入它（而不进行任何显式使用）是有用的。例如，在其<code>init</code>函数期间，<code><a href="/pkg/net/http/pprof/">net/http/pprof</a></code>包注册了提供调试信息的HTTP处理程序。它有一个导出的API，但大多数客户端只需要处理程序注册并通过网页访问数据。要仅为包的副作用而导入它，可以将包名重命名为空标识符：
 </p>
 <pre>
 import _ "net/http/pprof"
 </pre>
 <p>
-这种导入形式清楚地表明该包是为其副作用而导入的，因为不可能有其他用途：在这个文件中，它没有名称。（如果它有名称，而我们未使用该名称，编译器会拒绝该程序。）
+这种导入形式清楚地表明，该包是为其副作用而导入的，因为在此文件中没有其他可能的使用方式：它没有名字。（如果它有名字，而我们没有使用该名字，编译器会拒绝该程序。）
 </p>
 
 <h3 id="blank_implements">接口检查</h3>
 
 <p>
-正如我们在前面讨论<a href="#interfaces_and_types">接口</a>时看到的，一个类型无需显式声明它实现了某个接口。相反，一个类型只需实现该接口的方法即可实现该接口。实际上，大多数接口转换是静态的，因此在编译时进行检查。例如，将一个 <code>*os.File</code> 传递给一个期望 <code>io.Reader</code> 的函数，除非 <code>*os.File</code> 实现了 <code>io.Reader</code> 接口，否则无法编译。
+正如我们在上面关于<a href="#interfaces_and_types">接口</a>的讨论中所看到的，一个类型无需显式声明它实现了某个接口。相反，一个类型只需实现接口的方法就实现了该接口。实际上，大多数接口转换是静态的，因此在编译时检查。例如，将一个<code>*os.File</code>传递给一个期望<code>io.Reader</code>的函数，除非<code>*os.File</code>实现了<code>io.Reader</code>接口，否则无法编译。
 </p>
 
 <p>
-不过，有些接口检查确实发生在运行时。一个例子是 <code><a href="/pkg/encoding/json/">encoding/json</a></code> 包，它定义了一个 <code><a href="/pkg/encoding/json/#Marshaler">Marshaler</a></code> 接口。当 JSON 编码器接收到一个实现了该接口的值时，编码器会调用该值的序列化方法将其转换为 JSON，而不是执行标准转换。编码器在运行时通过类似这样的<a href="#interface_conversions">类型断言</a>来检查此属性：
+然而，有些接口检查确实发生在运行时。一个例子是在<code><a href="/pkg/encoding/json/">encoding/json</a></code>包中，它定义了一个<code><a href="/pkg/encoding/json/#Marshaler">Marshaler</a></code>接口。当JSON编码器接收到一个实现了该接口的值时，编码器会调用该值的编组方法将其转换为JSON，而不是执行标准转换。编码器在运行时通过<a href="#interface_conversions">类型断言</a>来检查此属性，如下所示：
 </p>
 
 <pre>
@@ -1795,7 +1918,7 @@ m, ok := val.(json.Marshaler)
 </pre>
 
 <p>
-如果只需要询问一个类型是否实现了某个接口，而无需实际使用该接口本身，例如作为错误检查的一部分，可以使用空白标识符来忽略类型断言的值：
+如果只需要询问一个类型是否实现了某个接口，而不实际使用该接口本身（例如作为错误检查的一部分），可以使用空标识符来忽略类型断言的值：
 </p>
 
 <pre>
@@ -1803,197 +1926,201 @@ if _, ok := val.(json.Marshaler); ok {
     fmt.Printf("value %v of type %T implements json.Marshaler\n", val, val)
 }
 </pre><p>
-这种情况的一个出现场景是：在实现该类型的包内，需要确保该类型确实满足了某个接口的要求。
-例如，若某个类型（比如 <code><a href="/pkg/encoding/json/#RawMessage">json.RawMessage</a></code>）需要自定义 JSON 表示方式，它就应当实现 <code>json.Marshaler</code> 接口，但编译器通常不会通过静态转换来自动验证这一点。
-如果该类型无意中未能满足接口要求，JSON 编码器依然可以工作，但不会使用自定义的实现。
-为了确保实现的正确性，可以在包中使用空白标识符进行全局声明：
+在实现类型的包内部需要确保该类型确实满足接口时，这种情况会出现。例如，若某个类型（如<code><a href="/pkg/encoding/json/#RawMessage">json.RawMessage</a></code>）需要自定义JSON表示，它应当实现<code>json.Marshaler</code>接口，但现有静态转换无法让编译器自动验证此实现。若该类型意外未能满足接口要求，JSON编码器仍可工作，但不会使用自定义实现。为保证实现正确性，可在包中使用空标识符进行全局声明：
 </p>
 <pre>
 var _ json.Marshaler = (*RawMessage)(nil)
 </pre>
 <p>
-在此声明中，涉及将 <code>*RawMessage</code> 转换为 <code>Marshaler</code> 的赋值操作，要求 <code>*RawMessage</code> 必须实现 <code>Marshaler</code> 接口，并且此特性将在编译时得到检查。
-倘若 <code>json.Marshaler</code> 接口发生变更，此包将无法再通过编译，从而提示我们需要对其进行更新。
+此声明中，将<code>*RawMessage</code>转换为<code>Marshaler</code>的赋值操作要求<code>*RawMessage</code>必须实现<code>Marshaler</code>接口，该约束将在编译时检查。若<code>json.Marshaler</code>接口发生变更，此包将无法编译，从而提醒我们需要进行更新。
 </p>
 
 <p>
-此结构中出现的空白标识符表明，该声明仅用于类型检查，而非为了创建变量。
-不过，不必对满足接口的每种类型都如此操作。按照惯例，这类声明通常只在代码中尚不存在静态转换时才会使用，而这种情况并不常见。
+此结构中出现的空标识符表明该声明仅用于类型检查，而非创建变量。但请勿为每个满足接口的类型都这样做。按照惯例，仅当代码中不存在现有静态转换时才会使用此类声明（这种情况较为罕见）。
 </p>
 
 <h2 id="embedding">嵌入</h2>
 
 <p>
-Go 语言没有提供典型的、基于类型的子类化概念，但它具备通过<em>嵌入</em>类型到结构体或接口中，从而“借用”部分实现的能力。
+Go语言未提供典型的基于类型的子类继承机制，但可以通过<em>嵌入</em>类型到结构体或接口中来"借用"部分实现。
 </p>
 <p>
-接口嵌入非常简单。我们之前已经提及过 <code>io.Reader</code> 和 <code>io.Writer</code> 接口；以下是它们的定义。
+接口嵌入非常简单。前文已提及<code>io.Reader</code>和<code>io.Writer</code>接口，以下是它们的定义：
 </p>
 <pre>
 type Reader interface {
     Read(p []byte) (n int, err error)
-}```go
+}</pre><pre>
 type Writer interface {
     Write(p []byte) (n int, err error)
 }
-```
-
-`io` 包也导出了其他几个接口，这些接口规定了对象可以实现的多个方法。例如，`io.ReadWriter` 接口同时包含 `Read` 和 `Write` 方法。我们可以通过显式列出这两个方法来定义 `io.ReadWriter`，但更简洁且更直观的做法是通过嵌入这两个接口来构成新的接口，如下所示：
-
-```go
-// ReadWriter 接口组合了 Reader 和 Writer 接口。
+</pre>
+<p>
+<code>io</code> 包还导出了其他几个接口，用于指定可实现多个此类方法的对象。例如，<code>io.ReadWriter</code> 是一个同时包含 <code>Read</code> 和 <code>Write</code> 方法的接口。我们可以通过显式列出这两个方法来定义 <code>io.ReadWriter</code>，但更简洁且更具表达力的方式是通过嵌入这两个接口来形成新接口，如下所示：
+</p>
+<pre>
+// ReadWriter接口组合了Reader和Writer接口。
 type ReadWriter interface {
     Reader
     Writer
 }
-```
-
-这正如它看起来那样：一个 `ReadWriter` 可以执行 `Reader` 能做的*以及* `Writer` 能做的；它是被嵌入接口的联合体。只有接口才能被嵌入到其他接口中。
-
-同样的基本思想也适用于结构体，但其影响更为深远。`bufio` 包有两个结构体类型：`bufio.Reader` 和 `bufio.Writer`，它们各自实现了 `io` 包中对应的接口。`bufio` 包还实现了一个带缓冲的读写器，它通过嵌入将读取器和写入器组合到一个结构体中实现：它在结构体内部列出这些类型，但不为它们指定字段名称。
-
-```go
-// ReadWriter 存储了指向 Reader 和 Writer 的指针。
-// 它实现了 io.ReadWriter 接口。
+</pre>
+<p>
+这段代码的含义正如其表面所示：<code>ReadWriter</code> 可以执行 <code>Reader</code> <em>和</em> <code>Writer</code> 的功能；它是嵌入接口的联合体。只有接口可以被嵌入到其他接口中。
+</p>
+<p>
+同样的基本思想也适用于结构体，但其影响更为深远。<code>bufio</code> 包包含两个结构体类型：<code>bufio.Reader</code> 和 <code>bufio.Writer</code>，它们各自当然实现了 <code>io</code> 包中对应的接口。此外，<code>bufio</code> 包还实现了带缓冲的读写器，它是通过嵌入将一个读取器和一个写入器组合到一个结构体中来实现的：它在结构体内部列出类型，但不赋予它们字段名。
+</p>
+<pre>
+// ReadWriter存储指向Reader和Writer的指针。
+// 它实现了io.ReadWriter接口。
 type ReadWriter struct {
     *Reader  // *bufio.Reader
     *Writer  // *bufio.Writer
 }
-```
-
-被嵌入的元素是指向结构体的指针，因此在使用前必须被初始化指向有效的结构体。`ReadWriter` 结构体也可以写成：
-
-```go
+</pre>
+<p>
+嵌入的元素是指向结构体的指针，因此在使用前必须初始化为指向有效的结构体。这个 <code>ReadWriter</code> 结构体也可以写成：
+</p>
+<pre>
 type ReadWriter struct {
     reader *Reader
     writer *Writer
 }
-```
-
-但如果这样做，为了提升字段的方法并满足 `io` 接口的要求，我们还需要提供转发方法，如下所示：
-
-```go
+</pre>
+<p>
+但为了提升字段的方法并满足 <code>io</code> 接口，我们还需要提供转发方法，例如：
+</p>
+<pre>
 func (rw *ReadWriter) Read(p []byte) (n int, err error) {
     return rw.reader.Read(p)
 }
-```
-
-通过直接嵌入结构体，我们避免了这种记账工作。被嵌入类型的方法会自动获得，这意味着 `bufio.ReadWriter` 不仅拥有 `bufio.Reader` 和 `bufio.Writer` 的方法，它同时也满足所有这三个接口：`io.Reader`、`io.Writer` 和 `io.ReadWriter`。
-
-嵌入与子类化有一个重要的区别。当我们嵌入一个类型时，该类型的方法会成为外部类型的方法，但当这些方法被调用时，方法的接收者是内部类型，而不是外部类型。在我们的例子中，当调用一个 `bufio.ReadWriter` 的 `Read` 方法时，其效果与上面写出的转发方法完全相同；接收者是 `ReadWriter` 的 `reader` 字段，而不是 `ReadWriter` 本身。
-
-嵌入也可以是一个简单的便利。此示例展示了一个嵌入字段与一个常规的命名字段并存的情况。
-
-```go
+</pre>
+<p>
+通过直接嵌入结构体，我们避免了这种额外的记录工作。嵌入类型的方法会自动继承，这意味着 <code>bufio.ReadWriter</code> 不仅拥有 <code>bufio.Reader</code> 和 <code>bufio.Writer</code> 的方法，还同时满足所有三个接口：<code>io.Reader</code>、<code>io.Writer</code> 和 <code>io.ReadWriter</code>。
+</p>
+<p>
+嵌入与子类化有一个重要的区别。当我们嵌入一个类型时，该类型的方法会成为外部类型的方法，但在调用时，方法的接收者是内部类型，而非外部类型。在我们的例子中，当调用 <code>bufio.ReadWriter</code> 的 <code>Read</code> 方法时，其效果与上面写出的转发方法完全相同；接收者是 <code>ReadWriter</code> 的 <code>reader</code> 字段，而不是 <code>ReadWriter</code> 本身。
+</p>
+<p>
+嵌入也可以是一种简单的便利功能。此示例展示了一个嵌入字段与一个常规命名字段并存的情况。
+</p>
+<pre>
 type Job struct {
     Command string
     *log.Logger
 }
-```
-
-现在，`Job` 类型拥有 `*log.Logger` 的 `Print`、`Printf`、`Println` 等方法。我们当然可以给 `Logger` 指定一个字段名称，但没有必要这样做。现在，一旦初始化，我们就可以将日志记录到 `Job`：
-
-```go
+</pre>
+<p>
+现在，<code>Job</code> 类型拥有 <code>*log.Logger</code> 的 <code>Print</code>、<code>Printf</code>、<code>Println</code> 等方法。当然，我们可以给 <code>Logger</code> 一个字段名，但这不是必须的。而且，一旦初始化后，我们就可以记录日志到 <code>Job</code>：
+</p>
+<pre>
 job.Println("starting now...")
-```
-
-`Logger` 是 `Job` 结构体的一个常规字段，因此我们可以在 `Job` 的构造函数中用通常的方式初始化它，如下所示：
-
-```go
+</pre>
+<p>
+<code>Logger</code> 是 <code>Job</code> 结构体的一个常规字段，因此我们可以在 <code>Job</code> 的构造函数中以常规方式初始化它，例如：
+</p>
+<pre>
 func NewJob(command string, logger *log.Logger) *Job {
-    return &Job{command, logger}
+    return &amp;Job{command, logger}
 }
-```
-
+</pre>
+<p>
 或者使用复合字面量：
-
-```go
-job := &Job{command, log.New(os.Stderr, "Job: ", log.Ldate)}
-```
-
-如果我们需要直接引用一个嵌入字段，该字段的类型名称（忽略包限定符）就充当字段名称，就像在 `ReadWriter` 结构体的 `Read` 方法中那样。这里，如果我们需要访问 `Job` 变量 `job` 的 `*log.Logger`，我们可以写作 `job.Logger`，这在我们想要细化 `Logger` 的方法时会很有用。
-
-```go
+</p>
+<pre>
+job := &amp;Job{command, log.New(os.Stderr, "Job: ", log.Ldate)}
+</pre>
+<p>
+如果我们需要直接引用嵌入字段，该字段的类型名（忽略包限定符）可以用作字段名，就像在我们的 <code>ReadWriter</code> 结构体的 <code>Read</code> 方法中所做的那样。在这里，如果我们需要访问 <code>Job</code> 变量 <code>job</code> 的 <code>*log.Logger</code>，我们可以写成 <code>job.Logger</code>，如果我们想细化 <code>Logger</code> 的方法，这将很有用。
+</p>
+<pre>
 func (job *Job) Printf(format string, args ...interface{}) {
     job.Logger.Printf("%q: %s", job.Command, fmt.Sprintf(format, args...))
 }
-```
-
-嵌入类型引入了名称冲突的问题，但解决冲突的规则很简单。
-首先，一个字段或方法 `X` 会隐藏在该类型更深层嵌套部分中的任何其他同名项 `X`。如果 `log.Logger` 包含一个名为 `Command` 的字段或方法，那么 `Job` 的 `Command` 字段将占据主导地位。
-
-其次，如果相同的名称出现在相同的嵌套层级，这通常是一个错误；如果 `Job` 结构体已经包含另一个名为 `Logger` 的字段或方法，那么再嵌入 `log.Logger` 将是错误的。
-然而，如果这个重复的名称在类型定义之外从未在程序中被提及，那么这是允许的。这个限定条件为应对从外部嵌入的类型可能发生的变化提供了一些保护；如果添加了一个字段与另一个子类型中的另一个字段冲突，但两个字段都从未被使用，那么就没有问题。
+</pre>
+<p>
+嵌入类型引入了名称冲突的问题，但解决这些冲突的规则很简单。首先，字段或方法 <code>X</code> 会隐藏类型中更深层次嵌套的任何其他名为 <code>X</code> 的项。如果 <code>log.Logger</code> 包含一个名为 <code>Command</code> 的字段或方法，那么 <code>Job</code> 的 <code>Command</code> 字段将优先。
+</p>
+<p>
+其次，如果相同的名称出现在相同的嵌套层级，这通常是一个错误；如果 <code>Job</code> 结构体包含另一个名为 <code>Logger</code> 的字段或方法，那么嵌入 <code>log.Logger</code> 将是错误的。但是，如果重复的名称在类型定义之外的程序中从未被提及，那就没问题。这个限制提供了一些保护，以防止从外部嵌入的类型发生更改；如果一个字段与另一个子类型中的另一个字段冲突，但两者都从未被使用过，那就没有问题。
+</p>
 
 <h2 id="concurrency">并发</h2>
 
-<h3 id="sharing">通过通信来共享</h3><p>
-并发编程是一个很大的主题，这里只能介绍一些 Go 特有的亮点。
+<h3 id="sharing">通过通信共享</h3><p>
+并发编程是一个很大的话题，这里只能介绍一些 Go 特有的亮点。
 </p>
 <p>
-在许多环境中，并发编程的困难之处在于，要实现对共享变量的正确访问需要非常小心。Go 鼓励一种不同的方法，即在通道上传递共享的值，实际上，从不允许单独的执行线程主动共享。在任何给定时间，只有一个 goroutine 可以访问该值。从设计上讲，数据竞争不可能发生。为了鼓励这种思维方式，我们将其总结为一句口号：
+在许多环境中，并发编程之所以困难，是因为实现对共享变量的正确访问需要处理许多微妙之处。Go 鼓励采用一种不同的方法：共享的值在通道（channel）上传递，并且实际上，它们从不会被不同的执行线程主动共享。在任何给定的时间，只有一个协程（goroutine）可以访问该值。从设计上就不可能发生数据竞争。
+为了鼓励这种思维方式，我们将其浓缩为一句格言：
 </p>
 <blockquote>
-不要通过共享内存来通信；相反，通过通信来共享内存。
+不要通过共享内存来通信；
+而是通过通信来共享内存。
 </blockquote>
 <p>
-这种方法也可能被过度使用。例如，引用计数可能最适合通过在整数变量周围放置一个互斥锁来实现。但作为一种高级方法，使用通道来控制访问可以使编写清晰、正确的程序变得更加容易。
+这种方法也可能被过度使用。例如，引用计数可能最适合通过在整数变量周围设置互斥锁（mutex）来实现。但作为一种高级方法，使用通道来控制访问使得编写清晰、正确的程序变得更加容易。
 </p>
 <p>
-理解这种模型的一种方式是，考虑一个在单个 CPU 上运行的典型单线程程序。它不需要任何同步原语。现在运行另一个这样的实例；它也不需要同步。现在让这两个实例进行通信；如果通信本身就是同步器，那么仍然不需要其他同步。例如，Unix 管道就完美地符合这个模型。虽然 Go 的并发方法起源于 Hoare 的通信顺序进程（CSP），但它也可以被视为 Unix 管道的一种类型安全的泛化。
+理解这种模型的一种方式是考虑一个运行在单个 CPU 上的典型单线程程序。它不需要任何同步原语。现在运行另一个这样的实例；它同样不需要同步。现在让这两个实例通信；如果通信本身就能起到同步作用，那么仍然不需要其他同步机制。例如，Unix 管道就完美地符合这种模型。尽管 Go 的并发方法起源于 Hoare 的通信顺序进程（CSP），但它也可以被视为 Unix 管道的一种类型安全泛化。
 </p>
 
-<h3 id="goroutines">Goroutines</h3>
+<h3 id="goroutines">协程（Goroutines）</h3>
 
 <p>
-之所以叫它们 <em>goroutines</em>，是因为现有的术语——线程、协程、进程等等——传达了不准确的含义。一个 goroutine 有一个简单的模型：它是一个函数，与同一地址空间中的其他 goroutine 并发执行。它非常轻量，开销几乎只相当于分配栈空间。而且栈的初始大小很小，因此很廉价，并在需要时通过分配（和释放）堆存储来增长。
+它们被称为 <em>协程（goroutines）</em>，是因为现有的术语&mdash;线程、协程、进程等等&mdash;传达了不准确的含义。协程的模型很简单：它是一个与其他协程在同一个地址空间中并发执行的函数。它是轻量级的，其开销仅比分配栈空间稍多一点。
+并且栈一开始很小，所以成本低，并根据需要通过分配（和释放）堆存储来增长。
 </p>
 <p>
-Goroutines 被多路复用到多个操作系统线程上，因此如果一个 goroutine 阻塞了（例如在等待 I/O 时），其他的 goroutine 会继续运行。它们的设计隐藏了许多线程创建和管理的复杂性。
+协程被多路复用到多个操作系统线程上，因此如果一个协程阻塞了，比如在等待 I/O 时，其他协程可以继续运行。它们的设计隐藏了许多线程创建和管理的复杂性。
 </p>
 <p>
-在函数或方法调用前加上 <code>go</code> 关键字，就可以在一个新的 goroutine 中运行该调用。当调用完成时，该 goroutine 会静默地退出。（其效果类似于 Unix shell 中的 <code>&amp;</code> 符号，用于在后台运行命令。）
+在函数或方法调用前加上 <code>go</code> 关键字，即可在一个新的协程中运行该调用。当调用完成时，协程会静默退出。（其效果类似于 Unix shell 中用于在后台运行命令的 <code>&amp;</code> 表示法。）
 </p>
 <pre>
 go list.Sort()  // 并发运行 list.Sort；不等待它完成。
 </pre>
 <p>
-在 goroutine 调用中使用函数字面量会很方便。
+在协程调用中使用函数字面量（function literal）会很方便。
 </p>
 <pre>
 func Announce(message string, delay time.Duration) {
     go func() {
         time.Sleep(delay)
         fmt.Println(message)
-    }()  // 注意括号——必须调用该函数。
+    }()  // 注意括号 - 必须调用该函数。
 }
 </pre>
 <p>
-在 Go 中，函数字面量就是闭包：其实现确保函数引用的变量只要处于活动状态就会一直存在。
+在 Go 中，函数字面量是闭包（closure）：其实现确保函数引用的变量在其活跃期间一直存在。
 </p>
 <p>
-这些例子不太实用，因为这些函数没有办法发出完成信号。为此，我们需要通道。
+这些例子不太实用，因为这些函数无法发出完成信号。为此，我们需要通道（channels）。
 </p>
 
-<h3 id="channels">通道</h3>
+<h3 id="channels">通道（Channels）</h3>
 
 <p>
-与映射类似，通道通过 <code>make</code> 分配，生成的值充当对底层数据结构的引用。如果提供了一个可选的整数参数，它会设置通道的缓冲区大小。默认值是零，表示无缓冲或同步通道。
+与映射（map）类似，通道使用 <code>make</code> 分配，其结果值充当对底层数据结构的引用。
+如果提供一个可选的整数参数，它将设置通道的缓冲区大小。
+默认值为零，表示无缓冲或同步通道。
 </p>
 <pre>
-ci := make(chan int)            // 整型的无缓冲通道
-cj := make(chan int, 0)         // 整型的无缓冲通道
-cs := make(chan *os.File, 100)  // 指向文件的指针的缓冲通道
+ci := make(chan int)            // 整数的无缓冲通道
+cj := make(chan int, 0)         // 整数的无缓冲通道
+cs := make(chan *os.File, 100)  // 文件指针的有缓冲通道
 </pre>
 <p>
-无缓冲通道将通信（交换一个值）与同步（保证两个计算/ goroutine 处于已知状态）结合在一起。
+无缓冲通道将通信（值的交换）与同步（保证两个计算/协程处于已知状态）结合在一起。
 </p>
 <p>
-使用通道有很多很好的惯用法。这里介绍一个入门示例。在上一节中，我们在后台启动了一个排序操作。通道可以让启动排序的 goroutine 等待排序完成。
+使用通道有很多巧妙的惯用法。这里有一个入门示例。
+在上一节中，我们在后台启动了一个排序操作。一个通道可以让启动排序的协程等待排序完成。
 </p>
 <pre>
 c := make(chan int)  // 分配一个通道。
-// 在一个 goroutine 中启动排序；当它完成时，在通道上发出信号。
+// 在一个协程中启动排序；当它完成时，在通道上发信号。
 go func() {
     list.Sort()
     c &lt;- 1  // 发送一个信号；值不重要。
@@ -2002,15 +2129,19 @@ doSomethingForAWhile()
 &lt;-c   // 等待排序完成；丢弃发送的值。
 </pre>
 <p>
-接收方总是阻塞，直到有数据可接收。如果通道是无缓冲的，发送方会阻塞，直到接收方接收到值。如果通道有缓冲，发送方仅阻塞到值被复制到缓冲区为止；如果缓冲区已满，这意味着要等待直到某个接收方取走一个值。
+接收者（receiver）总是阻塞，直到有数据可接收。
+如果通道是无缓冲的，发送者（sender）会阻塞，直到接收者接收到值。
+如果通道有缓冲，发送者只阻塞到值被复制到缓冲区；如果缓冲区已满，则意味着要等待某个接收者取走一个值。
 </p>
 <p>
-缓冲通道可以用作信号量，例如用来限制吞吐量。在这个例子中，传入的请求被传递给 <code>handle</code>，该函数向通道发送一个值，处理请求，然后从通道接收一个值，以便为下一个消费者“释放”信号量。通道缓冲区的容量限制了对 <code>process</code> 的并发调用次数。
-</pre>
+有缓冲通道可以用作信号量（semaphore），例如用于限制吞吐量。在这个例子中，传入的请求被传递给 <code>handle</code>，它会向通道发送一个值，处理请求，然后从通道接收一个值，以便为下一个消费者准备好"信号量"。
+通道缓冲区的容量限制了对 <code>process</code> 的并发调用数量。
+</p>
+<pre>
 var sem = make(chan int, MaxOutstanding)
 
 func handle(r *Request) {
-    sem &lt;- 1    // 等待活动队列排空。
+    sem &lt;- 1    // 等待活跃队列排空。
     process(r)  // 可能需要很长时间。
     &lt;-sem       // 完成；允许下一个请求运行。
 }
@@ -2022,29 +2153,30 @@ func Serve(queue chan *Request) {
     }
 }
 </pre>
+
 <p>
-一旦有 <code>MaxOutstanding</code> 个处理器正在执行 <code>process</code>，任何更多的处理器在尝试向已满的通道缓冲区发送数据时都会阻塞，直到现有处理器之一完成并从缓冲区接收数据。
+一旦 <code>MaxOutstanding</code> 个处理器正在执行 <code>process</code>，任何更多的处理器在尝试向已满的通道缓冲区发送时都会阻塞，直到现有的某个处理器完成并从缓冲区接收。
 </p><p>
-但这个设计有个问题：<code>Serve</code> 会为每个传入的请求创建一个新的协程，尽管同一时刻最多只能有 <code>MaxOutstanding</code> 个协程在运行。如果请求来得太快，程序可能会消耗无限的资源。我们可以通过修改 <code>Serve</code> 函数来限制协程的创建，以此解决这个缺陷：
+但这种设计存在问题：<code>Serve</code>会为每个传入的请求创建新的goroutine，尽管同时只能运行<code>MaxOutstanding</code>个。因此，如果请求来得太快，程序可能会消耗无限的资源。我们可以通过修改<code>Serve</code>函数来控制goroutine的创建，从而解决这个问题：
 </p>
 
 <pre>
 func Serve(queue chan *Request) {
     for req := range queue {
-        sem &lt;- 1
+        sem <- 1
         go func() {
             process(req)
-            &lt;-sem
+            <-sem
         }()
     }
 }</pre>
 
 <p>
-（请注意，在 Go 1.22 版本之前，这段代码存在一个 bug：循环变量在所有协程之间共享。详情请参阅 <a href="/wiki/LoopvarExperiment">Go wiki</a>。）
+（请注意，在Go 1.22之前的版本中，这段代码存在一个bug：循环变量会被所有goroutine共享。详见<a href="/wiki/LoopvarExperiment">Go维基</a>。）
 </p>
 
 <p>
-另一种能良好管理资源的方法是启动固定数量的 <code>handle</code> 协程，这些协程都从请求通道读取数据。协程的数量限制了同时调用 <code>process</code> 的次数。这个 <code>Serve</code> 函数还接受一个通道，通过该通道通知它退出；在启动协程后，它会阻塞在从该通道接收数据上。
+另一种良好的资源管理方法是启动固定数量的<code>handle</code> goroutine，它们都从请求通道中读取。goroutine的数量限制了<code>process</code>的并发调用次数。这个<code>Serve</code>函数还接受一个通道，用于通知它退出；启动goroutine后，它会阻塞以接收退出信号。
 </p>
 
 <pre>
@@ -2056,19 +2188,19 @@ func handle(queue chan *Request) {
 
 func Serve(clientRequests chan *Request, quit chan bool) {
     // 启动处理器
-    for i := 0; i &lt; MaxOutstanding; i++ {
+    for i := 0; i < MaxOutstanding; i++ {
         go handle(clientRequests)
     }
-    &lt;-quit  // 等待退出指令。
+    <-quit  // 等待退出指令。
 }
 </pre>
 
 <h3 id="chan_of_chan">通道的通道</h3>
 <p>
-Go 语言最重要的特性之一是通道是一等值，可以像任何其他值一样被分配和传递。这个特性的常见用途是实现安全、并行的解复用。
+Go最重要的特性之一是通道（channel）是一等值，可以像其他任何值一样分配和传递。该特性的一个常见用途是实现安全的并行多路分解。
 </p>
 <p>
-在上一节的例子中，<code>handle</code> 是一个理想化的请求处理器，但我们没有定义它处理的类型。如果该类型包含一个用于回复的通道，那么每个客户端就可以提供自己接收答案的路径。下面是类型 <code>Request</code> 的示意性定义。
+在前一节的示例中，<code>handle</code>是一个理想化的请求处理器，但我们没有定义它处理的类型。如果该类型包含用于回复的通道，每个客户端就可以提供自己的答案路径。以下是<code>Request</code>类型的示意图定义。
 </p>
 <pre>
 type Request struct {
@@ -2078,7 +2210,7 @@ type Request struct {
 }
 </pre>
 <p>
-客户端提供一个函数及其参数，并在请求对象内部提供一个通道来接收答案。
+客户端提供一个函数及其参数，以及请求对象内部的一个通道，用于接收答案。
 </p>
 <pre>
 func sum(a []int) (s int) {
@@ -2090,77 +2222,78 @@ func sum(a []int) (s int) {
 
 request := &amp;Request{[]int{3, 4, 5}, sum, make(chan int)}
 // 发送请求
-clientRequests &lt;- request
+clientRequests <- request
 // 等待响应。
-fmt.Printf("answer: %d\n", &lt;-request.resultChan)
+fmt.Printf("answer: %d\n", <-request.resultChan)
 </pre>
 <p>
-在服务器端，唯一变化的是处理函数。
+在服务器端，处理函数是唯一需要改动的部分。
 </p>
 <pre>
 func handle(queue chan *Request) {
     for req := range queue {
-        req.resultChan &lt;- req.f(req.args)
+        req.resultChan <- req.f(req.args)
     }
 }
 </pre>
 <p>
-显然，要使其具备实用性还有很多工作要做，但这段代码是一个限流、并行、非阻塞的 RPC 系统的框架，并且其中看不到任何互斥锁。
+要使其具备实际可行性显然还有很多工作要做，但这段代码是一个速率受限、并行、非阻塞的RPC系统框架，并且完全看不到互斥锁（mutex）的影子。
 </p>
 
 <h3 id="parallel">并行化</h3>
 <p>
-这些思想的另一个应用是将计算并行化到多个 CPU 核心上。如果计算可以被分解为可以独立执行的独立部分，那么它就可以被并行化，并使用一个通道来通知每个部分何时完成。
+这些思想的另一个应用是在多个CPU核心上并行化计算。如果计算可以分解为可独立执行的独立部分，就可以实现并行化，并用一个通道来通知每个部分何时完成。
 </p>
 <p>
-假设我们要对一个向量中的元素执行一个耗时操作，并且对每个元素的操作值是独立的，就像下面这个理想化的例子。
+假设我们要对一个向量执行一项昂贵操作，并且该操作在每个元素上的值是独立的，如下所示的理想化示例。
 </p>
 <pre>
 type Vector []float64
 
-// 对 v[i], v[i+1] ... 直到 v[n-1] 应用操作。
+// 对 v[i], v[i+1] ... 直到 v[n-1] 执行操作。
 func (v Vector) DoSome(i, n int, u Vector, c chan int) {
-    for ; i &lt; n; i++ {
+    for ; i < n; i++ {
         v[i] += u.Op(v[i])
     }
-    c &lt;- 1    // 通知这部分已完成
+    c <- 1    // 通知此部分已完成
 }
 </pre>
 <p>
-我们在一个循环中独立启动各个部分，每个 CPU 核心一个。它们可以按任意顺序完成，但这无关紧要；我们只需要在启动所有协程后，排空通道来统计完成信号。
+我们在循环中独立启动这些部分，每个CPU一个。它们可以按任何顺序完成，但这无关紧要；我们只需要在所有goroutine启动后，通过排空通道来计数完成信号。
 </p>
 <pre>
-const numCPU = 4 // CPU 核心数
+const numCPU = 4 // CPU核心数
 
 func (v Vector) DoAll(u Vector) {
-    c := make(chan int, numCPU)  // 缓冲可选但合理。
-    for i := 0; i &lt; numCPU; i++ {
+    c := make(chan int, numCPU)  // 缓冲是可选的，但很合理。
+    for i := 0; i < numCPU; i++ {
         go v.DoSome(i*len(v)/numCPU, (i+1)*len(v)/numCPU, u, c)
     }
     // 排空通道。
-    for i := 0; i &lt; numCPU; i++ {
-        &lt;-c    // 等待一个任务完成
+    for i := 0; i < numCPU; i++ {
+        <-c    // 等待一个任务完成
     }
     // 全部完成。
 }
 </pre>
 <p>
-与其为 numCPU 创建一个常量值，我们可以询问运行时哪个值是合适的。函数 <code><a href="/pkg/runtime#NumCPU">runtime.NumCPU</a></code> 返回机器的硬件 CPU 核心数，所以我们可以写：
+与其为 numCPU 创建常量值，我们可以向运行时查询合适的值。函数 <code><a href="/pkg/runtime#NumCPU">runtime.NumCPU</a></code> 返回机器的硬件 CPU 核心数，因此我们可以这样写：
 </p>
 <pre>
 var numCPU = runtime.NumCPU()
 </pre>
 <p>
-还有一个函数 <code><a href="/pkg/runtime#GOMAXPROCS">runtime.GOMAXPROCS</a></code>，它报告（或设置）用户指定的 Go 程序可以同时运行的协程数量。其默认值为 <code>runtime.NumCPU</code>，但可以通过设置同名的 shell 环境变量或通过调用函数并传入一个正数来覆盖。传入零则只是查询该值。因此，如果我们希望遵从用户的资源请求，我们应该写：
+还有一个函数 <code><a href="/pkg/runtime#GOMAXPROCS">runtime.GOMAXPROCS</a></code>，它报告（或设置）用户指定的Go程序可同时运行的核心数。其默认值为 <code>runtime.NumCPU</code> 的值，但可以通过设置同名的 shell 环境变量或传入正数调用该函数来覆盖。传入零值则仅查询当前值。因此，如果我们想遵循用户的资源请求，应该这样写：
 </p>
 <pre>
 var numCPU = runtime.GOMAXPROCS(0)
 </pre>
 <p>
-请务必不要混淆并发与并行的概念——并发是将程序构建为独立执行的组件，而并行是为了在多核 CPU 上提高效率而并行执行计算。尽管 Go 的并发特性可以让一些问题很容易地构建为并行计算，但 Go 是一种并发语言，而不是一种并行语言，并非所有并行化问题都适合 Go 的模型。关于这一区别的讨论，请参阅 <a href="/blog/concurrency-is-not-parallelism">这篇博客文章</a> 中引用的演讲。
+请注意区分并发（concurrency）——将程序构建为独立执行的组件——和并行（parallelism）——在多个CPU上并行执行计算以提高效率。虽然Go的并发特性使得某些问题易于构建为并行计算，但Go是一门并发语言，而非并行语言，并非所有并行化问题都适合Go的模型。关于区别的讨论，请参阅<a href="/blog/concurrency-is-not-parallelism">此博客文章</a>中提到的演讲。
 
-<h3 id="leaky_buffer">一个有泄漏的缓冲区</h3><p>
-并发编程的工具甚至能让非并发思想的表达更简洁。这里有一个从某个 RPC 包中抽象出的示例：客户端协程不断从某个来源（可能是网络）接收数据。为了避免反复分配和释放缓冲区，它维护了一个空闲列表，并使用有缓冲的通道来表示它。当通道为空时，就会分配一个新的缓冲区。消息缓冲区准备好后，便通过 <code>serverChan</code> 发送给服务器。
+<h3 id="leaky_buffer">一个有泄漏的缓冲区</h3>并发编程的工具甚至能让非并发思想更容易表达。下面这个示例摘自一个RPC包。客户端goroutine循环从某个源（可能是网络）接收数据。为避免反复分配和释放缓冲区，它维护了一个空闲列表，并用带缓冲的channel来表示。如果channel为空，就分配一个新的缓冲区。
+
+消息缓冲区准备就绪后，通过`serverChan`发送给服务器。
 </p>
 <pre>
 var freeList = make(chan *Buffer, 100)
@@ -2169,30 +2302,30 @@ var serverChan = make(chan *Buffer)
 func client() {
     for {
         var b *Buffer
-        // 尝试从空闲列表获取缓冲区；若无则分配一个。
+        // 如果可用则获取缓冲区；否则分配新的。
         select {
-        case b = <-freeList:
-            // 成功获取；无需其他操作。
+        case b = &lt;-freeList:
+            // 获取成功；无需其他操作。
         default:
             // 没有空闲缓冲区，分配一个新的。
             b = new(Buffer)
         }
         load(b)              // 从网络读取下一条消息。
-        serverChan <- b      // 发送给服务器。
+        serverChan &lt;- b      // 发送给服务器。
     }
 }
 </pre>
 <p>
-服务器循环从客户端接收每条消息，进行处理，然后将缓冲区归还给空闲列表。
+服务器循环接收客户端发来的每条消息，处理后将缓冲区归还到空闲列表。
 </p>
 <pre>
 func server() {
     for {
-        b := <-serverChan    // 等待工作。
+        b := &lt;-serverChan    // 等待任务。
         process(b)
-        // 如果空闲列表有空间，则重用缓冲区。
+        // 如果有空间则复用缓冲区。
         select {
-        case freeList <- b:
+        case freeList &lt;- b:
             // 缓冲区已放回空闲列表；无需其他操作。
         default:
             // 空闲列表已满，直接继续。
@@ -2201,17 +2334,17 @@ func server() {
 }
 </pre>
 <p>
-客户端尝试从 <code>freeList</code> 中检索缓冲区；如果没有可用的，则分配一个新的。服务器发送到 <code>freeList</code> 的操作会将 <code>b</code> 放回空闲列表，除非列表已满，此时缓冲区会被丢弃，等待垃圾回收器回收。（<code>select</code> 语句中的 <code>default</code> 子句在其他情况均未就绪时执行，这意味着这些 <code>select</code> 语句永远不会阻塞。）这个实现仅用几行代码就构建了一个“有漏洞的桶”式空闲列表，其簿记工作完全依赖有缓冲的通道和垃圾回收器。
+客户端尝试从`freeList`获取缓冲区；如果没有可用缓冲区，则分配一个新的。服务器向`freeList`发送时，除非列表已满，否则会将`b`放回空闲列表。如果列表已满，缓冲区将被丢弃，由垃圾回收器回收。（`select`语句中的`default`子句在没有其他case就绪时执行，这意味着`select`永远不会阻塞。）这个实现仅用几行代码就构建了一个有泄漏的桶式空闲列表，依靠带缓冲的channel和垃圾回收器进行记账。
 </p>
 
 <h2 id="errors">错误</h2>
 
 <p>
-库函数通常需要向调用者返回某种错误指示。如前所述，Go 语言的多返回值特性使得在返回正常值的同时附带详细的错误描述变得非常简单。良好的风格是利用这一特性提供详细的错误信息。例如，我们将会看到，<code>os.Open</code> 在失败时不仅会返回一个 <code>nil</code> 指针，还会返回一个描述问题所在的错误值。
+库函数通常必须向调用者返回某种错误指示。如前所述，Go的多值返回使得在正常返回值旁返回详细的错误描述变得容易。使用此功能提供详细错误信息是良好的编程风格。例如，我们将看到，<code>os.Open</code>在失败时不仅返回一个<code>nil</code>指针，还会返回一个描述问题所在的错误值。
 </p>
 
 <p>
-按照惯例，错误的类型为 <code>error</code>，这是一个简单的内置接口。
+按照惯例，错误的类型是<code>error</code>，这是一个简单的内置接口。
 </p>
 <pre>
 type error interface {
@@ -2219,14 +2352,14 @@ type error interface {
 }
 </pre>
 <p>
-库作者可以自由地使用更丰富的模型在底层实现这个接口，这样不仅能查看错误，还能提供一些上下文信息。如前所述，除了常见的 <code>*os.File</code> 返回值，<code>os.Open</code> 还会返回一个错误值。如果文件打开成功，错误将是 <code>nil</code>，但当出现问题时，它会持有一个 <code>os.PathError</code>：
+库编写者可以自由地用更丰富的模型在底层实现此接口，使其不仅能显示错误，还能提供一些上下文信息。如前所述，除了通常的<code>*os.File</code>返回值外，<code>os.Open</code>还会返回一个错误值。如果文件打开成功，错误将为<code>nil</code>，但当出现问题时，它将包含一个<code>os.PathError</code>：
 </p>
 <pre>
-// PathError 记录了一个错误以及导致该错误的操作和文件路径。
+// PathError 记录一个错误以及导致该错误的操作和文件路径。
 type PathError struct {
     Op string    // "open", "unlink" 等。
     Path string  // 相关的文件。
-    Err error    // 由系统调用返回。
+    Err error    // 系统调用返回的错误。
 }
 
 func (e *PathError) Error() string {
@@ -2234,31 +2367,31 @@ func (e *PathError) Error() string {
 }
 </pre>
 <p>
-<code>PathError</code> 的 <code>Error</code> 方法会生成类似这样的字符串：
+<code>PathError</code>的<code>Error</code>方法会生成类似这样的字符串：
 </p>
 <pre>
 open /etc/passwx: no such file or directory
 </pre>
 <p>
-这样一个包含了问题文件名、操作以及所触发的操作系统错误的错误信息，即使在远离导致其发生的调用处打印出来，也非常有用；它比单纯的“no such file or directory”提供了更多信息。
+这样一个包含了问题文件名、操作以及触发它的操作系统错误的错误信息，即使在远离引发它的调用处打印出来也很有用；它比简单的“no such file or directory”提供的信息要多得多。
 </p>
 
 <p>
-在可行的情况下，错误字符串应能标识其来源，例如通过添加前缀来指明生成错误的操作或包。例如，在 <code>image</code> 包中，由于未知格式导致的解码错误，其字符串表示是 "image: unknown format"。
+在可行的情况下，错误字符串应标识其来源，例如通过添加命名生成错误的操作或包的前缀。例如，在<code>image</code>包中，因未知格式导致的解码错误的字符串表示是“image: unknown format”。
 </p>
 
 <p>
-关心错误具体细节的调用者可以使用类型开关或类型断言来查找特定的错误并提取详细信息。对于 <code>PathErrors</code>，这可能包括检查内部的 <code>Err</code> 字段以确定是否为可恢复的失败。
+关心错误具体细节的调用者可以使用类型开关或类型断言来查找特定的错误并提取细节。对于<code>PathError</code>，这可能包括检查内部的<code>Err</code>字段，以识别可恢复的故障。
 </p>
 
 <pre>
-for try := 0; try < 2; try++ {
+for try := 0; try &lt; 2; try++ {
     file, err = os.Create(filename)
     if err == nil {
         return
     }
-    if e, ok := err.(*os.PathError); ok && e.Err == syscall.ENOSPC {
-        deleteTempFiles()  // 回收一些空间。
+    if e, ok := err.(*os.PathError); ok &amp;&amp; e.Err == syscall.ENOSPC {
+        deleteTempFiles()  // 恢复一些空间。
         continue
     }
     return
@@ -2266,19 +2399,19 @@ for try := 0; try < 2; try++ {
 </pre>
 
 <p>
-这里的第二个 <code>if</code> 语句是另一个 <a href="#interface_conversions">类型断言</a>。如果断言失败，<code>ok</code> 将为 <code>false</code>，且 <code>e</code> 为 <code>nil</code>。如果成功，<code>ok</code> 将为 <code>true</code>，这意味着该错误类型是 <code>*os.PathError</code>，而 <code>e</code> 也是该类型，我们可以检查它以获取更多关于错误的信息。
+这里的第二个<code>if</code>语句是另一个<a href="#interface_conversions">类型断言</a>。如果失败，<code>ok</code>将为false，<code>e</code>将为<code>nil</code>。如果成功，<code>ok</code>将为true，这意味着错误类型是<code>*os.PathError</code>，那么<code>e</code>也是，我们可以检查它以获取有关错误的更多信息。
 </p>
 
-<h3 id="panic">Panic</h3>
+<h3 id="panic">恐慌</h3>
 
 <p>
-向调用者报告错误的常规方法是返回一个 <code>error</code> 作为额外的返回值。经典的 <code>Read</code> 方法就是一个众所周知的例子；它返回一个字节数和一个 <code>error</code>。但如果错误是无法恢复的呢？有时程序确实无法继续执行。
+向调用者报告错误的通常方法是将<code>error</code>作为额外的返回值返回。典型的<code>Read</code>方法就是这样一个众所周知的例子；它返回一个字节数和一个<code>error</code>。但如果错误不可恢复怎么办？有时程序就是无法继续执行。
 </p>
 
 <p>
-为此，有一个内置函数 <code>panic</code>，它实际上会创建一个运行时错误来停止程序（但请参阅下一节）。该函数接受一个任意类型的参数（通常是一个字符串），在程序终止时打印出来。它也是一种指示发生了不可能事件（例如退出一个无限循环）的方式。
+为此，有一个内置函数<code>panic</code>，它实际上会创建一个运行时错误来停止程序（但请参阅下一节）。该函数接受一个任意类型的参数（通常是一个字符串），在程序终止时打印出来。这也是表明发生了不可能之事（例如退出一个无限循环）的一种方式。
 </p><pre>
-// 使用牛顿法实现立方根的玩具示例。
+// 使用牛顿法实现立方根的玩具示例
 func CubeRoot(x float64) float64 {
     z := x/3   // 任意初始值
     for i := 0; i &lt; 1e6; i++ {
@@ -2288,13 +2421,13 @@ func CubeRoot(x float64) float64 {
             return z
         }
     }
-    // 一百万次迭代仍未收敛；说明存在问题。
+    // 迭代一百万次仍未收敛；必定存在问题
     panic(fmt.Sprintf("CubeRoot(%g) did not converge", x))
 }
 </pre>
 
 <p>
-这只是一个示例，但实际的库函数应避免使用 <code>panic</code>。如果问题可以被掩盖或绕过，让程序继续运行总是比终止整个程序更好。一个可能的反例是在初始化期间：如果库确实无法完成自身设置，此时使用 panic 是合理的。
+这仅是示例，但真实的库函数应避免使用 <code>panic</code>。若问题可被掩盖或绕过，让程序继续运行总是优于直接终止整个程序。一个可能的反例是在初始化阶段：若库确实无法完成自身配置，此时触发恐慌是合理的。
 </p>
 
 <pre>
@@ -2307,18 +2440,18 @@ func init() {
 }
 </pre>
 
-<h3 id="recover">恢复 (Recover)</h3>
+<h3 id="recover">恢复机制</h3>
 
 <p>
-当 <code>panic</code> 被调用时（包括因运行时错误如切片索引越界或类型断言失败而隐式触发），它会立即停止当前函数的执行，并开始展开该 goroutine 的栈，沿途执行所有延迟函数。如果栈展开到达该 goroutine 的栈顶，程序就会终止。然而，可以使用内置函数 <code>recover</code> 来重新获取对该 goroutine 的控制权并恢复正常执行。
+当调用 <code>panic</code> 时（包括切片越界索引或类型断言失败等隐式触发的运行时错误），它会立即停止当前函数执行，并开始展开协程的栈结构，沿途执行所有延迟函数。若栈展开到达协程栈顶，程序将终止。但可通过内置函数 <code>recover</code> 重新获取协程控制权并恢复正常执行。
 </p>
 
 <p>
-调用 <code>recover</code> 会停止栈展开，并返回传递给 <code>panic</code> 的参数。因为栈展开期间运行的唯一代码位于延迟函数内部，所以 <code>recover</code> 只在延迟函数内部有用。
+调用 <code>recover</code> 会停止栈展开并返回传递给 <code>panic</code> 的参数。由于栈展开过程中仅执行延迟函数内的代码，因此 <code>recover</code> 仅在延迟函数中生效。
 </p>
 
 <p>
-<code>recover</code> 的一个应用是：在服务器中关闭一个发生故障的 goroutine，而不影响其他正在执行的 goroutine。
+<code>recover</code> 的一种应用场景是：在服务器中关闭出现故障的协程，而不影响其他正在运行的协程。
 </p>
 
 <pre>
@@ -2339,37 +2472,37 @@ func safelyDo(work *Work) {
 </pre>
 
 <p>
-在这个例子中，如果 <code>do(work)</code> 发生 panic，结果会被记录日志，并且该 goroutine 会干净地退出，不会干扰其他 goroutine。在延迟闭包中不需要做任何其他事情；调用 <code>recover</code> 就完全处理了该情况。
+在此示例中，若 <code>do(work)</code> 触发恐慌，结果将被记录且协程会干净退出而不干扰其他协程。延迟闭包中无需其他操作——调用 <code>recover</code> 即可完全处理该状况。
 </p>
 
 <p>
-因为除非直接从延迟函数中调用，否则 <code>recover</code> 总是返回 <code>nil</code>，所以延迟代码可以调用那些内部也使用了 <code>panic</code> 和 <code>recover</code> 的库例程而不会失败。例如，<code>safelyDo</code> 中的延迟函数可以在调用 <code>recover</code> 之前调用一个日志记录函数，并且该日志记录代码的运行不会受到 panic 状态的影响。
+由于 <code>recover</code> 仅在直接通过延迟函数调用时返回非 <code>nil</code> 值，延迟代码可调用内部使用 <code>panic</code> 和 <code>recover</code> 的库函数而不致失败。例如 <code>safelyDo</code> 中的延迟函数可在调用 <code>recover</code> 前调用日志函数，该日志代码将不受恐慌状态影响而正常运行。
 </p>
 
 <p>
-有了我们的恢复模式后，<code>do</code> 函数（及其调用的任何函数）可以通过调用 <code>panic</code> 干净地摆脱任何糟糕的状况。我们可以利用这个想法来简化复杂软件中的错误处理。让我们看一个理想化的 <code>regexp</code> 包版本，它通过使用局部错误类型调用 <code>panic</code> 来报告解析错误。以下是 <code>Error</code> 的定义、一个 <code>error</code> 方法以及 <code>Compile</code> 函数。
+借助此恢复模式，<code>do</code> 函数（及其调用的所有函数）可通过调用 <code>panic</code> 干净地脱离任何异常状态。此理念可用于简化复杂软件中的错误处理。以理想化的 <code>regexp</code> 包为例，其通过调用携带本地错误类型的 <code>panic</code> 来报告解析错误。以下是 <code>Error</code> 类型定义、<code>error</code> 方法及 <code>Compile</code> 函数：
 </p>
 
 <pre>
-// Error 是解析错误的类型；它满足 error 接口。
+// Error 是解析错误的类型；实现了 error 接口
 type Error string
 func (e Error) Error() string {
     return string(e)
 }
 
-// error 是 *Regexp 的一个方法，它通过使用 Error 类型的 panic 来报告解析错误。
+// error 是 *Regexp 的方法，通过触发 Error 类型恐慌来报告解析错误
 func (regexp *Regexp) error(err string) {
     panic(Error(err))
 }
 
-// Compile 返回正则表达式的已解析表示形式。
+// Compile 返回正则表达式的解析表示
 func Compile(str string) (regexp *Regexp, err error) {
     regexp = new(Regexp)
-    // doParse 在解析错误时会 panic。
+    // 若存在解析错误，doParse 将触发恐慌
     defer func() {
         if e := recover(); e != nil {
-            regexp = nil    // 清除返回值。
-            err = e.(Error) // 如果不是解析错误，将重新 panic。
+            regexp = nil    // 清空返回值
+            err = e.(Error) // 若非解析错误将重新触发恐慌
         }
     }()
     return regexp.doParse(str), nil
@@ -2377,13 +2510,11 @@ func Compile(str string) (regexp *Regexp, err error) {
 </pre>
 
 <p>
-如果 <code>doParse</code> 发生 panic，恢复块会将返回值设置为 <code>nil</code>&mdash;&mdash;延迟函数可以修改具名返回值。然后，在将错误赋值给 <code>err</code> 时，它会通过类型断言检查问题是否是解析错误（即断言其具有局部类型 <code>Error</code>）。
-如果不是，类型断言将失败，导致一个运行时错误，从而像没有被中断过一样继续栈展开。
-这个检查意味着如果发生了意外情况，例如索引越界，代码将失败，即使我们正在使用 <code>panic</code> 和 <code>recover</code> 来处理解析错误。
+若 <code>doParse</code> 触发恐慌，恢复代码块会将返回值设为 <code>nil</code>——延迟函数可修改具名返回值。随后在赋值给 <code>err</code> 时，通过断言问题属于本地类型 <code>Error</code> 来确认其为解析错误。若类型不匹配，类型断言将失败，导致运行时错误从而继续栈展开过程，如同未被中断一样。此检查意味着当发生意外情况（如索引越界）时，即便使用 <code>panic</code> 和 <code>recover</code> 处理解析错误，程序仍会正常报错。
 </p>
 
 <p>
-有了错误处理机制，<code>error</code> 方法（因为它是一个绑定到类型的方法，所以与内置的 <code>error</code> 类型同名是合适的，甚至很自然）使得报告解析错误变得容易，无需手动考虑解析栈的展开：
+配备错误处理机制后，<code>error</code> 方法（因其绑定到类型，与内置 <code>error</code> 类型同名是合理且自然的）使得报告解析错误变得轻松，无需手动处理解析栈的展开：
 </p>
 
 <pre>
@@ -2393,52 +2524,76 @@ if pos == 0 {
 </pre>
 
 <p>
-尽管这个模式很有用，但它应只在包内部使用。
-<code>Parse</code> 将其内部的 <code>panic</code> 调用转换为 <code>error</code> 值；它不会向其客户端暴露 <code>panic</code>。
-这是一个值得遵循的好规则。
+尽管此模式十分实用，但应仅限于包内使用。<code>Parse</code> 会将内部的 <code>panic</code> 调用转换为 <code>error</code> 值，而不会向客户端暴露恐慌行为。这是值得遵循的准则。
 </p>
 
 <p>
-顺便说一下，这种重新 panic 的惯用法会在发生实际错误时更改 panic 的值。然而，原始错误和新的错误都会出现在崩溃报告中，因此问题的根本原因仍然可见。所以这种简单的重新 panic 方法通常是足够的——毕竟这是一次崩溃——但如果你只想显示原始值，你可以编写更多代码来过滤意外问题，并使用原始错误重新 panic。
-这留作读者的练习。
+顺便说明，此重新恐慌的惯用写法会在发生实际错误时改变恐慌值。但崩溃报告中会同时呈现原始错误和新错误，因此问题的根本原因仍然可见。故此简单的重新恐慌方式通常足够有效——毕竟已是崩溃状态——若仅需显示原始值，可编写额外代码来过滤意外问题并用原始错误重新恐慌。这留待读者作为练习。
 </p><h2 id="web_server">一个Web服务器</h2>
 
 <p>
-让我们以一个完整的Go程序作为结尾，即一个Web服务器。这个程序实际上是一种Web中继服务器。谷歌在 <code>chart.apis.google.com</code> 提供了一项服务，能将数据自动格式化为图表和图形。然而，它难以交互使用，因为您需要将数据作为查询参数放入URL中。这里的程序为其中一种形式的数据提供了更友好的界面：给定一段简短的文本，它会调用图表服务器来生成一个QR码，即一个编码了该文本的方形矩阵。该图像可以用手机摄像头拍摄并解读为例如一个URL，省去了在手机微小键盘上输入URL的麻烦。
+让我们用一个完整的Go程序来结束——一个Web服务器。
+这其实是一种Web转服务器。
+Google在<code>chart.apis.google.com</code>提供了一项服务，
+可以将数据自动格式化为图表和图形。
+然而，这项服务在交互使用时并不方便，
+因为需要将数据作为查询参数放入URL中。
+这里的程序为一种数据形式提供了更友好的接口：给定一段短文本，
+它会调用图表服务器生成二维码——一种由方格矩阵编码文本信息的图形。
+这个图像可以用手机摄像头捕获并解析为，
+例如一个网址，从而免去了在手机微小键盘上输入网址的麻烦。
 </p>
 <p>
-以下是完整的程序。随后会有解释。
+以下是完整程序。
+随后会有解释。
 </p>
 {{code "/doc/progs/eff_qr.go" `/package/` `$`}}
 <p>
-在 <code>main</code> 之前的部分应该很容易理解。一个flag设置了服务器的默认HTTP端口。模板变量 <code>templ</code> 是关键所在。它构建了一个HTML模板，服务器将执行该模板来显示页面；稍后会详细说明。
+<code>main</code>之前的部分应该容易理解。
+其中一个标志为服务器设置了默认HTTP端口。模板变量<code>templ</code>是关键所在。它构建了一个HTML模板，
+服务器将执行该模板来显示页面；稍后会详细说明。
 </p>
 <p>
-<code>main</code> 函数解析flag，并使用我们上面讨论过的机制，将函数 <code>QR</code> 绑定到服务器的根路径。然后调用 <code>http.ListenAndServe</code> 来启动服务器；它会在服务器运行时阻塞。
+<code>main</code>函数解析标志，并通过我们之前讨论的机制，
+将函数<code>QR</code>绑定到服务器的根路径。
+随后调用<code>http.ListenAndServe</code>启动服务器；
+该函数在服务器运行期间保持阻塞。
 </p>
 <p>
-<code>QR</code> 只是接收包含表单数据的请求，并对名为 <code>s</code> 的表单值中的数据执行模板。
+<code>QR</code>函数接收包含表单数据的请求，
+并在名为<code>s</code>的表单值数据上执行模板。
 </p>
 <p>
-模板包 <code>html/template</code> 功能强大；此程序仅涉及其部分功能。本质上，它通过替换传递给 <code>templ.Execute</code> 的数据项（此处是表单值）派生的元素，来动态重写一段HTML文本。在模板文本（<code>templateStr</code>）中，由双花括号分隔的部分表示模板动作。从 <code>{{"{{if .}}"}}</code> 到 <code>{{"{{end}}"}}</code> 的部分，仅当当前数据项（称为 <code>.</code>（点））的值非空时才执行。也就是说，当字符串为空时，模板的这部分将被抑制。
+模板包<code>html/template</code>功能强大；
+本程序仅展示了其部分能力。
+本质上，它通过用传递给<code>templ.Execute</code>的数据项派生的元素
+（本例中为表单值）替换内容，来实时重写HTML文本。
+在模板文本（<code>templateStr</code>）中，
+双花括号包裹的部分表示模板操作。
+从<code>{{"{{if .}}"}}</code>到<code>{{"{{end}}"}}</code>的部分仅在当前数据项的值
+（称为<code>.</code>（点））非空时执行。
+即当字符串为空时，模板的该部分会被抑制。
 </p>
 <p>
-两个片段 <code>{{"{{.}}"}}</code> 表示在网页上显示呈现给模板的数据——即查询字符串。HTML模板包会自动提供适当的转义，因此文本显示是安全的。
+两处<code>{{"{{.}}"}}</code>代码片段表示在网页上显示传递给模板的数据——即查询字符串。
+HTML模板包会自动进行适当转义，确保显示的文本是安全的。
 </p>
 <p>
-模板字符串的其余部分只是页面加载时显示的HTML。如果这个解释过于简略，请参阅模板包的<a href="/pkg/html/template/">文档</a>以获得更全面的讨论。
+模板字符串的其余部分是页面加载时显示的HTML内容。
+如果以上解释过于简略，请查阅模板包的<a href="/pkg/html/template/">文档</a>以获得更详尽的说明。
 </p>
 <p>
-至此，您已经了解：一个有用的Web服务器仅需几行代码加上一些数据驱动的HTML文本即可完成。Go语言功能强大，足以用少量代码实现大量功能。
+至此，我们得到了：一个用少量代码加上一些数据驱动HTML文本构建的实用Web服务器。
+Go语言足够强大，能够用寥寥数行实现诸多功能。
 </p>
 
 <!--
-待办事项
+待办
 <pre>
-verifying implementation
+验证实现
 type Color uint32
 
-// Check that Color implements image.Color and image.Image
+// 检查Color是否实现了image.Color和image.Image接口
 var _ image.Color = Black
 var _ image.Image = Black
 </pre>
