@@ -89,7 +89,8 @@
       "source": "solutions/cloudflare.md",
       "target": "solutions/cloudflare.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:12:34.360Z"
     },
     {
       "source": "solutions/cockroachlabs.md",
