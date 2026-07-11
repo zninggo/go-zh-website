@@ -166,7 +166,8 @@
       "source": "solutions/google/index.md",
       "target": "solutions/google/index.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:16:28.009Z"
     },
     {
       "source": "solutions/google/sitereliability.md",
