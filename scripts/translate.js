@@ -4,6 +4,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
 const { execSync } = require('child_process');
+const zlib = require('zlib');
 
 const CONTENT_DIR = path.join(__dirname, '..', '_content');
 const TRANSLATIONS_DIR = path.join(__dirname, '..', '_translations', 'zh');
@@ -243,6 +244,15 @@ function translateCodeComments(code) {
   });
 }
 
+async function decompressResponse(response) {
+  const buffer = Buffer.from(await response.arrayBuffer());
+  // gzip 魔术字节: 0x1f 0x8b
+  if (buffer.length >= 2 && buffer[0] === 0x1f && buffer[1] === 0x8b) {
+    return zlib.gunzipSync(buffer).toString('utf-8');
+  }
+  return buffer.toString('utf-8');
+}
+
 async function translateText(text, glossary, config, context = {}) {
   const { api_url, api_key, model, timeout, max_retries } = config.translation;
 
@@ -281,7 +291,8 @@ ${glossaryPrompt}`;
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${api_key}`
+          'Authorization': `Bearer ${api_key}`,
+          'Accept-Encoding': 'identity'
         },
         body: JSON.stringify({
           model: model,
@@ -298,11 +309,12 @@ ${glossaryPrompt}`;
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        const errorBody = await response.text();
+        const errorBody = await decompressResponse(response);
         throw new Error(`API 请求失败: ${response.status} - ${errorBody}`);
       }
 
-      const data = await response.json();
+      const body = await decompressResponse(response);
+      const data = JSON.parse(body);
       return data.choices[0].message.content;
     } catch (error) {
       if (attempt === max_retries) throw error;
