@@ -54,7 +54,8 @@
       "source": "doc/go1.7.md",
       "target": "doc/go1.7.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T15:21:18.521Z"
     },
     {
       "source": "doc/modules/publishing.md",
