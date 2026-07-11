@@ -364,8 +364,12 @@ async function translateFile(file, glossary, config) {
           after: ''
         };
         const translated = await translateText(markedCode, glossary, config, context);
+        // 确保代码块前后有换行分隔
+        if (translatedContent && !translatedContent.endsWith('\n')) translatedContent += '\n';
         translatedContent += translated;
       } else {
+        // 确保代码块前后有换行分隔
+        if (translatedContent && !translatedContent.endsWith('\n')) translatedContent += '\n';
         translatedContent += block.content;
       }
     } else {
@@ -382,6 +386,8 @@ async function translateFile(file, glossary, config) {
         };
         const translated = await translateText(chunk, glossary, config, context);
         console.log(`    [DEBUG] 翻译结果: ${translated.length} 字符 (源${chunk.length}→译${translated.length})`);
+        // 确保文本块之间有换行分隔
+        if (translatedContent && !translatedContent.endsWith('\n') && !translated.startsWith('\n')) translatedContent += '\n';
         translatedContent += translated;
       }
       textPartIndex++;
