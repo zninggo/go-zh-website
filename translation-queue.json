@@ -320,7 +320,8 @@
       "source": "gopls/doc/settings.md",
       "target": "gopls/doc/settings.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:23:18.551Z"
     },
     {
       "source": "index.md",
