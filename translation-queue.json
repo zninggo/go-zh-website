@@ -68,7 +68,8 @@
       "source": "doc/comment.md",
       "target": "doc/comment.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:57:03.989Z"
     },
     {
       "source": "doc/conduct.md",
