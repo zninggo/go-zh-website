@@ -12,7 +12,8 @@
       "source": "doc/database/manage-connections.md",
       "target": "doc/database/manage-connections.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T15:09:26.261Z"
     },
     {
       "source": "doc/database/sql-injection.md",
