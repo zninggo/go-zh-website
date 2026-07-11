@@ -243,7 +243,8 @@
       "source": "doc/gccgo_contribute.html",
       "target": "doc/gccgo_contribute.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T14:12:41.572Z"
     },
     {
       "source": "doc/gccgo_install.md",
