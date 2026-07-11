@@ -201,7 +201,8 @@
       "source": "solutions/microsoft.md",
       "target": "solutions/microsoft.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:18:41.504Z"
     },
     {
       "source": "solutions/monzo.md",
