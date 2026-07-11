@@ -236,7 +236,8 @@
       "source": "solutions/salesforce.md",
       "target": "solutions/salesforce.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:20:11.720Z"
     },
     {
       "source": "solutions/sitereliability.md",
