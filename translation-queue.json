@@ -131,7 +131,8 @@
       "source": "solutions/facebook.md",
       "target": "solutions/facebook.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:14:40.223Z"
     },
     {
       "source": "solutions/firebase.md",
