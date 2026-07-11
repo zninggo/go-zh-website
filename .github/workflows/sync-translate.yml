@@ -60,15 +60,10 @@ jobs:
             echo "has_changes=true" >> $GITHUB_OUTPUT
             echo "Force translate enabled"
           else
-            CHANGED=$(git diff --name-only HEAD~1 HEAD -- '_content/doc/' '_content/learn/' 2>/dev/null | grep -E '\.(md|html)$' || true)
-            if [ -n "$CHANGED" ]; then
-              echo "has_changes=true" >> $GITHUB_OUTPUT
-              echo "Changed files:"
-              echo "$CHANGED"
-            else
-              echo "has_changes=false" >> $GITHUB_OUTPUT
-              echo "No documentation changes detected."
-            fi
+            # 让 translate.js 的 hash 检测决定哪些文件需要翻译
+            # 每日运行时只要有未翻译/变更的文件就执行
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Will check via hash-based detection in translate.js"
           fi
 
       - name: Translate documentation
@@ -100,4 +95,6 @@ jobs:
           gh workflow run build-deploy.yml --ref master
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 
