@@ -1,5 +1,5 @@
-```json
-{
-    "重定向": "/doc/install/gccgo"
-}
+```html
+<!--{
+	"Redirect": "/doc/安装/gccgo"
+}-->
 ```
