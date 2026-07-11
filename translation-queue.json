@@ -348,7 +348,8 @@
       "source": "conduct.html",
       "target": "conduct.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:25:56.033Z"
     },
     {
       "source": "copyright.md",
