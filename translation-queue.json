@@ -257,7 +257,8 @@
       "source": "solutions/stream.md",
       "target": "solutions/stream.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:20:42.075Z"
     },
     {
       "source": "solutions/trivago.md",
