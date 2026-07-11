@@ -92,6 +92,8 @@ async function detectChanges() {
   const newHashes = {};
   const changedFiles = [];
 
+  console.log(`[DEBUG] hash 条目数: ${Object.keys(oldHashes).length}, forceTranslate: ${forceTranslate}`);
+
   // 扫描子目录
   for (const docPath of DOC_PATHS) {
     const dir = path.join(CONTENT_DIR, docPath);
