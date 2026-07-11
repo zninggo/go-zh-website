@@ -606,6 +606,7 @@ func hostEnforcerHandler(h http.Handler) http.Handler {
 			isValidHost = strings.ToLower(r.Host) == defaultHost
 		}
 
+		log.Printf("hostEnforcer: host=%s isHTTPS=%v isValidHost=%v XFH=%s XFP=%s", host, isHTTPS, isValidHost, r.Header.Get("X-Forwarded-Host"), r.Header.Get("X-Forwarded-Proto"))
 		if !isHTTPS || !isValidHost {
 			r.URL.Scheme = "https"
 			if isValidHost {
@@ -1185,6 +1186,7 @@ func jsonUnmarshal(data []byte) (any, error) {
 	err := json.Unmarshal(data, &x)
 	return x, err
 }
+
 
 
 

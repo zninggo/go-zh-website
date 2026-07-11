@@ -339,6 +339,8 @@ async function translateFile(file, glossary, config) {
   const title = extractTitle(content);
   const blocks = splitContent(content, ext);
 
+  console.log(`    [DEBUG] 总块数: ${blocks.length}, 文本块: ${blocks.filter(b=>b.type==='text').length}, 代码块: ${blocks.filter(b=>b.type==='code').length}`);
+
   // 收集所有文本块用于上下文
   const allTextParts = blocks.filter(b => b.type === 'text').map(b => b.content);
 
@@ -367,6 +369,7 @@ async function translateFile(file, glossary, config) {
     } else {
       // 文本块：带上下文翻译
       const chunks = splitTextBlocks(block.content);
+      console.log(`    [DEBUG] 文本块分 ${chunks.length} 个chunk`);
       for (const chunk of chunks) {
         blockIndex++;
         console.log(`    文本块 ${blockIndex}: ${chunk.length} 字符`);
@@ -376,6 +379,7 @@ async function translateFile(file, glossary, config) {
           after: allTextParts[textPartIndex + 1] ? allTextParts[textPartIndex + 1].slice(0, 300) : ''
         };
         const translated = await translateText(chunk, glossary, config, context);
+        console.log(`    [DEBUG] 翻译结果: ${translated.length} 字符 (源${chunk.length}→译${translated.length})`);
         translatedContent += translated;
       }
       textPartIndex++;
