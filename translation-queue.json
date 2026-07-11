@@ -278,7 +278,8 @@
       "source": "solutions/uber.md",
       "target": "solutions/uber.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:21:12.526Z"
     },
     {
       "source": "solutions/use-cases.md",
