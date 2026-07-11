@@ -19,7 +19,8 @@
       "source": "doc/database/sql-injection.md",
       "target": "doc/database/sql-injection.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T15:10:00.506Z"
     },
     {
       "source": "doc/go1.3.md",
