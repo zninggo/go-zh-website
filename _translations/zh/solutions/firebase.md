@@ -1,3 +1,3 @@
 ---
-redirect: /solutions/google/firebase
+重定向：/solutions/google/firebase
 ---
