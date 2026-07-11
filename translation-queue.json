@@ -61,7 +61,8 @@
       "source": "doc/modules/publishing.md",
       "target": "doc/modules/publishing.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T15:22:01.383Z"
     },
     {
       "source": "doc/security/best-practices.md",
