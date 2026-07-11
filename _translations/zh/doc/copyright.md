@@ -1,3 +1,4 @@
 ---
-redirect: /版权信息
+redirect: 重定向
+/copyright
 ---
