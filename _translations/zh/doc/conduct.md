@@ -1,3 +1,3 @@
 <!--{
-	"Redirect": "/conduct"
+	"重定向": "/conduct"
 }-->

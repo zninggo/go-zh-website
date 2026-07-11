@@ -75,7 +75,8 @@
       "source": "doc/conduct.md",
       "target": "doc/conduct.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:57:13.991Z"
     },
     {
       "source": "doc/contrib.md",
