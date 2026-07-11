@@ -229,7 +229,8 @@
       "source": "doc/fuzz.md",
       "target": "doc/fuzz.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T14:06:01.310Z"
     },
     {
       "source": "doc/gc-guide.html",

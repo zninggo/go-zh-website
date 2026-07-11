@@ -1,3 +1,3 @@
 ---
-redirect: /security/fuzz
+重定向至：/security/fuzz
 ---
