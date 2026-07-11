@@ -365,12 +365,14 @@ async function translateFile(file, glossary, config) {
         };
         const translated = await translateText(markedCode, glossary, config, context);
         // 确保代码块前后有换行分隔
-        if (translatedContent && !translatedContent.endsWith('\n')) translatedContent += '\n';
+        if (translatedContent && !translatedContent.endsWith('\n\n')) translatedContent += '\n\n';
         translatedContent += translated;
+        if (!translated.endsWith('\n')) translatedContent += '\n';
       } else {
         // 确保代码块前后有换行分隔
-        if (translatedContent && !translatedContent.endsWith('\n')) translatedContent += '\n';
+        if (translatedContent && !translatedContent.endsWith('\n\n')) translatedContent += '\n\n';
         translatedContent += block.content;
+        if (!block.content.endsWith('\n')) translatedContent += '\n';
       }
     } else {
       // 文本块：带上下文翻译
@@ -387,7 +389,7 @@ async function translateFile(file, glossary, config) {
         const translated = await translateText(chunk, glossary, config, context);
         console.log(`    [DEBUG] 翻译结果: ${translated.length} 字符 (源${chunk.length}→译${translated.length})`);
         // 确保文本块之间有换行分隔
-        if (translatedContent && !translatedContent.endsWith('\n') && !translated.startsWith('\n')) translatedContent += '\n';
+        if (translatedContent && !translatedContent.endsWith('\n\n') && !translated.startsWith('\n')) translatedContent += '\n';
         translatedContent += translated;
       }
       textPartIndex++;
