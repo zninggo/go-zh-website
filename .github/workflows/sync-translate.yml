@@ -93,3 +93,11 @@ jobs:
           git add _translations/ .file-hashes.json translation-queue.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "chore: update translations [skip ci]"
           git push
+
+      - name: Trigger deploy
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          gh workflow run build-deploy.yml --ref master
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
