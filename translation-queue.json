@@ -152,7 +152,8 @@
       "source": "doc/database/querying.md",
       "target": "doc/database/querying.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T13:14:06.593Z"
     },
     {
       "source": "doc/database/sql-injection.md",
