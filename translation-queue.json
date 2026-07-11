@@ -82,7 +82,8 @@
       "source": "solutions/cloud.md",
       "target": "solutions/cloud.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:12:19.480Z"
     },
     {
       "source": "solutions/cloudflare.md",
