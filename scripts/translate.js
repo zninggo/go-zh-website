@@ -91,10 +91,13 @@ async function detectChanges() {
 
       if (forceTranslate || oldHashes[file] !== hash) {
         changedFiles.push(file);
+      } else {
+        newHashes[file] = hash;
       }
     }
   }
 
+  // 保存未变更文件的 hash，成功翻译的文件在 main() 中单独保存
   await saveJSON(HASH_FILE, newHashes);
   return changedFiles;
 }
@@ -380,6 +383,12 @@ async function main() {
         file.translatedAt = new Date().toISOString();
         successCount++;
 
+        // 翻译成功后保存该文件的 hash，这样失败的文件下次会自动重试
+        const translatedContent = await fs.readFile(path.join(CONTENT_DIR, file.source), 'utf-8');
+        const currentHashes = await loadJSON(HASH_FILE);
+        currentHashes[file.source] = md5(translatedContent);
+        await saveJSON(HASH_FILE, currentHashes);
+
         // 每翻译完一个文件就 commit，防止超时丢进度
         try {
           await saveJSON(QUEUE_FILE, queue);
@@ -413,5 +422,7 @@ async function main() {
 }
 
 main();
+
+
 
 
