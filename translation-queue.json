@@ -117,7 +117,8 @@
       "source": "solutions/devops.md",
       "target": "solutions/devops.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:14:21.507Z"
     },
     {
       "source": "solutions/dropbox.md",
