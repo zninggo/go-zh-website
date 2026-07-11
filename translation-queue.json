@@ -1,103 +1,12 @@
 {
-  "timestamp": "2026-07-11T15:08:18.922Z",
+  "timestamp": "2026-07-11T16:54:28.318Z",
   "files": [
-    {
-      "source": "doc/articles/go_command.html",
-      "target": "doc/articles/go_command.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:09:06.096Z"
-    },
-    {
-      "source": "doc/database/manage-connections.md",
-      "target": "doc/database/manage-connections.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:09:26.261Z"
-    },
-    {
-      "source": "doc/database/sql-injection.md",
-      "target": "doc/database/sql-injection.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:10:00.506Z"
-    },
-    {
-      "source": "doc/go1.3.md",
-      "target": "doc/go1.3.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:11:31.749Z"
-    },
-    {
-      "source": "doc/go1.4.md",
-      "target": "doc/go1.4.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:13:37.718Z"
-    },
-    {
-      "source": "doc/go1.5.md",
-      "target": "doc/go1.5.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:16:17.853Z"
-    },
-    {
-      "source": "doc/go1.6.md",
-      "target": "doc/go1.6.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:18:21.470Z"
-    },
-    {
-      "source": "doc/go1.7.md",
-      "target": "doc/go1.7.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:21:18.521Z"
-    },
-    {
-      "source": "doc/modules/publishing.md",
-      "target": "doc/modules/publishing.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:22:01.383Z"
-    },
     {
       "source": "doc/security/best-practices.md",
       "target": "doc/security/best-practices.md",
       "type": "markdown",
       "status": "completed",
-      "translatedAt": "2026-07-11T15:22:27.283Z"
-    },
-    {
-      "source": "solutions/firebase.md",
-      "target": "solutions/firebase.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:22:32.904Z"
-    },
-    {
-      "source": "solutions/google/firebase.md",
-      "target": "solutions/google/firebase.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:22:53.577Z"
-    },
-    {
-      "source": "solutions/google/sitereliability.md",
-      "target": "solutions/google/sitereliability.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:23:18.230Z"
-    },
-    {
-      "source": "solutions/sitereliability.md",
-      "target": "solutions/sitereliability.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-11T15:23:24.846Z"
+      "translatedAt": "2026-07-11T16:54:56.760Z"
     }
   ]
 }
