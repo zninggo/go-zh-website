@@ -131,7 +131,8 @@
       "source": "doc/database/manage-connections.md",
       "target": "doc/database/manage-connections.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T13:07:31.109Z"
     },
     {
       "source": "doc/database/open-handle.md",
