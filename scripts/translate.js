@@ -12,7 +12,19 @@ const QUEUE_FILE = path.join(__dirname, '..', 'translation-queue.json');
 const GLOSSARY_FILE = path.join(__dirname, '..', 'glossary', 'go-terms.json');
 
 // Directories to translate
-const DOC_PATHS = ['doc', 'learn'];
+// 需要翻译的子目录（递归扫描）
+const DOC_PATHS = ['doc', 'learn', 'ref', 'solutions', 'gopls'];
+
+// 需要翻译的根目录文件
+const ROOT_FILES = [
+  'index.md',
+  'about.md',
+  'project.html',
+  'conduct.html',
+  'copyright.md',
+  'tos.md',
+  'help.md',
+];
 
 async function loadJSON(filePath) {
   try {
@@ -79,6 +91,7 @@ async function detectChanges() {
   const newHashes = {};
   const changedFiles = [];
 
+  // 扫描子目录
   for (const docPath of DOC_PATHS) {
     const dir = path.join(CONTENT_DIR, docPath);
     const files = await scanFiles(dir, docPath);
@@ -94,6 +107,24 @@ async function detectChanges() {
       } else {
         newHashes[file] = hash;
       }
+    }
+  }
+
+  // 扫描根目录文件
+  for (const file of ROOT_FILES) {
+    const fullPath = path.join(CONTENT_DIR, file);
+    try {
+      const content = await fs.readFile(fullPath, 'utf-8');
+      const hash = md5(content);
+      newHashes[file] = hash;
+
+      if (forceTranslate || oldHashes[file] !== hash) {
+        changedFiles.push(file);
+      } else {
+        newHashes[file] = hash;
+      }
+    } catch {
+      // 文件不存在，跳过
     }
   }
 
@@ -422,6 +453,9 @@ async function main() {
 }
 
 main();
+
+
+
 
 
 
