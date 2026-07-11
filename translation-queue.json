@@ -68,7 +68,8 @@
       "source": "doc/security/best-practices.md",
       "target": "doc/security/best-practices.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T15:22:27.283Z"
     },
     {
       "source": "solutions/firebase.md",
