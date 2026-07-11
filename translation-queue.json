@@ -145,7 +145,8 @@
       "source": "solutions/google/chrome.md",
       "target": "solutions/google/chrome.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:15:09.642Z"
     },
     {
       "source": "solutions/google/coredata.md",
