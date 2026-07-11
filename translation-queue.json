@@ -1,901 +1,324 @@
 {
-  "timestamp": "2026-07-10T12:24:48.154Z",
+  "timestamp": "2026-07-11T11:21:26.117Z",
   "files": [
     {
-      "source": "doc/articles/go_command.html",
-      "target": "doc/articles/go_command.md",
+      "source": "ref/index.md",
+      "target": "ref/index.md",
+      "type": "markdown",
+      "status": "completed",
+      "translatedAt": "2026-07-11T11:21:32.161Z"
+    },
+    {
+      "source": "ref/mod.md",
+      "target": "ref/mod.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/allegro.md",
+      "target": "solutions/allegro.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/americanexpress.md",
+      "target": "solutions/americanexpress.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/armut.md",
+      "target": "solutions/armut.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/bitly.md",
+      "target": "solutions/bitly.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/bytedance.md",
+      "target": "solutions/bytedance.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/capital-one.md",
+      "target": "solutions/capital-one.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/case-studies.md",
+      "target": "solutions/case-studies.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/chrome.md",
+      "target": "solutions/chrome.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/clis.md",
+      "target": "solutions/clis.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/cloud.md",
+      "target": "solutions/cloud.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/cloudflare.md",
+      "target": "solutions/cloudflare.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/cockroachlabs.md",
+      "target": "solutions/cockroachlabs.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/coredata.md",
+      "target": "solutions/coredata.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/curve.md",
+      "target": "solutions/curve.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/devops.md",
+      "target": "solutions/devops.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/dropbox.md",
+      "target": "solutions/dropbox.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/facebook.md",
+      "target": "solutions/facebook.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/firebase.md",
+      "target": "solutions/firebase.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/google/chrome.md",
+      "target": "solutions/google/chrome.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/google/coredata.md",
+      "target": "solutions/google/coredata.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/google/firebase.md",
+      "target": "solutions/google/firebase.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/google/index.md",
+      "target": "solutions/google/index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/google/sitereliability.md",
+      "target": "solutions/google/sitereliability.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/grail.md",
+      "target": "solutions/grail.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/index.md",
+      "target": "solutions/index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/mercadolibre.md",
+      "target": "solutions/mercadolibre.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/microsoft.md",
+      "target": "solutions/microsoft.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/monzo.md",
+      "target": "solutions/monzo.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/netflix.md",
+      "target": "solutions/netflix.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/paypal.md",
+      "target": "solutions/paypal.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/riotgames.md",
+      "target": "solutions/riotgames.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/salesforce.md",
+      "target": "solutions/salesforce.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/sitereliability.md",
+      "target": "solutions/sitereliability.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/sixt.md",
+      "target": "solutions/sixt.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/stream.md",
+      "target": "solutions/stream.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/trivago.md",
+      "target": "solutions/trivago.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/twitch.md",
+      "target": "solutions/twitch.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/uber.md",
+      "target": "solutions/uber.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/use-cases.md",
+      "target": "solutions/use-cases.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/webdev.md",
+      "target": "solutions/webdev.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/wildlifestudios.md",
+      "target": "solutions/wildlifestudios.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "solutions/x.md",
+      "target": "solutions/x.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "gopls/doc/index.md",
+      "target": "gopls/doc/index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "gopls/doc/settings.md",
+      "target": "gopls/doc/settings.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "index.md",
+      "target": "index.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "about.md",
+      "target": "about.md",
+      "type": "markdown",
+      "status": "pending"
+    },
+    {
+      "source": "project.html",
+      "target": "project.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:25:47.396Z"
+      "status": "pending"
     },
     {
-      "source": "doc/articles/index.html",
-      "target": "doc/articles/index.md",
+      "source": "conduct.html",
+      "target": "conduct.md",
       "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:25:55.421Z"
+      "status": "pending"
     },
     {
-      "source": "doc/articles/race_detector.html",
-      "target": "doc/articles/race_detector.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:27:01.188Z"
-    },
-    {
-      "source": "doc/articles/wiki/edit.html",
-      "target": "doc/articles/wiki/edit.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:27:09.950Z"
-    },
-    {
-      "source": "doc/articles/wiki/index.html",
-      "target": "doc/articles/wiki/index.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:29:16.459Z"
-    },
-    {
-      "source": "doc/articles/wiki/view.html",
-      "target": "doc/articles/wiki/view.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:29:23.177Z"
-    },
-    {
-      "source": "doc/build-cover.md",
-      "target": "doc/build-cover.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:32:01.630Z"
-    },
-    {
-      "source": "doc/cmd.html",
-      "target": "doc/cmd.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:32:21.725Z"
-    },
-    {
-      "source": "doc/code.html",
-      "target": "doc/code.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:33:34.578Z"
-    },
-    {
-      "source": "doc/comment.md",
-      "target": "doc/comment.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:36:53.171Z"
-    },
-    {
-      "source": "doc/conduct.md",
-      "target": "doc/conduct.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:37:00.947Z"
-    },
-    {
-      "source": "doc/contrib.md",
-      "target": "doc/contrib.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:37:06.816Z"
-    },
-    {
-      "source": "doc/contribute.html",
-      "target": "doc/contribute.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:40:55.638Z"
-    },
-    {
-      "source": "doc/copyright.md",
-      "target": "doc/copyright.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:41:01.873Z"
-    },
-    {
-      "source": "doc/database/cancel-operations.md",
-      "target": "doc/database/cancel-operations.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:41:37.747Z"
-    },
-    {
-      "source": "doc/database/change-data.md",
-      "target": "doc/database/change-data.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:42:16.848Z"
-    },
-    {
-      "source": "doc/database/execute-transactions.md",
-      "target": "doc/database/execute-transactions.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:42:57.372Z"
-    },
-    {
-      "source": "doc/database/index.md",
-      "target": "doc/database/index.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:43:20.811Z"
-    },
-    {
-      "source": "doc/database/manage-connections.md",
-      "target": "doc/database/manage-connections.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:43:43.984Z"
-    },
-    {
-      "source": "doc/database/open-handle.md",
-      "target": "doc/database/open-handle.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:45:36.510Z"
-    },
-    {
-      "source": "doc/database/prepared-statements.md",
-      "target": "doc/database/prepared-statements.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:46:30.052Z"
-    },
-    {
-      "source": "doc/database/querying.md",
-      "target": "doc/database/querying.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:48:20.584Z"
-    },
-    {
-      "source": "doc/database/sql-injection.md",
-      "target": "doc/database/sql-injection.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:49:06.205Z"
-    },
-    {
-      "source": "doc/debugging_with_gdb.md",
-      "target": "doc/debugging_with_gdb.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:49:13.972Z"
-    },
-    {
-      "source": "doc/devel/pre_go1.html",
-      "target": "doc/devel/pre_go1.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:51:08.285Z"
-    },
-    {
-      "source": "doc/devel/release.html",
-      "target": "doc/devel/release.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T12:52:59.745Z"
-    },
-    {
-      "source": "doc/devel/weekly.html",
-      "target": "doc/devel/weekly.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T13:25:18.860Z"
-    },
-    {
-      "source": "doc/diagnostics.html",
-      "target": "doc/diagnostics.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T13:27:01.298Z"
-    },
-    {
-      "source": "doc/docs.md",
-      "target": "doc/docs.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T13:27:09.292Z"
-    },
-    {
-      "source": "doc/editors.html",
-      "target": "doc/editors.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T13:27:22.555Z"
-    },
-    {
-      "source": "doc/effective_go.html",
-      "target": "doc/effective_go.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T13:38:33.963Z"
-    },
-    {
-      "source": "doc/faq.md",
-      "target": "doc/faq.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T13:51:56.894Z"
-    },
-    {
-      "source": "doc/fuzz.md",
-      "target": "doc/fuzz.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T13:52:07.241Z"
-    },
-    {
-      "source": "doc/gc-guide.html",
-      "target": "doc/gc-guide.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T13:59:25.247Z"
-    },
-    {
-      "source": "doc/gccgo_contribute.html",
-      "target": "doc/gccgo_contribute.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T13:59:50.220Z"
-    },
-    {
-      "source": "doc/gccgo_install.md",
-      "target": "doc/gccgo_install.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:00:01.064Z"
-    },
-    {
-      "source": "doc/gdb.html",
-      "target": "doc/gdb.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:02:32.781Z"
-    },
-    {
-      "source": "doc/go-get-install-deprecation.md",
-      "target": "doc/go-get-install-deprecation.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:03:06.825Z"
-    },
-    {
-      "source": "doc/go1.1.md",
-      "target": "doc/go1.1.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:06:13.903Z"
-    },
-    {
-      "source": "doc/go1.10.md",
-      "target": "doc/go1.10.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:10:59.843Z"
-    },
-    {
-      "source": "doc/go1.11.md",
-      "target": "doc/go1.11.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:13:40.190Z"
-    },
-    {
-      "source": "doc/go1.12.md",
-      "target": "doc/go1.12.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:16:45.566Z"
-    },
-    {
-      "source": "doc/go1.13.md",
-      "target": "doc/go1.13.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:19:57.381Z"
-    },
-    {
-      "source": "doc/go1.14.md",
-      "target": "doc/go1.14.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:22:42.668Z"
-    },
-    {
-      "source": "doc/go1.15.md",
-      "target": "doc/go1.15.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:25:42.809Z"
-    },
-    {
-      "source": "doc/go1.16.md",
-      "target": "doc/go1.16.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:29:18.222Z"
-    },
-    {
-      "source": "doc/go1.17.md",
-      "target": "doc/go1.17.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:33:41.105Z"
-    },
-    {
-      "source": "doc/go1.18.md",
-      "target": "doc/go1.18.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:38:33.316Z"
-    },
-    {
-      "source": "doc/go1.19.md",
-      "target": "doc/go1.19.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:42:09.329Z"
-    },
-    {
-      "source": "doc/go1.2.md",
-      "target": "doc/go1.2.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:44:48.418Z"
-    },
-    {
-      "source": "doc/go1.20.md",
-      "target": "doc/go1.20.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:49:30.291Z"
-    },
-    {
-      "source": "doc/go1.21.md",
-      "target": "doc/go1.21.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:54:30.596Z"
-    },
-    {
-      "source": "doc/go1.22.md",
-      "target": "doc/go1.22.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T14:58:25.591Z"
-    },
-    {
-      "source": "doc/go1.23.md",
-      "target": "doc/go1.23.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:02:11.656Z"
-    },
-    {
-      "source": "doc/go1.24.md",
-      "target": "doc/go1.24.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:06:53.907Z"
-    },
-    {
-      "source": "doc/go1.25.md",
-      "target": "doc/go1.25.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:10:34.737Z"
-    },
-    {
-      "source": "doc/go1.26.md",
-      "target": "doc/go1.26.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:14:11.189Z"
-    },
-    {
-      "source": "doc/go1.27.md",
-      "target": "doc/go1.27.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:17:01.983Z"
-    },
-    {
-      "source": "doc/go1.3.md",
-      "target": "doc/go1.3.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:18:39.672Z"
-    },
-    {
-      "source": "doc/go1.4.md",
-      "target": "doc/go1.4.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:20:59.852Z"
-    },
-    {
-      "source": "doc/go1.5.md",
-      "target": "doc/go1.5.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:24:14.187Z"
-    },
-    {
-      "source": "doc/go1.6.md",
-      "target": "doc/go1.6.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:26:36.102Z"
-    },
-    {
-      "source": "doc/go1.7.md",
-      "target": "doc/go1.7.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:29:41.126Z"
-    },
-    {
-      "source": "doc/go1.8.md",
-      "target": "doc/go1.8.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:33:56.621Z"
-    },
-    {
-      "source": "doc/go1.9.md",
-      "target": "doc/go1.9.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:36:42.657Z"
-    },
-    {
-      "source": "doc/go1.md",
-      "target": "doc/go1.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:42:02.010Z"
-    },
-    {
-      "source": "doc/go1compat.html",
-      "target": "doc/go1compat.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:42:40.964Z"
-    },
-    {
-      "source": "doc/go_faq.md",
-      "target": "doc/go_faq.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:42:53.056Z"
-    },
-    {
-      "source": "doc/gopath_code.html",
-      "target": "doc/gopath_code.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:43:01.572Z"
-    },
-    {
-      "source": "doc/gopher/index.md",
-      "target": "doc/gopher/index.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:43:11.997Z"
-    },
-    {
-      "source": "doc/help.md",
-      "target": "doc/help.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:43:19.822Z"
-    },
-    {
-      "source": "doc/index.html",
-      "target": "doc/index.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:45:01.584Z"
-    },
-    {
-      "source": "doc/install/gccgo.html",
-      "target": "doc/install/gccgo.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:46:36.219Z"
-    },
-    {
-      "source": "doc/install/source.html",
-      "target": "doc/install/source.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:49:04.972Z"
-    },
-    {
-      "source": "doc/install-source.md",
-      "target": "doc/install-source.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:49:12.947Z"
-    },
-    {
-      "source": "doc/install.html",
-      "target": "doc/install.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:50:13.096Z"
-    },
-    {
-      "source": "doc/manage-install.html",
-      "target": "doc/manage-install.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:50:55.090Z"
-    },
-    {
-      "source": "doc/modules/developing.md",
-      "target": "doc/modules/developing.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:51:21.369Z"
-    },
-    {
-      "source": "doc/modules/gomod-ref.md",
-      "target": "doc/modules/gomod-ref.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:56:52.644Z"
-    },
-    {
-      "source": "doc/modules/layout.md",
-      "target": "doc/modules/layout.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T15:59:46.551Z"
-    },
-    {
-      "source": "doc/modules/major-version.md",
-      "target": "doc/modules/major-version.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:00:16.288Z"
-    },
-    {
-      "source": "doc/modules/managing-dependencies.md",
-      "target": "doc/modules/managing-dependencies.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:06:15.863Z"
-    },
-    {
-      "source": "doc/modules/managing-source.md",
-      "target": "doc/modules/managing-source.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:06:56.766Z"
-    },
-    {
-      "source": "doc/modules/pruning.md",
-      "target": "doc/modules/pruning.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:07:06.325Z"
-    },
-    {
-      "source": "doc/modules/publishing.md",
-      "target": "doc/modules/publishing.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:07:57.643Z"
-    },
-    {
-      "source": "doc/modules/release-workflow.md",
-      "target": "doc/modules/release-workflow.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:09:27.170Z"
-    },
-    {
-      "source": "doc/modules/version-numbers.md",
-      "target": "doc/modules/version-numbers.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:10:49.720Z"
-    },
-    {
-      "source": "doc/next.md",
-      "target": "doc/next.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:11:00.068Z"
-    },
-    {
-      "source": "doc/pgo.md",
-      "target": "doc/pgo.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:12:39.443Z"
-    },
-    {
-      "source": "doc/root.md",
-      "target": "doc/root.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:12:49.572Z"
-    },
-    {
-      "source": "doc/security/best-practices.md",
-      "target": "doc/security/best-practices.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:13:19.323Z"
-    },
-    {
-      "source": "doc/security/decisions.md",
-      "target": "doc/security/decisions.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:13:42.489Z"
-    },
-    {
-      "source": "doc/security/fips140.md",
-      "target": "doc/security/fips140.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:14:30.089Z"
-    },
-    {
-      "source": "doc/security/fuzz/index.md",
-      "target": "doc/security/fuzz/index.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:16:19.492Z"
-    },
-    {
-      "source": "doc/security/fuzz/technical.md",
-      "target": "doc/security/fuzz/technical.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:17:08.076Z"
-    },
-    {
-      "source": "doc/security/index.md",
-      "target": "doc/security/index.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:17:29.190Z"
-    },
-    {
-      "source": "doc/security/policy.md",
-      "target": "doc/security/policy.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:18:18.125Z"
-    },
-    {
-      "source": "doc/security/threat-model.md",
-      "target": "doc/security/threat-model.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:18:36.152Z"
-    },
-    {
-      "source": "doc/security/vuln/cna.md",
-      "target": "doc/security/vuln/cna.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:18:55.738Z"
-    },
-    {
-      "source": "doc/security/vuln/database.md",
-      "target": "doc/security/vuln/database.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:20:43.026Z"
-    },
-    {
-      "source": "doc/security/vuln/editor.md",
-      "target": "doc/security/vuln/editor.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:21:29.783Z"
-    },
-    {
-      "source": "doc/security/vuln/index.md",
-      "target": "doc/security/vuln/index.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:22:14.941Z"
-    },
-    {
-      "source": "doc/security/vuln/vulncheck.md",
-      "target": "doc/security/vuln/vulncheck.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:22:22.741Z"
-    },
-    {
-      "source": "doc/security/vulncheck.md",
-      "target": "doc/security/vulncheck.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:22:31.975Z"
-    },
-    {
-      "source": "doc/security/vulndb/api.md",
-      "target": "doc/security/vulndb/api.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:22:40.677Z"
-    },
-    {
-      "source": "doc/security/vulndb/index.md",
-      "target": "doc/security/vulndb/index.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:22:47.976Z"
-    },
-    {
-      "source": "doc/security/vulndb/policy.md",
-      "target": "doc/security/vulndb/policy.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:22:57.287Z"
-    },
-    {
-      "source": "doc/telemetry.md",
-      "target": "doc/telemetry.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:24:31.932Z"
-    },
-    {
-      "source": "doc/toolchain.md",
-      "target": "doc/toolchain.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:26:56.346Z"
-    },
-    {
-      "source": "doc/tos.html",
-      "target": "doc/tos.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:27:03.715Z"
-    },
-    {
-      "source": "doc/tutorial/add-a-test.html",
-      "target": "doc/tutorial/add-a-test.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:27:45.541Z"
-    },
-    {
-      "source": "doc/tutorial/call-module-code.html",
-      "target": "doc/tutorial/call-module-code.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:28:33.126Z"
-    },
-    {
-      "source": "doc/tutorial/compile-install.html",
-      "target": "doc/tutorial/compile-install.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:28:58.252Z"
-    },
-    {
-      "source": "doc/tutorial/create-module.html",
-      "target": "doc/tutorial/create-module.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:29:45.329Z"
-    },
-    {
-      "source": "doc/tutorial/database-access.md",
-      "target": "doc/tutorial/database-access.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:35:11.300Z"
-    },
-    {
-      "source": "doc/tutorial/fuzz.md",
-      "target": "doc/tutorial/fuzz.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:41:18.355Z"
-    },
-    {
-      "source": "doc/tutorial/generics.md",
-      "target": "doc/tutorial/generics.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:45:00.689Z"
-    },
-    {
-      "source": "doc/tutorial/getting-started.html",
-      "target": "doc/tutorial/getting-started.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:45:50.736Z"
-    },
-    {
-      "source": "doc/tutorial/govulncheck-ide.md",
-      "target": "doc/tutorial/govulncheck-ide.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:46:43.438Z"
-    },
-    {
-      "source": "doc/tutorial/govulncheck.md",
-      "target": "doc/tutorial/govulncheck.md",
-      "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:49:22.612Z"
-    },
-    {
-      "source": "doc/tutorial/greetings-multiple-people.html",
-      "target": "doc/tutorial/greetings-multiple-people.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:50:01.311Z"
-    },
-    {
-      "source": "doc/tutorial/handle-errors.html",
-      "target": "doc/tutorial/handle-errors.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:50:28.609Z"
-    },
-    {
-      "source": "doc/tutorial/index.html",
-      "target": "doc/tutorial/index.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:50:50.891Z"
-    },
-    {
-      "source": "doc/tutorial/module-conclusion.html",
-      "target": "doc/tutorial/module-conclusion.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:51:06.213Z"
-    },
-    {
-      "source": "doc/tutorial/random-greeting.html",
-      "target": "doc/tutorial/random-greeting.md",
-      "type": "html",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:51:30.639Z"
-    },
-    {
-      "source": "doc/tutorial/web-service-gin.md",
-      "target": "doc/tutorial/web-service-gin.md",
+      "source": "copyright.md",
+      "target": "copyright.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:56:44.430Z"
+      "status": "pending"
     },
     {
-      "source": "doc/tutorial/workspaces.md",
-      "target": "doc/tutorial/workspaces.md",
+      "source": "tos.md",
+      "target": "tos.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T16:59:32.354Z"
+      "status": "pending"
     },
     {
-      "source": "learn/index.md",
-      "target": "learn/index.md",
+      "source": "help.md",
+      "target": "help.md",
       "type": "markdown",
-      "status": "completed",
-      "translatedAt": "2026-07-10T17:00:16.795Z"
+      "status": "pending"
     }
   ]
 }
