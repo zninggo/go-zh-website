@@ -4,37 +4,41 @@
 }-->
 
 <p>
-Go 语言提供了一套用于构建和处理 Go 源代码的程序集合。这些程序通常不直接运行，而是通过 <a href="/cmd/go/">go</a> 程序来调用。
+有一套用于构建和处理 Go 源代码的程序集。
+这些程序通常不是直接运行，而是由 <a href="/cmd/go/">go</a> 程序调用。
 </p>
 
 <p>
-运行这些程序最常见的方式是作为 go 程序的子命令，例如 <code>go fmt</code>。以这种方式运行时，命令会处理完整的 Go 源代码包，go 程序会以适合包级别处理的参数调用底层二进制程序。
+运行这些程序最常见的方式是作为 go 程序的子命令，例如 <code>go fmt</code>。以此方式运行时，命令会对完整的 Go 源代码包进行操作，go 程序会使用适合包级别处理的参数来调用底层的二进制文件。
 </p>
 
 <p>
-这些程序也可以作为独立的二进制文件运行，使用未修改的参数，通过 go 的 <code>tool</code> 子命令，例如 <code>go tool cgo</code>。对于大多数命令，这主要用于调试。部分命令，如 <code>pprof</code>，只能通过 go 的 <code>tool</code> 子命令访问。
+这些程序也可以作为独立的二进制文件运行，无需修改参数，只需使用 go <code>tool</code> 子命令，例如 <code>go tool cgo</code>。
+对于大多数命令来说，这主要用于调试。
+其中一些命令，例如 <code>pprof</code>，只能通过 go <code>tool</code> 子命令访问。
 </p>
 
 <p>
-Go 的安装过程还会安装一个名为 <code>gofmt</code> 的可执行文件，它等同于 <code>go fmt</code>，因为后者被频繁引用。
+Go 安装过程还会安装一个名为 <code>gofmt</code> 的可执行文件，它与 <code>go fmt</code> 等效，因为后者被频繁引用。
 </p>
 
 <p>
-点击链接可查看更多文档、调用方法和使用细节。
+点击链接可查看更详细的文档、调用方法和使用说明。
 </p>
 
 <table class="dir">
 <tr>
 <th>名称</th>
 <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
-<th>概要</th>
+<th>简介</th>
 </tr>
 
 <tr>
 <td><a href="/cmd/go/">go</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td>
-<code>go</code> 程序用于管理 Go 源代码并运行此处列出的其他命令。详细用法请参见命令文档。
+<code>go</code> 程序管理 Go 源代码并运行此处列出的其他命令。
+有关用法详情，请参见其命令文档。
 </td>
 </tr>
 
@@ -47,20 +51,19 @@ Go 的安装过程还会安装一个名为 <code>gofmt</code> 的可执行文件
 <tr>
 <td><a href="/cmd/cover/">cover</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Cover 是一个用于创建和分析由 <code>"go test -coverprofile"</code> 生成的覆盖率分析结果的程序。</td>
+<td>Cover 是一个用于创建和分析由 <code>"go test -coverprofile"</code> 生成的覆盖率配置文件的程序。</td>
 </tr>
 
 <tr>
 <td><a href="/cmd/fix/">fix</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Fix 用于查找使用旧版语言和库特性的 Go 程序，并将它们重写为使用新特性。</td>
+<td>Fix 用于查找使用旧版语言和库特性的 Go 程序，并将其重写为使用更新的版本。</td>
 </tr>
 
 <tr>
 <td><a href="/cmd/gofmt/">fmt</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Fmt 用于格式化 Go 包。它也可以作为独立的 <a href="/cmd/gofmt/">
-gofmt</a> 命令使用，并提供更多通用选项。</td>
+<td>Fmt 用于格式化 Go 包，它也可以作为一个独立的 <a href="/cmd/gofmt/">gofmt</a> 命令使用，并提供更多通用选项。</td>
 </tr>
 
 <tr>
@@ -72,11 +75,11 @@ gofmt</a> 命令使用，并提供更多通用选项。</td>
 <tr>
 <td><a href="/cmd/vet/">vet</a></td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td>Vet 用于检查 Go 源代码并报告可疑的构造，例如参数与格式化字符串不匹配的 Printf 调用。</td>
+<td>Vet 用于检查 Go 源代码并报告可疑的结构，例如参数与格式化字符串不匹配的 Printf 调用。</td>
 </tr>
 
 </table>
 
 <p>
-此处为节选列表。请参阅 <a href="/cmd/">完整命令参考</a> 以获取编译器等更多内容的文档。
+此处为精简列表。如需查看编译器及更多内容的文档，请参阅<a href="/cmd/">完整命令参考</a>。
 </p>
