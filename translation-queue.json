@@ -61,7 +61,8 @@
       "source": "doc/code.html",
       "target": "doc/code.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:52:40.894Z"
     },
     {
       "source": "doc/comment.md",
