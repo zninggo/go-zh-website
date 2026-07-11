@@ -5,13 +5,13 @@
 <h2 id="Introduction">介绍</h2>
 
 <p>
-数据竞争是并发系统中最常见且最难调试的错误类型之一。
-当两个 goroutine（协程）并发地访问同一个变量，且至少有一个访问是写操作时，就会发生数据竞争。
+数据竞争（data race）是并发系统中最常见且最难调试的 bug 类型之一。
+当两个 goroutine 并发访问同一个变量，且至少有一个是写操作时，就会发生数据竞争。
 详情请参阅 <a href="/ref/mem/">Go 内存模型</a>。
 </p>
 
 <p>
-下面是一个可能导致程序崩溃和内存损坏的数据竞争示例：
+下面是一个可能导致崩溃和内存损坏的数据竞争示例：
 </p>
 
 <pre>
@@ -19,10 +19,10 @@ func main() {
 	c := make(chan bool)
 	m := make(map[string]string)
 	go func() {
-		m["1"] = "a" // 第一次冲突访问。
+		m["1"] = "a" // [待翻译: First conflicting access.]
 		c &lt;- true
 	}()
-	m["2"] = "b" // 第二次冲突访问。
+	m["2"] = "b" // [待翻译: Second conflicting access.]
 	&lt;-c
 	for k, v := range m {
 		fmt.Println(k, v)
@@ -33,22 +33,22 @@ func main() {
 <h2 id="Usage">使用方法</h2>
 
 <p>
-为了帮助诊断此类错误，Go 语言内置了一个数据竞争检测器。
+为了帮助诊断此类 bug，Go 内置了一个数据竞争检测器。
 要使用它，只需在 go 命令中添加 <code>-race</code> 标志：
 </p>
 
 <pre>
-$ go test -race mypkg    // 测试包
-$ go run -race mysrc.go  // 运行源文件
-$ go build -race mycmd   // 构建命令
-$ go install -race mypkg // 安装包
+$ go test -race mypkg    // [待翻译: to test the package]
+$ go run -race mysrc.go  // [待翻译: to run the source file]
+$ go build -race mycmd   // [待翻译: to build the command]
+$ go install -race mypkg // [待翻译: to install the package]
 </pre>
 
 <h2 id="Report_Format">报告格式</h2>
 
 <p>
 当竞争检测器在程序中发现数据竞争时，它会打印一份报告。
-报告包含冲突访问的调用栈，以及涉及的 goroutine（协程）被创建时的调用栈。
+该报告包含冲突访问的调用栈，以及涉及相关 goroutine 创建时的调用栈。
 示例如下：
 </p>
 
@@ -90,7 +90,7 @@ Goroutine 184 (running) created at:
 <h2 id="Options">选项</h2>
 
 <p>
-环境变量 <code>GORACE</code> 用于设置竞争检测器的选项。
+<code>GORACE</code> 环境变量用于设置竞争检测器的选项。
 格式如下：
 </p>
 
@@ -99,34 +99,34 @@ GORACE="option1=val1 option2=val2"
 </pre>
 
 <p>
-可用选项如下：
+可用选项有：
 </p>
 
 <ul>
 <li>
-<code>log_path</code>（默认值 <code>stderr</code>）：竞争检测器会将其报告写入名为 <code>log_path.<em>pid</em></code> 的文件中。
+<code>log_path</code> (默认 <code>stderr</code>)：竞争检测器将其报告写入名为 <code>log_path.<em>pid</em></code> 的文件。
 特殊名称 <code>stdout</code> 和 <code>stderr</code> 分别表示将报告写入标准输出和标准错误。
 </li>
 
 <li>
-<code>exitcode</code>（默认值 <code>66</code>）：检测到竞争后程序退出时使用的退出状态码。
+<code>exitcode</code> (默认 <code>66</code>)：在检测到竞争后退出时使用的退出状态码。
 </li>
 
 <li>
-<code>strip_path_prefix</code>（默认值 <code>""</code>）：从所有报告的文件路径中剥离此前缀，以使报告更简洁。
+<code>strip_path_prefix</code> (默认 <code>""</code>)：从所有报告的文件路径中去除此前缀，以使报告更简洁。
 </li>
 
 <li>
-<code>history_size</code>（默认值 <code>1</code>）：每个 goroutine（协程）的内存访问历史大小为 <code>32K * 2**history_size 个元素</code>。
-增加此值可以避免报告中出现“failed to restore the stack”错误，但会增加内存使用量。
+<code>history_size</code> (默认 <code>1</code>)：每个 goroutine 的内存访问历史记录大小为 <code>32K * 2**history_size 个元素</code>。
+增加此值可以避免报告中出现 "failed to restore the stack" 错误，但代价是增加内存使用。
 </li>
 
 <li>
-<code>halt_on_error</code>（默认值 <code>0</code>）：控制程序在报告第一个数据竞争后是否退出。
+<code>halt_on_error</code> (默认 <code>0</code>)：控制程序在报告第一个数据竞争后是否退出。
 </li>
 
 <li>
-<code>atexit_sleep_ms</code>（默认值 <code>1000</code>）：在主 goroutine（协程）退出前休眠的毫秒数。
+<code>atexit_sleep_ms</code> (默认 <code>1000</code>)：在退出前，主 goroutine 中休眠的毫秒数。
 </li>
 </ul>
 
@@ -141,10 +141,10 @@ $ GORACE="log_path=/tmp/race/report strip_path_prefix=/my/go/sources/" go test -
 <h2 id="Excluding_Tests">排除测试</h2>
 
 <p>
-当你使用 <code>-race</code> 标志进行构建时，<code>go</code> 命令会定义一个额外的
+当你使用 <code>-race</code> 标志构建时，<code>go</code> 命令会定义额外的
 <a href="/pkg/go/build/#hdr-Build_Constraints">构建标签</a> <code>race</code>。
 你可以使用此标签在运行竞争检测器时排除某些代码和测试。
-一些示例：
+一些例子：
 </p>
 
 <pre>
@@ -152,17 +152,17 @@ $ GORACE="log_path=/tmp/race/report strip_path_prefix=/my/go/sources/" go test -
 
 package foo
 
-// 此测试包含数据竞争。参见 issue 123。
+// [待翻译: The test contains a data race. See issue 123.]
 func TestFoo(t *testing.T) {
 	// ...
 }
 
-// 此测试在竞争检测器下由于超时而失败。
+// [待翻译: The test fails under the race detector due to timeouts.]
 func TestBar(t *testing.T) {
 	// ...
 }
 
-// 此测试在竞争检测器下运行时间过长。
+// [待翻译: The test takes too long under the race detector.]
 func TestBaz(t *testing.T) {
 	// ...
 }
@@ -172,12 +172,11 @@ func TestBaz(t *testing.T) {
 
 <p>
 首先，使用竞争检测器运行你的测试（<code>go test -race</code>）。
-竞争检测器只能发现运行时发生的数据竞争，因此无法发现未执行的代码路径中的竞争。
-如果你的测试覆盖不完整，
-你可以通过在实际工作负载下运行使用 <code>-race</code> 构建的二进制文件来发现更多数据竞争。
+竞争检测器只能发现运行时发生的竞争，因此它无法找到未执行代码路径中的竞争。
+如果你的测试覆盖不全面，你可以在真实负载下运行使用 <code>-race</code> 构建的二进制文件，可能会发现更多竞争。
 </p>
 
-<h2 id="Typical_Data_Races">典型数据竞争</h2>
+<h2 id="Typical_Data_Races">典型的数据竞争</h2>
 
 <p>
 以下是一些典型的数据竞争示例。所有这些都可以被竞争检测器检测到。
@@ -192,7 +191,7 @@ func main() {
 	var i int
 	for i = 0; i &lt; 5; i++ {
 		go func() {
-			fmt.Println(i) // 这里的 'i' 可能不是你期望的那个。
+			fmt.Println(i) // [待翻译: Not the 'i' you are looking for.]
 			wg.Done()
 		}()
 	}
@@ -201,10 +200,9 @@ func main() {
 </pre>
 
 <p>
-函数字面量中的变量 <code>i</code> 与循环使用的变量是同一个，
-因此 goroutine（协程）中的读取操作与循环的递增操作存在竞争。
-（此程序通常会打印 55555，而不是 01234。）
-可以通过复制变量来修复该程序：
+函数字面量中的变量 <code>i</code> 与循环使用的是同一个变量，因此 goroutine 中的读操作与循环递增操作存在竞争。
+（此程序通常打印 55555，而不是 01234。）
+可以通过复制该变量来修复此程序：
 </p>
 
 <pre>
@@ -214,7 +212,7 @@ func main() {
 	var i int
 	for i = 0; i &lt; 5; i++ {
 		go func(j int) {
-			fmt.Println(j) // 很好。读取循环计数器的本地副本。
+			fmt.Println(j) // [待翻译: Good. Read local copy of the loop counter.]
 			wg.Done()
 		}(i)
 	}
@@ -231,14 +229,14 @@ func ParallelWrite(data []byte) chan error {
 		res <- err
 	} else {
 		go func() {
-			// 这个 err 与主 goroutine 共享，
-			// 因此这里的写入与下面的写入存在竞争。
+			// 此 err 与主 goroutine 共享，
+			// 因此这里的写操作与下面的写操作存在竞争。
 			_, err = f1.Write(data)
 			res <- err
 			f1.Close()
 		}()
 	}
-	f2, err := os.Create("file2") // 第二个冲突的对 err 的写入。
+	f2, err := os.Create("file2") // 对 err 的第二个冲突写入。
 	if err != nil {
 		res <- err
 	} else {
@@ -264,11 +262,11 @@ func ParallelWrite(data []byte) chan error {
 			...
 </pre>
 
-<h3 id="Unprotected_global_variable">未受保护的全局变量</h3>
+<h3 id="Unprotected_global_variable">未保护的全局变量</h3>
 
 <p>
-如果以下代码从多个 goroutine 调用，会导致对 <code>service</code> map 的竞争。
-对同一 map 的并发读写是不安全的：
+如果以下代码被多个 goroutine 调用，会导致对 <code>service</code> 映射的竞争条件。
+对同一映射的并发读写是不安全的：
 </p>
 
 <pre>
@@ -284,7 +282,7 @@ func LookupService(name string) net.Addr {
 </pre>
 
 <p>
-为使代码安全，应使用互斥锁保护访问：
+要使代码安全，使用互斥锁保护访问：
 </p>
 
 <pre>
@@ -306,24 +304,25 @@ func LookupService(name string) net.Addr {
 }
 </pre>
 
-<h3 id="Primitive_unprotected_variable">未受保护的基本类型变量</h3>
+<h3 id="Primitive_unprotected_variable">原始未保护的变量</h3>
 
 <p>
-数据竞争也可能发生在基本类型变量上（如 <code>bool</code>、<code>int</code>、<code>int64</code> 等），如下例所示：
+数据竞争也可能发生在原始类型的变量上（<code>bool</code>、<code>int</code>、<code>int64</code> 等），
+如本例所示：
 </p>
 
 <pre>
 type Watchdog struct{ last int64 }
 
 func (w *Watchdog) KeepAlive() {
-	w.last = time.Now().UnixNano() // 第一个冲突的访问。
+	w.last = time.Now().UnixNano() // 第一次冲突访问。
 }
 
 func (w *Watchdog) Start() {
 	go func() {
 		for {
 			time.Sleep(time.Second)
-			// 第二个冲突的访问。
+			// 第二次冲突访问。
 			if w.last < time.Now().Add(-10*time.Second).UnixNano() {
 				fmt.Println("No keepalives for 10 seconds. Dying.")
 				os.Exit(1)
@@ -334,12 +333,16 @@ func (w *Watchdog) Start() {
 </pre>
 
 <p>
-即使是这种"无害"的数据竞争，也可能由于内存访问的非原子性、编译器优化的干扰，或访问处理器内存时的重排序问题而导致难以调试的问题。
+即使是这种 "无害的" 数据竞争也可能导致难以调试的问题，原因在于
+内存访问的非原子性、
+与编译器优化的干扰，
+或处理器内存访问的重排序问题。
 </p>
 
 <p>
-此竞争的典型修复方法是使用 channel 或互斥锁。
-为了保持无锁行为，也可以使用 <a href="/pkg/sync/atomic/"><code>sync/atomic</code></a> 包。
+解决此类竞争的典型方法是使用通道或互斥锁。
+为了保持无锁行为，也可以使用
+<a href="/pkg/sync/atomic/"><code>sync/atomic</code></a> 包。
 </p>
 
 <pre>
@@ -365,36 +368,41 @@ func (w *Watchdog) Start() {
 <h3 id="Unsynchronized_send_and_close_operations">未同步的发送和关闭操作</h3>
 
 <p>
-如本例所示，对同一 channel 的未同步发送和关闭操作也可能构成竞态条件：
+如本例所示，对同一通道的未同步发送和关闭操作
+也可能构成竞态条件：
 </p>
 
 <pre>
-c := make(chan struct{}) // 或带缓冲的 channel
+c := make(chan struct{}) // 或有缓冲通道
 
-// 竞态检测器无法推断以下发送和关闭操作之间的 happens-before 关系。
+// 竞态检测器无法推导出以下发送和关闭操作的先于发生关系。
 // 这两个操作未同步且并发发生。
 go func() { c <- struct{}{} }()
 close(c)
 </pre>
 
 <p>
-根据 Go 内存模型，对 channel 的发送操作在该 channel 上相应的接收操作完成之前发生。
-要同步发送和关闭操作，请使用保证在关闭前完成发送的接收操作：
+根据 Go 内存模型，通道上的发送操作先于
+该通道上相应接收操作的完成。要同步
+发送和关闭操作，可使用一个接收操作来确保
+发送在关闭之前完成：
 </p>
 
 <pre>
-c := make(chan struct{}) // 或带缓冲的 channel
+c := make(chan struct{}) // 或有缓冲通道
 
 go func() { c <- struct{}{} }()
 <-c
 close(c)
 </pre>
 
-<h2 id="Requirements">要求</h2>
+<h2 id="Requirements">系统要求</h2>
 
 <p>
-  竞态检测器需要启用 cgo，并且在非 Darwin 系统上需要安装 C 编译器。
-  竞态检测器支持 <code>linux/amd64</code>、<code>linux/ppc64le</code>、
+  竞态检测器需要启用 cgo，在非 Darwin 系统上
+  需要安装 C 编译器。
+  竞态检测器支持
+  <code>linux/amd64</code>、<code>linux/ppc64le</code>、
   <code>linux/arm64</code>、<code>linux/s390x</code>、
   <code>linux/loong64</code>、<code>freebsd/amd64</code>、
   <code>netbsd/amd64</code>、<code>darwin/amd64</code>、
@@ -402,23 +410,26 @@ close(c)
 </p>
 
 <p>
-  在 Windows 上，竞态检测器运行时对已安装的 C 编译器版本敏感；
-  从 Go 1.21 开始，使用 <code>-race</code> 构建程序需要一个包含了 <code>mingw-w64</code>
-  运行时库版本 8 或更高版本的 C 编译器。您可以通过调用
-  <code>--print-file-name libsynchronization.a</code> 参数来测试您的 C 编译器。
-  较新的兼容 C 编译器将打印该库的完整路径，而较旧的 C 编译器只会回显该参数。
+  在 Windows 上，竞态检测器运行时对所安装 C 编译器的
+  版本敏感；自 Go 1.21 起，使用 <code>-race</code> 构建
+  程序需要 C 编译器包含 8 版或更高版本的 <code>mingw-w64</code>
+  运行时库。您可以通过使用参数
+  <code>--print-file-name libsynchronization.a</code> 调用 C 编译器来测试。
+  更新的合规 C 编译器会打印此库的完整路径，
+  而旧版 C 编译器只会回显参数。
 </p>
 
 <h2 id="Runtime_Overheads">运行时开销</h2>
 
 <p>
-竞态检测的成本因程序而异，但对于典型程序，内存使用量可能增加 5-10 倍，执行时间可能增加 2-20 倍。
+竞态检测的开销因程序而异，但对于典型程序，内存使用量
+可能增加 5-10 倍，执行时间增加 2-20 倍。
 </p>
 
 <p>
-竞态检测器目前为每个 <code>defer</code> 和 <code>recover</code> 语句额外分配 8 字节。
-这些额外的分配 <a href="/issue/26813">直到 goroutine 退出才被回收</a>。
-这意味着，如果您有一个长期运行的 goroutine 周期性地发出 <code>defer</code> 和 <code>recover</code> 调用，
-程序的内存使用量可能会无限增长。这些内存分配不会出现在 <code>runtime.ReadMemStats</code> 或
-<code>runtime/pprof</code> 的输出中。
+竞态检测器当前为每个 <code>defer</code> 和 <code>recover</code> 语句额外分配 8 字节。这些额外分配<a
+href="/issue/26813">直到 goroutine 退出时才回收</a>。这意味着如果您有一个长时间运行的 goroutine 周期性地调用
+<code>defer</code> 和 <code>recover</code>，
+程序内存使用量可能会无限制增长。这些内存分配
+不会出现在 <code>runtime.ReadMemStats</code> 或 <code>runtime/pprof</code> 的输出中。
 </p>
