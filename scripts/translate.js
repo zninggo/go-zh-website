@@ -310,6 +310,9 @@ ${glossaryPrompt}`;
 
       if (!response.ok) {
         const errorBody = await decompressResponse(response);
+        const reqUrl = `${api_url}/chat/completions`;
+        console.log(`    [DEBUG] 请求URL: ${reqUrl}`);
+        console.log(`    [DEBUG] Model: ${model}`);
         throw new Error(`API 请求失败: ${response.status} - ${errorBody}`);
       }
 
@@ -396,6 +399,12 @@ async function main() {
     }
 
     const glossary = loadGlossary();
+
+    // 调试：打印 API 配置（不暴露完整密钥）
+    console.log('API 配置:');
+    console.log(`  URL: ${config.translation.api_url}`);
+    console.log(`  Model: ${config.translation.model}`);
+    console.log(`  Key: ${config.translation.api_key ? config.translation.api_key.slice(0, 8) + '...' : '(空)'}`);
 
     console.log('检测变更文件...');
     const changedFiles = await detectChanges();
