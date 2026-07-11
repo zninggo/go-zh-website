@@ -68,7 +68,8 @@
       "source": "solutions/chrome.md",
       "target": "solutions/chrome.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:08:36.967Z"
     },
     {
       "source": "solutions/clis.md",
