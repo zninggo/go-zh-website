@@ -117,7 +117,8 @@
       "source": "doc/database/execute-transactions.md",
       "target": "doc/database/execute-transactions.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T13:06:29.491Z"
     },
     {
       "source": "doc/database/index.md",
