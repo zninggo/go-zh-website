@@ -3,90 +3,87 @@
 }-->
 
 <p>
-本页总结了Go 1之前稳定版本之间的变更情况。
-近期版本的发布说明请参见<a href="release.html">发布历史</a>页面。
+本页面总结了 Go 1 之前各稳定版本之间的变更。
+有关最近版本的说明，请参阅 <a href="release.html">发布历史</a> 页面。
 </p>
 
-<h2 id="r60">r60（发布于2011年9月7日）</h2>
+<h2 id="r60">r60（发布于 2011年9月7日）</h2>
 
 <p>
-r60版本对应于
+r60 版本对应
 <code><a href="weekly.html#2011-08-17">weekly.2011-08-17</a></code>。
-本节重点介绍此版本中最重大的变更。
-更详细的摘要，请参阅
-<a href="weekly.html#2011-08-17">周发布说明</a>。
-完整信息，请查阅
+本节重点介绍此版本中最显著的变更。
+更详细的摘要请参阅
+<a href="weekly.html#2011-08-17">每周发布说明</a>。
+完整信息请查阅
 <a href="https://code.google.com/p/go/source/list?r=release-branch.r60">Mercurial 变更列表</a>。
 </p>
 
 <h3 id="r60.lang">语言</h3>
 
 <p>
-现在，“else”代码块必须使用花括号，除非“else”的主体是另一个“if”。由于 gofmt 总是会自动添加这些花括号，
-经过 gofmt 格式化的程序将不受影响。
+现在要求“else”代码块必须带有花括号，除非“else”的主体是另一个“if”。由于 gofmt 总是会自动添加这些花括号，因此经 gofmt 格式化的程序不受影响。
 要修复其他程序，请运行 gofmt。
 </p>
 
 <h3 id="r60.pkg">包</h3>
 
 <p>
-<a href="/pkg/http/">http 包</a>中的 URL 解析和查询转义代码
-（如 <code>ParseURL</code> 和 <code>URLEscape</code>）已被移至
-新的 <a href="/pkg/url/">url 包</a>，并对名称进行了一些简化。
+<a href="/pkg/http/">包 http</a> 的 URL 解析和查询转义代码
+（例如 <code>ParseURL</code> 和 <code>URLEscape</code>）已移至新的
+<a href="/pkg/url/">url 包</a>，并对名称进行了若干简化。
 客户端代码可以通过 gofix 自动更新。
 </p>
 
 <p>
-<a href="/pkg/image/">image 包</a>中结构体类型（如
+<a href="/pkg/image/">包 image</a> 中
 <a href="/pkg/image/#RGBA">image.RGBA</a> 和
-<a href="/pkg/image/#NRGBA">image.NRGBA</a>）的
+<a href="/pkg/image/#NRGBA">image.NRGBA</a> 等结构体类型的
 <code>Pix</code> 字段已发生重大变更。
-但 <a href="/pkg/image/#Image">image.Image</a> 接口类型未变，
-因此如果你的代码没有显式引用 <code>Pix</code> 字段，则无需修改。例如，如果你使用
-<a href="/pkg/image/jpeg/">image/jpeg</a> 包解码多张图像，使用
-<a href="/pkg/image/draw/">image/draw</a> 进行合成，然后使用
-<a href="/pkg/img/png">image/png</a> 编码结果，那么你的代码应该仍然可以像以前一样运行。
-如果你的代码<i>确实</i>引用了 <code>Pix</code> 字段，请参阅
-<a href="/doc/devel/weekly.html#2011-07-19">weekly.2011-07-19</a>
+不过，<a href="/pkg/image/#Image">image.Image</a> 接口类型未变，
+如果你没有显式引用 <code>Pix</code> 字段，则无需更改代码。
+例如，如果你使用 <a href="/pkg/image/jpeg/">image/jpeg</a> 包解码多张图像，
+使用 <a href="/pkg/image/draw/">image/draw</a> 进行组合，
+然后使用 <a href="/pkg/img/png">image/png</a> 对结果进行编码，
+那么你的代码应仍能照常运行。
+如果你的代码<i>确实</i>引用了 <code>Pix</code> 字段，
+请参阅 <a href="/doc/devel/weekly.html#2011-07-19">weekly.2011-07-19</a>
 快照说明以了解如何更新代码。
 </p>
 
 <p>
-<a href="/pkg/template/">template 包</a>已被一个新的
-模板包（原 <code>exp/template</code>）取代。原来的 template
-包仍可作为 <a href="/pkg/old/template/">old/template</a> 使用。
-<code>old/template</code> 包已被弃用，并将被移除。
-Go 源代码树已更新为使用新的模板包。我们鼓励
-旧模板包的用户切换到新包。使用
-<code>template</code> 或 <code>exp/template</code> 的代码需要将其
-导入行分别更改为 <code>"old/template"</code> 或 <code>"template"</code>。
+<a href="/pkg/template/">包 template</a> 已被一个新的模板包（原 <code>exp/template</code>）取代。
+原始 template 包仍可作为 <a href="/pkg/old/template/">old/template</a> 使用。
+<code>old/template</code> 包已被弃用并将被移除。
+Go 源代码树已更新为使用新的 template 包。
+我们鼓励原 template 包的用户转而使用新包。
+使用 <code>template</code> 或 <code>exp/template</code> 的代码需要将其
+import 行分别更改为 <code>"old/template"</code> 或 <code>"template"</code>。
 </p>
 
 <h3 id="r60.cmd">工具</h3>
 
 <p>
 <a href="/cmd/goinstall/">Goinstall</a> 现在使用新的标签选择方案。
-在下载或更新时，goinstall 会查找带有
-<code>"go."</code> 前缀且对应于本地 Go 版本的标签或分支。对于 Go
-<code>release.r58</code>，它会查找 <code>go.r58</code>。对于
-<code>weekly.2011-06-03</code>，它会查找 <code>go.weekly.2011-06-03</code>。
-如果未找到特定的 <code>go.X</code> 标签或分支，它会选择
-最接近的较早版本。如果找到合适的标签或分支，goinstall
-会使用该版本的代码。否则，它将使用版本控制系统选择的默认版本。鼓励库作者在他们的代码库中使用
-相应的标签或分支名称，以便于用户使用他们的库。
+在下载或更新时，goinstall 会查找与本地 Go 版本对应的、具有 <code>"go."</code> 前缀的标签或分支。
+对于 Go <code>release.r58</code>，它会查找 <code>go.r58</code>。
+对于 <code>weekly.2011-06-03</code>，它会查找 <code>go.weekly.2011-06-03</code>。
+如果未找到具体的 <code>go.X</code> 标签或分支，它会选择最接近的较早版本。
+如果找到合适的标签或分支，goinstall 将使用该版本的代码。
+否则，它将使用版本控制系统选择的默认版本。
+鼓励库作者在其仓库中使用适当的标签或分支名称，以便其库更易于访问。
 </p>
 
 <h3 id="r60.minor">次要修订</h3>
 
 <p>
-r60.1 包括一个
+r60.1 包含一个
 <a href="/change/1824581bf62d">链接器
-修复</a>，一对
+修复</a>、一对
 <a href="/change/9ef4429c2c64">goplay</a>
 <a href="/change/d42ed8c3098e">修复</a>，
 以及一个 <code>json</code> 包
-<a href="/change/d5e97874fe84">修复</a> 和一个
-新的
+<a href="/change/d5e97874fe84">修复</a> 和一个新的
 <a href="/change/4f0e6269213f">结构体标签
 选项</a>。
 </p>
@@ -94,62 +91,62 @@ r60.1 包括一个
 <p>
 r60.2
 <a href="/change/ff19536042ac">修复</a>
-了一个涉及 map 的内存泄漏问题。
+了一个涉及映射的内存泄漏。
 </p>
 
 <p>
 r60.3 修复了一个
-<a href="/change/01fa62f5e4e5">reflect 错误</a>。
+<a href="/change/01fa62f5e4e5">反射 bug</a>。
 </p>
 
-<h2 id="r59">r59（发布于2011年8月1日）</h2>
+<h2 id="r59">r59（发布于 2011年8月1日）</h2>
 
 <p>
-r59版本对应于
+r59 版本对应
 <code><a href="weekly.html#2011-07-07">weekly.2011-07-07</a></code>。
-本节重点介绍此版本中最重大的变更。
-更详细的摘要，请参阅
-<a href="weekly.html#2011-07-07">周发布说明</a>。
-完整信息，请查阅
+本节重点介绍此版本中最显著的变更。
+更详细的摘要请参阅
+<a href="weekly.html#2011-07-07">每周发布说明</a>。
+完整信息请查阅
 <a href="https://code.google.com/p/go/source/list?r=release-branch.r59">Mercurial 变更列表</a>。
 </p>
 
 <h3 id="r59.lang">语言</h3>
 
 <p>
-此版本包含一项限制 <code>goto</code> 使用的语言变更。本质上，
-<code>goto</code> 语句在代码块外部时，不能跳转到该代码块内部的标签。如果你的代码使用了 <code>goto</code>，可能需要进行修改。
-请参见<a href="/change/dc6d3cf9279d">这个
+此版本包含一项语言变更，限制了 <code>goto</code> 的使用。
+本质上，位于代码块外部的 <code>goto</code> 语句不能跳转到该代码块内部的标签。
+如果你的代码使用了 <code>goto</code>，可能需要修改。
+请参阅 <a href="/change/dc6d3cf9279d">此
 变更集</a>，了解新规则如何影响 Go 源代码树。
 </p>
 
 <h3 id="r59.pkg">包</h3>
 
 <p>
-和往常一样，<a href="/cmd/gofix/">gofix</a> 将处理这些包 API 变更所需的大部分重写工作。
+与往常一样，<a href="/cmd/gofix/">gofix</a> 将处理这些包 API 变更所需的大部分重写工作。
 </p>
 
 <p>
-<a href="/pkg/http">http 包</a>新增了一个
+<a href="/pkg/http">包 http</a> 有一个新的
 <a href="/pkg/http/#FileSystem">FileSystem</a> 接口，用于提供文件访问。
 <a href="/pkg/http/#FileServer">FileServer</a> 辅助函数现在接受一个
-<code>FileSystem</code> 参数，而不是一个显式的文件系统根路径。通过
-实现你自己的 <code>FileSystem</code>，你可以使用
-<code>FileServer</code> 来提供任意数据的服务。
+<code>FileSystem</code> 参数，而不是一个显式的文件系统根路径。
+通过实现你自己的 <code>FileSystem</code>，你可以使用 <code>FileServer</code> 来提供任意数据。
 </p>
 
 <p>
-<a href="/pkg/os/">os 包</a>的 <code>ErrorString</code> 类型已被隐藏。
-大多数 <code>os.ErrorString</code> 的用法可以替换为
+<a href="/pkg/os/">包 os</a> 的 <code>ErrorString</code> 类型已被隐藏。
+大多数对 <code>os.ErrorString</code> 的使用都可以替换为
 <a href="/pkg/os/#NewError">os.NewError</a>。
 </p><p>
-<a href="/pkg/reflect/">reflect 包</a>支持一种新的结构体标签方案，允许在多个包之间共享结构体标签。该方案中，标签必须采用以下形式：
+<a href="/pkg/reflect/">reflect 包</a>支持一种新的结构体标签方案，该方案允许在多个包之间共享结构体标签。在此方案中，标签必须采用以下格式：
 </p>
 <pre>
 	`key:"value" key2:"value2"`
 </pre>
 <p>
-<a href="/pkg/reflect/#StructField">StructField</a> 类型的 Tag 字段现在具有 <a href="/pkg/reflect/#StructTag">StructTag</a> 类型，该类型提供 <code>Get</code> 方法。<a href="/pkg/json">json</a> 和 <a href="/pkg/xml">xml</a> 包的使用者需要更新代码。以下代码：
+<a href="/pkg/reflect/#StructField">StructField</a> 类型的 Tag 字段现在的类型是 <a href="/pkg/reflect/#StructTag">StructTag</a>，它拥有一个 <code>Get</code> 方法。使用 <a href="/pkg/json">json</a> 和 <a href="/pkg/xml">xml</a> 包的用户需要进行更新。原来写成这样：
 </p>
 <pre>
 	type T struct {
@@ -157,7 +154,7 @@ r59版本对应于
 	}
 </pre>
 <p>
-应改为：
+的代码，现在应该改为：
 </p>
 <pre>
 	type T struct {
@@ -165,182 +162,203 @@ r59版本对应于
 	}
 </pre>
 <p>
-使用 <a href="/cmd/govet/">govet</a> 工具可识别需要更改为新语法的结构体标签。
+可以使用 <a href="/cmd/govet/">govet</a> 来识别需要更改为新语法的结构体标签。
 </p>
 
 <p>
-<a href="/pkg/sort/">sort 包</a>的 <code>IntArray</code> 类型已重命名为 <a href="/pkg/sort/#IntSlice">IntSlice</a>，同样重命名的还有 <a href="/pkg/sort/#Float64Slice">Float64Slice</a> 和 <a href="/pkg/sort/#StringSlice">StringSlice</a>。
+<a href="/pkg/sort/">sort 包</a> 的 <code>IntArray</code> 类型已被重命名为 <a href="/pkg/sort/#IntSlice">IntSlice</a>，同样地，还有 <a href="/pkg/sort/#Float64Slice">Float64Slice</a> 和 <a href="/pkg/sort/#StringSlice">StringSlice</a>。
 </p>
 
 <p>
-<a href="/pkg/strings/">strings 包</a>的 <code>Split</code> 函数本身已被拆分为 <a href="/pkg/strings/#Split">Split</a> 和 <a href="/pkg/strings/#SplitN">SplitN</a>。<code>SplitN</code> 与旧版的 <code>Split</code> 功能相同。新版 <code>Split</code> 等同于将 <code>SplitN</code> 的最后一个参数设为 -1。
+<a href="/pkg/strings/">strings 包</a> 的 <code>Split</code> 函数本身已被拆分为 <a href="/pkg/strings/#Split">Split</a> 和 <a href="/pkg/strings/#SplitN">SplitN</a>。
+<code>SplitN</code> 与旧的 <code>Split</code> 功能相同。
+新的 <code>Split</code> 等同于将最后一个参数设为 -1 的 <code>SplitN</code>。
 </p>
 
 <p>
-<a href="/pkg/image/draw/">image/draw 包</a>的 <a href="/pkg/image/draw/#Draw">Draw</a> 函数现在增加了一个额外参数——合成操作符。如有疑问，请使用 <a href="/pkg/image/draw/#Op">draw.Over</a>。
+<a href="/pkg/image/draw/">image/draw 包</a> 的 <a href="/pkg/image/draw/#Draw">Draw</a> 函数现在新增了一个参数：一个合成运算符。如有疑问，请使用 <a href="/pkg/image/draw/#Op">draw.Over</a>。
 </p>
 
 <h3 id="r59.cmd">工具</h3>
 
 <p>
-<a href="/cmd/goinstall/">Goinstall</a> 现在可从任意远程仓库安装包和命令（不再局限于 Google Code、GitHub 等）。详情请参阅 <a href="/cmd/goinstall/">goinstall 文档</a>。
+<a href="/cmd/goinstall/">Goinstall</a> 现在支持从任意的远程仓库（不仅仅是 Google Code、GitHub 等）安装包和命令。详情请参见 <a href="/cmd/goinstall/">goinstall 文档</a>。
 </p>
 
 <h2 id="r58">r58（发布于 2011/06/29）</h2>
 
 <p>
-r58 版本对应于 <code><a href="weekly.html#2011-06-09">weekly.2011-06-09</a></code>，并包含额外的错误修复。本节重点说明该版本中最显著的变更。更详细的摘要请参阅 <a href="weekly.html#2011-06-09">周度发布说明</a>。完整信息请参阅 <a href="https://code.google.com/p/go/source/list?r=release-branch.r58">Mercurial 变更列表</a>。
+r58 版本对应于 <code><a href="weekly.html#2011-06-09">weekly.2011-06-09</a></code>，并包含额外的错误修复。本节重点介绍此版本中最重大的变更。更详细的摘要请参见 <a href="weekly.html#2011-06-09">周发布说明</a>。完整信息请查阅 <a href="https://code.google.com/p/go/source/list?r=release-branch.r58">Mercurial 变更列表</a>。
 </p>
 
 <h3 id="r58.lang">语言</h3>
 
 <p>
-此版本修复了 <a href="/change/b720749486e1">滥用 <code>goto</code> 的程序中未初始化内存的使用问题</a>。
+此版本修复了一个在滥用 <code>goto</code> 的程序中导致使用未初始化内存的问题。
 </p>
 
 <h3 id="r58.pkg">包</h3>
 
 <p>
-与往常一样，<a href="/cmd/gofix/">gofix</a> 将处理包 API 变更所需的大部分代码重写。
+一如既往，<a href="/cmd/gofix/">gofix</a> 将处理包 API 变更所需的大部分重写工作。
 </p>
 
 <p>
-<a href="/pkg/http/">http 包</a>从 <a href="/pkg/http/#Client.Get">Client.Get</a> 方法中移除了 <code>finalURL</code> 返回值。该值现在可通过 <a href="/pkg/http/#Response">http.Response</a> 上的新 <code>Request</code> 字段获取。大多数 map[string][]string 类型的实例已被替换为新的 <a href="/pkg/http/#Values">Values</a> 类型。
+<a href="/pkg/http/">http 包</a> 移除了 <a href="/pkg/http/#Client.Get">Client.Get</a> 方法返回的 <code>finalURL</code> 值。该值现在可以通过 <a href="/pkg/http/#Response">http.Response</a> 上新的 <code>Request</code> 字段获取。大部分 map[string][]string 类型的使用已被替换为新的 <a href="/pkg/http/#Values">Values</a> 类型。
 </p>
 
 <p>
-<a href="/pkg/exec/">exec 包</a>已重新设计，提供更便捷、更简洁的 API。
+<a href="/pkg/exec/">exec 包</a> 已经过重新设计，提供了更方便、更简洁的 API。
 </p>
 
 <p>
-<a href="/pkg/strconv/">strconv 包</a>的 <a href="/pkg/strconv/#Quote">Quote</a> 函数现在仅转义那些未被 <a href="/pkg/unicode/#IsPrint">unicode.IsPrint</a> 归类为可打印的 Unicode 码点。此前 Quote 会转义所有非 ASCII 字符。这也影响了 <a href="/pkg/fmt/">fmt 包</a>的 <code>"%q"</code> 格式化指令。之前的引号行为仍可通过 strconv 的新函数 <a href="/pkg/strconv/#QuoteToASCII">QuoteToASCII</a> 实现。
+<a href="/pkg/strconv/">strconv 包</a> 的 <a href="/pkg/strconv/#Quote">Quote</a> 函数现在仅对那些 <a href="/pkg/unicode/#IsPrint">unicode.IsPrint</a> 未归类为可打印字符的 Unicode 码点进行转义。之前，Quote 会转义所有非 ASCII 字符。这也影响了 <a href="/pkg/fmt/">fmt</a> 包的 <code>"%q"</code> 格式指令。之前的引号行为仍然可以通过 strconv 的新函数 <a href="/pkg/strconv/#QuoteToASCII">QuoteToASCII</a> 获得。
 </p>
 
 <p>
-<a href="/pkg/os/signal/">os/signal 包</a>的 <a href="/pkg/os/#Signal">Signal</a> 和 <a href="/pkg/os/#UnixSignal">UnixSignal</a> 类型已移至 <a href="/pkg/os/">os 包</a>。
+<a href="/pkg/os/signal/">os/signal 包</a> 的 <a href="/pkg/os/#Signal">Signal</a> 和 <a href="/pkg/os/#UnixSignal">UnixSignal</a> 类型已被移至 <a href="/pkg/os/">os</a> 包。
 </p>
 
 <p>
-<a href="/pkg/image/draw/">image/draw 包</a>是 <code>exp/draw</code> 的新名称。<code>exp/draw</code> 中的 GUI 相关代码现位于 <a href="/pkg/exp/gui/">exp/gui 包</a>中。
+<a href="/pkg/image/draw/">image/draw 包</a> 是 <code>exp/draw</code> 的新名称。原 <code>exp/draw</code> 中与 GUI 相关的代码现在位于 <a href="/pkg/exp/gui/">exp/gui</a> 包中。
 </p>
 
 <h3 id="r58.cmd">工具</h3>
 
 <p>
-<a href="/cmd/goinstall/">Goinstall</a> 现在会遵循 GOPATH 环境变量，以在 Go 源代码树之外构建和安装你自己的代码及外部库（同时避免编写 Makefile）。
+<a href="/cmd/goinstall/">Goinstall</a> 现在会观察 GOPATH 环境变量，以在 Go 源代码树外部构建和安装您自己的代码及外部库（从而避免编写 Makefile）。
 </p>
 
 <h3 id="r58.minor">小版本修订</h3>
 
-<p>r58.1 增加了 <a href="/change/293c25943586">构建</a> 和 <a href="/change/bf17e96b6582">运行时</a> 变更，使 Go 能够运行在 OS X 10.7 Lion 上。
-</p>
+<p>r58.1 增加了 <a href="/change/293c25943586">构建</a> 和 <a href="/change/bf17e96b6582">运行时</a> 方面的变更，以使 Go 能够在 OS X 10.7 Lion 上运行。</p>
 
 <h2 id="r57">r57（发布于 2011/05/03）</h2>
 
 <p>
-r57 版本对应于 <code><a href="weekly.html#2011-04-27">weekly.2011-04-27</a></code>，并包含额外的错误修复。本节重点说明该版本中最显著的变更。更详细的摘要请参阅 <a href="weekly.html#2011-04-27">周度发布说明</a>。完整信息请参阅 <a href="https://code.google.com/p/go/source/list?r=release-branch.r57">Mercurial 变更列表</a>。
+r57 版本对应于 <code><a href="weekly.html#2011-04-27">weekly.2011-04-27</a></code>，并包含额外的错误修复。本节重点介绍此版本中最重大的变更。更详细的摘要请参见 <a href="weekly.html#2011-04-27">周发布说明</a>。完整信息请查阅 <a href="https://code.google.com/p/go/source/list?r=release-branch.r57">Mercurial 变更列表</a>。
 </p>
 
-<p>新的 <a href="/cmd/gofix">gofix</a> 工具可以查找使用旧 API 的 Go 程序并将其重写以使用更新的 API。在更新到新的 Go 版本后，gofix 可帮助你的程序进行必要的更改。Gofix 将处理下文描述的 http、os 和 syscall 包的变更，我们会持续更新该程序以跟进未来库的变更。
-Gofix 无法完美处理所有情况，因此在提交前请阅读并测试它所做的更改。
-更多信息请参阅 <a href="/blog/introducing-gofix">gofix 博客文章</a>。</p>
+<p>新的 <a href="/cmd/gofix">gofix</a> 工具可以查找使用旧 API 的 Go 程序，并将其重写为使用更新的 API。在您更新到新的 Go 版本后，gofix 有助于对您的程序进行必要的更改。Gofix 将处理下面描述的 http、os 和 syscall 包的变更，我们将更新该程序以适应未来库的更改。Gofix 不能完美地处理所有情况，因此在提交更改之前，请阅读并测试它所做的更改。更多信息请参见 <a href="/blog/introducing-gofix">gofix 博客文章</a>。</p>
 
 <h3 id="r57.lang">语言</h3>
 
 <p>
-<a href="/doc/go_spec.html#Receive_operator">多重赋值语法</a>取代了 <code>closed</code> 函数。channel（通道）接收的语法允许一个可选的第二赋值，这是一个布尔值，用于指示 channel 是否已关闭。以下代码：
+<a href="/doc/go_spec.html#Receive_operator">多重赋值语法</a> 取代了 <code>closed</code> 函数。channel（通道）接收操作的语法允许一个可选的第二赋值，一个布尔值，指示通道是否已关闭。原来的代码：
 </p><pre>
 	v := &lt;-ch
 	if closed(ch) {
-		// channel 已关闭
+		// 通道已关闭
 	}
 </pre>
 
-<p>现在应写成：</p>
+<p>现在应该写为：</p>
 
 <pre>
 	v, ok := &lt;-ch
 	if !ok {
-		// channel 已关闭
+		// 通道已关闭
 	}
 </pre>
 
-<p><a href="/doc/go_spec.html#Label_scopes">未使用的标签现在被视为非法</a>，与未使用的局部变量相同。</p>
+<p><a href="/doc/go_spec.html#Label_scopes">未使用的标签现在是非法的</a>，就像未使用的局部变量一样。</p>
 
 <h3 id="r57.pkg">包</h3>
 
 <p>
-<a href="/pkg/gob/">gob 包</a>现在能够编码和解码实现了
+<a href="/pkg/gob/">gob 包</a>现在可以编码和解码实现了
 <a href="/pkg/gob/#GobEncoder">GobEncoder</a> 和
-<a href="/pkg/gob/#GobDecoder">GobDecoder</a> 接口的类型的值。这允许具有未导出字段的类型传输自描述信息；例如 <a href="/pkg/big/#Int.GobDecode">big.Int</a> 和 <a href="/pkg/big/#Rat.GobDecode">big.Rat</a>。
+<a href="/pkg/gob/#GobDecoder">GobDecoder</a> 接口的类型的值。这允许具有未导出字段的类型传输自描述信息；示例包括
+<a href="/pkg/big/#Int.GobDecode">big.Int</a> 和 <a href="/pkg/big/#Rat.GobDecode">big.Rat</a>。
 </p>
 
 <p>
-<a href="/pkg/http/">http 包</a>已重新设计。
-对于客户端，新增了 <a href="/pkg/http/#Client">Client</a> 和 <a href="/pkg/http/#Transport">Transport</a> 抽象层，提供了对 HTTP 细节（如发送的标头和遵循的重定向）更多的控制。这些抽象使得实现添加 <a href="https://code.google.com/p/goauth2/source/browse/oauth/oauth.go">OAuth2</a> 等功能的自定义客户端变得容易。
-对于服务器端，<a href="/pkg/http/#ResponseWriter">ResponseWriter</a> 移除了其非必要方法。
+<a href="/pkg/http/">http 包</a>已被重新设计。
+对于客户端，新增了
+<a href="/pkg/http/#Client">Client</a> 和 <a href="/pkg/http/#Transport">Transport</a>
+抽象，提供了对 HTTP 细节（如发送的头部和跟随的重定向）的更多控制。这些抽象使得实现自定义客户端变得容易，例如添加
+<a href="https://code.google.com/p/goauth2/source/browse/oauth/oauth.go">OAuth2</a> 之类的功能。
+对于服务器端，<a href="/pkg/http/#ResponseWriter">ResponseWriter</a>
+已去除非必需的方法。
 Hijack 和 Flush 方法不再是必需的；
-代码可以通过检查特定值是否实现了 <a href="/pkg/http/#Hijacker">Hijacker</a> 或 <a href="/pkg/http/#Flusher">Flusher</a> 来测试它们是否存在。
-RemoteAddr 和 UsingTLS 方法已被 <a href="/pkg/http/#Request">Request</a> 的 RemoteAddr 和 TLS 字段取代。
+代码可以通过检查特定值是否实现了
+<a href="/pkg/http/#Hijacker">Hijacker</a> 或 <a href="/pkg/http/#Flusher">Flusher</a> 接口来测试它们。
+RemoteAddr 和 UsingTLS 方法已被 <a href="/pkg/http/#Request">Request</a> 的
+RemoteAddr 和 TLS 字段取代。
 SetHeader 方法已被 Header 方法取代；
-其结果（类型为 <a href="/pkg/http/#Header">Header</a>）实现了 Set 和其他方法。
+其结果类型为 <a href="/pkg/http/#Header">Header</a>，
+实现了 Set 和其他方法。
 </p>
 
 <p>
-<a href="/pkg/net/">net 包</a>从 <a href="/pkg/net/#Conn.Dial">Dial</a> 中移除了 <code>laddr</code> 参数，并从 <a href="/pkg/net/#LookupHost">LookupHost</a> 中移除了 <code>cname</code> 返回值。
-其实现现在在可能的情况下使用 <a href="/cmd/cgo/">cgo</a>，通过 C 库的 getaddrinfo(3) 函数来执行网络名称查找。这确保了 Go 和 C 程序以相同的方式解析名称，并避免了 OS X 应用程序级防火墙的问题。
+<a href="/pkg/net/">net 包</a>
+从 <a href="/pkg/net/#Conn.Dial">Dial</a> 方法中删除了 <code>laddr</code> 参数，
+并从 <a href="/pkg/net/#LookupHost">LookupHost</a> 中删除了 <code>cname</code> 返回值。
+现在的实现在可能的情况下使用 <a href="/cmd/cgo/">cgo</a>，通过 C 库的 getaddrinfo(3) 函数进行网络名称查找。这确保了 Go 和 C 程序以相同的方式解析名称，并且也避免了 OS X 应用层防火墙的问题。
 </p>
 
 <p>
-<a href="/pkg/os/">os 包</a>引入了简化的 <a href="/pkg/os/#File.Open">Open</a> 和 <a href="/pkg/os/#File.Create">Create</a> 函数。
-原来的 Open 现在以 <a href="/pkg/os/#File.OpenFile">OpenFile</a> 的形式提供。
-<a href="/pkg/os/#Process.StartProcess">StartProcess</a> 的最后三个参数已被替换为一个指向 <a href="/pkg/os/#ProcAttr">ProcAttr</a> 的指针。
+<a href="/pkg/os/">os 包</a>
+引入了简化的 <a href="/pkg/os/#File.Open">Open</a>
+和 <a href="/pkg/os/#File.Create">Create</a> 函数。
+原来的 Open 现在可通过 <a href="/pkg/os/#File.OpenFile">OpenFile</a> 访问。
+<a href="/pkg/os/#Process.StartProcess">StartProcess</a> 的最后三个参数
+已被一个指向 <a href="/pkg/os/#ProcAttr">ProcAttr</a> 的指针取代。
 </p>
 
 <p>
-<a href="/pkg/reflect/">reflect 包</a>已重新设计。
-<a href="/pkg/reflect/#Type">Type</a> 现在是一个实现了所有可能类型方法的接口。
-现在是对 <code>t.Kind()</code> 进行类型开关判断，而不是对 Type <code>t</code> 进行类型开关判断。
-<a href="/pkg/reflect/#Value">Value</a> 现在是一个结构体值，实现了所有可能的值方法。
-现在是对 <code>v.Kind()</code> 进行类型开关判断，而不是对 Value <code>v</code> 进行类型开关判断。
-Typeof 和 NewValue 现在称为 <a href="/pkg/reflect/#Type.TypeOf">TypeOf</a> 和 <a href="/pkg/reflect/#Value.ValueOf">ValueOf</a>。
-要创建可写的 Value，请使用 <code>New(t).Elem()</code> 而不是 <code>Zero(t)</code>。
-有关完整细节，请参阅 <a href="/change/843855f3c026">变更描述</a>。
-新的 API 允许更高效地实现 Value，避免了旧 API 所需的许多内存分配。
+<a href="/pkg/reflect/">reflect 包</a>已被重新设计。
+<a href="/pkg/reflect/#Type">Type</a> 现在是一个接口，实现了
+所有可能的类型方法。
+取代了对类型 <code>t</code> 进行类型 switch，现在应对 <code>t.Kind()</code> 进行 switch。
+<a href="/pkg/reflect/#Value">Value</a> 现在是一个结构体值，实现了
+所有可能的值方法。
+取代了对值 <code>v</code> 进行类型 switch，现在应对 <code>v.Kind()</code> 进行 switch。
+Typeof 和 NewValue 现在被称为 <a href="/pkg/reflect/#Type.TypeOf">TypeOf</a> 和 <a href="/pkg/reflect/#Value.ValueOf">ValueOf</a>。
+要创建可写的 Value，请使用 <code>New(t).Elem()</code> 代替 <code>Zero(t)</code>。
+详见 <a href="/change/843855f3c026">变更描述</a>
+了解完整细节。
+新的 API 允许更高效地实现 Value，
+避免了旧 API 所需的许多分配操作。
 </p>
 
 <p>
-请记住，gofix 将处理这些包 API 变更所需的大部分代码重写工作。
+请记住，gofix 将处理这些包 API 更改所需的大部分重写工作。
 </p>
 
 <h3 id="r57.cmd">工具</h3>
 
-<p><a href="/cmd/gofix/">Gofix</a>，一个新命令，已在上文描述。</p>
+<p><a href="/cmd/gofix/">Gofix</a>，一个新命令，上文已描述。</p>
 
 <p>
-<a href="/cmd/gotest/">Gotest</a> 现在是一个 Go 程序，而不是一个 shell 脚本。
-新的 <code>-test.short</code> 标志与 testing 包的 Short 函数结合使用，允许您编写可以在正常模式或“短”模式下运行的测试；
-all.bash 以短模式运行测试以减少安装时间。
-Makefiles 了解此标志：使用 <code>make testshort</code>。
+<a href="/cmd/gotest/">Gotest</a> 现在是一个 Go 程序，而不是 shell 脚本。
+新的 <code>-test.short</code> 标志与 testing 包的 Short 函数结合，
+允许你编写可以在普通模式或“短”模式下运行的测试；
+all.bash 在短模式下运行测试以减少安装时间。
+Makefile 知道这个标志：使用 <code>make testshort</code>。
 </p>
 
 <p>
-运行时支持现在实现了 CPU 和内存分析。
+运行时支持现在实现了 CPU 和内存性能分析。
 Gotest 新增的
-<a href="/cmd/gotest/"><code>-test.cpuprofile</code> 和 <code>-test.memprofile</code> 标志</a> 使得对测试进行分析变得简单。
-要将分析添加到您的 Web 服务器，请参阅 <a href="/pkg/http/pprof/">http/pprof</a> 文档。
+<a href="/cmd/gotest/"><code>-test.cpuprofile</code> 和
+<code>-test.memprofile</code> 标志</a>使得
+对测试进行性能分析变得容易。
+要将性能分析添加到你的 Web 服务器，请参阅 <a href="/pkg/http/pprof/">http/pprof</a>
+文档。
 对于其他用途，请参阅 <a href="/pkg/runtime/pprof/">runtime/pprof</a> 文档。
 </p>
 
 <h3 id="r57.minor">次要修订</h3>
 
-<p>r57.1 修复了 <a href="/change/ff2bc62726e7145eb2ecc1e0f076998e4a8f86f0">http.FormFile 中的空指针解引用</a>。</p>
-<p>r57.2 修复了 <a href="/change/063b0ff67d8277df03c956208abc068076818dae">在错误使用 <code>goto</code> 的程序中出现的未初始化内存使用</a>。</p>
+<p>r57.1 修复了 <a href="/change/ff2bc62726e7145eb2ecc1e0f076998e4a8f86f0">http.FormFile 中的空指针解引用</a>问题。</p>
+<p>r57.2 修复了 <a href="/change/063b0ff67d8277df03c956208abc068076818dae">在误用 <code>goto</code> 的程序中使用未初始化内存</a>的问题。</p>
 
 <h2 id="r56">r56 (发布于 2011/03/16)</h2>
 
 <p>
 r56 版本是第一个稳定版本，对应于
 <code><a href="weekly.html#2011-03-07">weekly.2011-03-07.1</a></code>。
-版本号从 56 开始，因为在此版本之前，我们现在所称的每周快照曾被称为发布版本。
+版本号从 56 开始，是因为在此版本之前，
+我们现在认为的每周快照被称为发布版。
 </p>

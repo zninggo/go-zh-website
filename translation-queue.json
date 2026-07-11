@@ -173,7 +173,8 @@
       "source": "doc/devel/pre_go1.html",
       "target": "doc/devel/pre_go1.md",
       "type": "html",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T13:17:22.319Z"
     },
     {
       "source": "doc/devel/release.html",
