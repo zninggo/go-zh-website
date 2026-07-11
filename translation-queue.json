@@ -334,7 +334,8 @@
       "source": "about.md",
       "target": "about.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:24:36.303Z"
     },
     {
       "source": "project.html",
