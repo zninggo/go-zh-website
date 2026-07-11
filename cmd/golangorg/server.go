@@ -354,6 +354,8 @@ func NewHandler(contentDir, goroot string) http.Handler {
 		h = translationRedirectHandler(h)
 	}
 
+	h = realHostHandler(h)
+
 	return h
 }
 
@@ -576,6 +578,19 @@ var validHosts = map[string]bool{
 	"tour.go.dev":  true,
 }
 
+
+
+
+// realHostHandler normalizes r.Host from X-Forwarded-Host when running behind a reverse proxy.
+// Must be the outermost handler so all downstream handlers see the correct host.
+func realHostHandler(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if xfh := r.Header.Get("X-Forwarded-Host"); xfh != "" {
+			r.Host = strings.ToLower(xfh)
+		}
+		h.ServeHTTP(w, r)
+	})
+}
 // hostEnforcerHandler redirects http://foo.golang.org/bar to https://golang.org/bar.
 // It also forces all requests coming from China for golang.org to use golang.google.cn.
 func hostEnforcerHandler(h http.Handler) http.Handler {
@@ -1170,3 +1185,6 @@ func jsonUnmarshal(data []byte) (any, error) {
 	err := json.Unmarshal(data, &x)
 	return x, err
 }
+
+
+
