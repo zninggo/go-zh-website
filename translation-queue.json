@@ -285,7 +285,8 @@
       "source": "solutions/use-cases.md",
       "target": "solutions/use-cases.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T12:21:32.847Z"
     },
     {
       "source": "solutions/webdev.md",
