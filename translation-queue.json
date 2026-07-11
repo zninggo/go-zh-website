@@ -103,7 +103,8 @@
       "source": "doc/database/cancel-operations.md",
       "target": "doc/database/cancel-operations.md",
       "type": "markdown",
-      "status": "pending"
+      "status": "completed",
+      "translatedAt": "2026-07-11T13:04:28.639Z"
     },
     {
       "source": "doc/database/change-data.md",
