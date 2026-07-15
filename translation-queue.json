@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-07-11T16:54:28.318Z",
+  "timestamp": "2026-07-15T04:37:06.247Z",
   "files": [
     {
-      "source": "doc/security/best-practices.md",
-      "target": "doc/security/best-practices.md",
+      "source": "doc/security/decisions.md",
+      "target": "doc/security/decisions.md",
       "type": "markdown",
       "status": "completed",
-      "translatedAt": "2026-07-11T16:54:56.760Z"
+      "translatedAt": "2026-07-15T04:37:25.165Z"
     }
   ]
 }
